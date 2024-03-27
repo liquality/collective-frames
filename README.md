@@ -15,9 +15,6 @@ POSTGRES_URL=""
 5. Set permissions `GRANT ALL PRIVILEGES ON DATABASE colletive_frames TO collective_frames_app;`
 
 
-
-
-
 ### Development server
 First, run the development server:
 
