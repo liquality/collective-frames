@@ -9,8 +9,6 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 POSTGRES_URL=""
 - Linux: [https://w3resource.com/PostgreSQL/install-postgresql-on-linux-and-windows.php](https://w3resource.com/PostgreSQL/install-postgresql-on-linux-and-windows.php)
 
-- Vercel Postgress
-
 2. create the local database: `createdb colletive_frames`
 3. connect to the database: `psql colletive_frames`
 4. create role and password `CREATE ROLE collective_frames_app WITH LOGIN PASSWORD 'my_secure_password';`
