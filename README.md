@@ -2,6 +2,25 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## Getting Started
 
+### Database
+- Local Database
+1. You should has up and running a local instance of postgresql 
+- Mac / Homebrew: [https://wiki.postgresql.org/wiki/Homebrew](https://wiki.postgresql.org/wiki/Homebrew)
+POSTGRES_URL=""
+- Linux: [https://w3resource.com/PostgreSQL/install-postgresql-on-linux-and-windows.php](https://w3resource.com/PostgreSQL/install-postgresql-on-linux-and-windows.php)
+
+- Vercel Postgress
+
+2. create the local database: `createdb colletive_frames`
+3. connect to the database: `psql colletive_frames`
+4. create role and password `CREATE ROLE collective_frames_app WITH LOGIN PASSWORD 'my_secure_password';`
+5. Set permissions `GRANT ALL PRIVILEGES ON DATABASE colletive_frames TO collective_frames_app;`
+
+
+
+
+
+### Development server
 First, run the development server:
 
 ```bash

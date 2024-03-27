@@ -9,7 +9,8 @@ const handleRequest = frames(async (ctx) => {
       throw new Error('Frame id not found');
     }
     const frameId = parts[2];
-    console.log({ parts });
+    console.log({ parts: ctx.url.pathname });
+    
   return {
     image: (
      <>
@@ -21,10 +22,10 @@ const handleRequest = frames(async (ctx) => {
       </span></>
     ),
     buttons: [
-      <Button action="post" target={{ query: { value: "Yes" }}}>
+      <Button action="post" target={{ pathname: `/${frameId}`, query: { value: "Yes" }}}>
         Say Yes
       </Button>,
-      <Button action="post" target={{ query: { value: "No" }}}>
+      <Button action="post" target={{ pathname: `/${frameId}`, query: { value: "No" }}}>
         Say No
       </Button>,
     ],
