@@ -3,10 +3,16 @@ import UploadForm from "./components/UploadForm";
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
+    <main className="flex min-h-screen items-center justify-between p-24">
+      <div className=" w-full items-center justify-between font-mono ">
+        <h2 style={{ fontSize: 30, lineHeight: 1 }}>
+          Meme NFT generator is here - share to mint & earn
+        </h2>
+        <p className="mt-3">
+          Upload your meme to generate a mint frame that you can share. Every
+          mint of your meme will benefit your pool.
+        </p>
         <UploadForm />
-        <h2>Collective Frames Demo</h2>
       </div>
     </main>
   );

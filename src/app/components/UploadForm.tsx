@@ -5,6 +5,7 @@ export default function UploadForm() {
   const [selectedImage, setSelectedImage] = useState<
     string | ArrayBuffer | null
   >(null);
+  const [selectedOption, setSelectedOption] = useState("");
 
   const handleImageUpload = (e: any) => {
     const file = e.target.files[0];
@@ -15,6 +16,10 @@ export default function UploadForm() {
       };
       reader.readAsDataURL(file);
     }
+  };
+
+  const handleOptionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedOption(e.target.value);
   };
 
   return (
@@ -38,10 +43,10 @@ export default function UploadForm() {
           <img
             src={selectedImage as string}
             alt="Uploaded meme"
-            className="mt-8 max-w-md w-30 h-30 object-cover"
+            className="mt-8 max-w-md w-30 h-30 object-cover container-border"
           />
         ) : (
-          <div className="w-20 h-20 flex items-center justify-center container-border ">
+          <div className="flex items-center justify-center container-border ">
             Upload image
           </div>
         )}
@@ -53,10 +58,21 @@ export default function UploadForm() {
           />
           <textarea
             placeholder="Enter description..."
-            className="p-2 text-xs w-300 h-50 border border-purple-500 focus:outline-none focus:ring-0"
+            className="description p-2 text-xs w-300 h-50 border border-purple-500 focus:outline-none focus:ring-0"
           ></textarea>
         </div>
       </div>
+      <select
+        style={{ width: 390 }}
+        value={selectedOption}
+        onChange={handleOptionChange}
+        className="mt-12 p-2 text-xs border border-purple-500 focus:outline-none focus:ring-0"
+      >
+        <option value="">Select community...</option>
+        <option value="option1">Option 1</option>
+        <option value="option2">Option 2</option>
+        <option value="option3">Option 3</option>
+      </select>
     </div>
   );
 }
