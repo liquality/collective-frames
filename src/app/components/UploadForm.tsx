@@ -1,18 +1,23 @@
 "use client";
 import React, { useState } from "react";
+import Modal from "./CopyModal";
 
 export default function UploadForm() {
   const [selectedImage, setSelectedImage] = useState<
     string | ArrayBuffer | null
   >(null);
   const [selectedOption, setSelectedOption] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleImageUpload = (e: any) => {
-    const file = e.target.files[0];
+  const handleModalToggle = () => {
+    setIsModalOpen(!isModalOpen);
+  };
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
     if (file) {
       const reader = new FileReader();
       reader.onload = () => {
-        setSelectedImage(reader.result);
+        setSelectedImage(reader.result as string);
       };
       reader.readAsDataURL(file);
     }
@@ -23,7 +28,7 @@ export default function UploadForm() {
   };
 
   return (
-    <div className="flex min-h-screen p-24 flex-col">
+    <div className="flex min-h-screen p-24 flex-col ">
       <div className="flex mb-5  font-mono text-sm">
         <label htmlFor="image-upload" className="cursor-pointer">
           <button className="border border-purple-500 rounded-full px-4 py-2 bg-white focus:outline-none focus:ring-0 hover:bg-white hover:border-purple-500">
@@ -41,7 +46,7 @@ export default function UploadForm() {
       <div className="flex flex-row">
         {selectedImage ? (
           <img
-            src={selectedImage as string}
+            src={selectedImage}
             alt="Uploaded meme"
             className="mt-8 max-w-md w-30 h-30 object-cover container-border"
           />
@@ -66,13 +71,24 @@ export default function UploadForm() {
         style={{ width: 390 }}
         value={selectedOption}
         onChange={handleOptionChange}
-        className="mt-12 p-2 text-xs border border-purple-500 focus:outline-none focus:ring-0"
+        className="mt-12 mb-12 p-2 text-xs border border-purple-500 focus:outline-none focus:ring-0"
       >
         <option value="">Select community...</option>
         <option value="option1">Option 1</option>
         <option value="option2">Option 2</option>
         <option value="option3">Option 3</option>
       </select>
+      <div className="flex items-center justify-center mt-12">
+        <br></br>
+        <button
+          onClick={handleModalToggle}
+          style={{ width: 300 }}
+          className="rounded-full px-4 py-2 bg-purple-500 text-white focus:outline-none focus:ring-0"
+        >
+          Save my meme
+        </button>
+      </div>
+      <Modal isOpen={isModalOpen} onClose={handleModalToggle}></Modal>
     </div>
   );
 }
