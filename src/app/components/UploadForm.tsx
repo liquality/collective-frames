@@ -31,7 +31,10 @@ export default function UploadForm() {
     <div className="flex min-h-screen p-24 flex-col ">
       <div className="flex mb-5  font-mono text-sm">
         <label htmlFor="image-upload" className="cursor-pointer">
-          <button className="border border-purple-500 rounded-full px-4 py-2 bg-white focus:outline-none focus:ring-0 hover:bg-white hover:border-purple-500">
+          <button
+            onClick={() => console.log("haaj")}
+            className="border border-purple-500 rounded-full px-4 py-2 bg-white focus:outline-none focus:ring-0 hover:bg-white hover:border-purple-500"
+          >
             <input
               id="avatarInput"
               type="file"
