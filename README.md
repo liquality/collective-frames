@@ -9,11 +9,11 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 POSTGRES_URL=""
 - Linux: [https://w3resource.com/PostgreSQL/install-postgresql-on-linux-and-windows.php](https://w3resource.com/PostgreSQL/install-postgresql-on-linux-and-windows.php)
 
-2. create the local database: `createdb colletive_frames`
-3. connect to the database: `psql colletive_frames`
+2. create the local database: `createdb collective_frames`
+3. connect to the database: `psql collective_frames`
 4. create role and password `CREATE ROLE collective_frames_app WITH LOGIN PASSWORD 'my_secure_password';`
-5. Set permissions `GRANT ALL PRIVILEGES ON DATABASE colletive_frames TO collective_frames_app;`
-
+5. Run migration `npm run migrate:run`;
+6. Run drizzle studio to alter and check the tables `npm run db:studio`
 
 ### Development server
 First, run the development server:

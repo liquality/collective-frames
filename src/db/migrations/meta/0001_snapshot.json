@@ -1,6 +1,6 @@
 {
-  "id": "320820f1-9504-48c0-bb55-254901d2efa5",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "001c5ac4-85e4-4fbe-b096-201cab82839e",
+  "prevId": "320820f1-9504-48c0-bb55-254901d2efa5",
   "version": "5",
   "dialect": "pg",
   "tables": {
@@ -80,6 +80,12 @@
           "type": "varchar(256)",
           "primaryKey": false,
           "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": false
         },
         "slug": {
           "name": "slug",
