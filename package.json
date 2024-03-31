@@ -15,13 +15,17 @@
   "dependencies": {
     "@vercel/blob": "^0.22.1",
     "@vercel/postgres": "^0.7.2",
+    "@zoralabs/protocol-sdk": "^0.5.7",
+    "axios": "^1.6.8",
     "drizzle-orm": "^0.30.4",
+    "form-data": "^4.0.0",
     "frames.js": "^0.9.6",
     "next": "14.1.4",
     "pg": "^8.11.3",
     "react": "^18",
     "react-dom": "^18",
-    "uuid": "^9.0.1"
+    "uuid": "^9.0.1",
+    "viem": "1.19.15"
   },
   "devDependencies": {
     "@frames.js/debugger": "^0.1.9",
