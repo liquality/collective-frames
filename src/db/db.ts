@@ -1,3 +1,4 @@
+import "dotenv/config";
 import { sql as sqlVercel } from "@vercel/postgres";
 import { NodePgDatabase, drizzle as drizzleNode } from "drizzle-orm/node-postgres";
 import { drizzle as drizzleVercel } from "drizzle-orm/vercel-postgres";

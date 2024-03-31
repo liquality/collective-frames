@@ -1,0 +1,1 @@
+ALTER TABLE "collective_frames_app"."frame" ADD COLUMN "description" varchar(256);

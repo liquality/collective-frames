@@ -1,94 +1,208 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
-import React, { useState } from "react";
+import React, {
+  ChangeEvent,
+  FormEvent,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import Modal from "./CopyModal";
+import "./UploadForm.css";
+import { CollectiveItem } from "@/types";
 
 export default function UploadForm() {
-  const [selectedImage, setSelectedImage] = useState<
-    string | ArrayBuffer | null
-  >(null);
-  const [selectedOption, setSelectedOption] = useState("");
+  const [isSaving, setIsSaving] = useState<boolean>(false);
+  const [loadingCollectives, setLoadingCollectives] = useState<boolean>(true);
+  const [collectives, setCollectives] = useState<CollectiveItem[]>([]);
+  const [imageContent, setImageContent] = useState<string>();
+  const [imageFile, setImagefile] = useState<File | null>(null);
+  const [name, setName] = useState<string>("");
+  const [tokenAddress, setTokenAddress] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
+  const [collective, setCollective] = useState<number>(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleModalToggle = () => {
     setIsModalOpen(!isModalOpen);
   };
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        setSelectedImage(reader.result as string);
-      };
-      reader.readAsDataURL(file);
+
+  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setImagefile(e.target.files?.[0] || null);
+  };
+
+  const handleCollectiveChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    if (e.target.value) {
+      const option = Number(e.target.value);
+      if (option > 0) {
+        setCollective(option);
+      }
+    } else {
+      setCollective(0);
     }
   };
 
-  const handleOptionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedOption(e.target.value);
+  const handleNameChange = (e: FormEvent<HTMLInputElement>) => {
+    setName(e.currentTarget.value || "");
   };
 
+  const handleDescriptionChange = (e: FormEvent<HTMLTextAreaElement>) => {
+    setDescription(e.currentTarget.value || "");
+  };
+
+  const handleTokenAddressChange = (e: FormEvent<HTMLInputElement>) => {
+    setTokenAddress(e.currentTarget.value || "");
+  };
+
+  const handleSave = async () => {
+    if (formIsValid) {
+      setIsSaving(true);
+      try {
+        const formData = new FormData();
+        formData.set("name", name);
+        formData.set("description", description);
+        formData.set("tokenAddress", tokenAddress);
+        formData.set("imageFile", imageFile!);
+        const response = await fetch("/api/frames/create", {
+          method: "POST",
+          body: formData,
+        });
+
+        // Handle response if necessary
+        const data = await response.json();
+        console.log({ data });
+      } catch (error) {
+        console.error({ error });
+      } finally {
+        setIsSaving(false);
+      }
+    } else {
+      console.log("form invalid");
+    }
+  };
+
+  useEffect(() => {
+    const loadData = async () => {
+      setLoadingCollectives(true);
+      try {
+        const response = await fetch("/api/collectives");
+        const data = await response.json();
+        setCollectives(data);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoadingCollectives(false);
+      }
+    };
+    loadData();
+  }, []);
+
+  useEffect(() => {
+    if (imageFile) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        setImageContent(reader.result as string);
+      };
+      reader.onerror = (e) => {
+        setImageContent("");
+        console.log(e, "Error reading image file");
+      };
+      reader.readAsDataURL(imageFile);
+    }
+  }, [imageFile]);
+
+  const formIsValid = useMemo(() => {
+    if (
+      imageFile &&
+      collective &&
+      collective > 0 &&
+      name &&
+      name.length > 4 &&
+      tokenAddress &&
+      tokenAddress.length > 4
+    ) {
+      return true;
+    }
+    return false;
+  }, [imageFile, collective, name, tokenAddress]);
+
   return (
-    <div className="flex min-h-screen p-24 flex-col ">
-      <div className="flex mb-5  font-mono text-sm">
-        <label htmlFor="image-upload" className="cursor-pointer">
-          <button
-            onClick={() => console.log("haaj")}
-            className="border border-purple-500 rounded-full px-4 py-2 bg-white focus:outline-none focus:ring-0 hover:bg-white hover:border-purple-500"
-          >
-            <input
-              id="avatarInput"
-              type="file"
-              accept="image/*"
-              onChange={handleImageUpload}
-              style={{ display: "none" }}
-            />
-            Upload your meme
-          </button>
-        </label>
-      </div>
-      <div className="flex flex-row">
-        {selectedImage ? (
-          <img
-            src={selectedImage}
-            alt="Uploaded meme"
-            className="mt-8 max-w-md w-30 h-30 object-cover container-border"
-          />
-        ) : (
-          <div className="flex items-center justify-center container-border ">
-            Upload image
+    <div className="flex flex-col min-h-screen p-24">
+      <div className="flex w-full">
+        <div className="flex flex-col w-full">
+          <div className="flex mb-5 font-mono text-sm">
+            <label className="ml-3 border border-purple-500 rounded-full px-4 py-2 bg-white focus:outline-none focus:ring-0 hover:bg-white hover:border-purple-500 cursor-pointer">
+              Upload your meme
+              <input
+                id="avatarInput"
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                className="hidden"
+              />
+            </label>
           </div>
-        )}
-        <div className="ml-3 flex flex-col">
-          <input
-            type="text"
-            className="p-2 mb-3 text-xs w-300 h-50 border border-purple-500 focus:outline-none focus:ring-0"
-            placeholder="Enter name..."
-          />
-          <textarea
-            placeholder="Enter description..."
-            className="description p-2 text-xs w-300 h-50 border border-purple-500 focus:outline-none focus:ring-0"
-          ></textarea>
+          <div className="flex flex-row">
+            <div className="ml-3 flex flex-col w-full">
+              <input
+                type="text"
+                onInput={handleNameChange}
+                value={name}
+                className="p-2 mb-3 text-xs h-50 border border-purple-500 focus:outline-none focus:ring-0"
+                placeholder="Enter name..."
+              />
+              <textarea
+                onInput={handleDescriptionChange}
+                value={description}
+                placeholder="Enter description..."
+                className="description mb-3 p-2 text-xs h-50 border border-purple-500 focus:outline-none focus:ring-0"
+              ></textarea>
+              <input
+                type="text"
+                onInput={handleTokenAddressChange}
+                value={tokenAddress}
+                className="p-2 mb-3 text-xs h-50 border border-purple-500 focus:outline-none focus:ring-0"
+                placeholder="Enter the token address"
+              />
+            </div>
+          </div>
+          <select
+            value={collective}
+            onChange={handleCollectiveChange}
+            className="ml-3 w-full mt-12 mb-12 p-2 text-xs border border-purple-500 focus:outline-none focus:ring-0"
+          >
+            <option value="">
+              {loadingCollectives ? "Loading..." : "Select community..."}
+            </option>
+            {collectives.map((collective: CollectiveItem) => (
+              <option key={collective.id} value={collective.id}>
+                {collective.name}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="flex items-center justify-center w-full h-full">
+          <div className="flex items-center justify-center container-border">
+            {imageContent ? (
+              <img
+                src={imageContent}
+                alt="Uploaded meme"
+                className="max-w-md w-full h-full object-cover container-border"
+              />
+            ) : (
+              "Upload image"
+            )}
+          </div>
         </div>
       </div>
-      <select
-        style={{ width: 390 }}
-        value={selectedOption}
-        onChange={handleOptionChange}
-        className="mt-12 mb-12 p-2 text-xs border border-purple-500 focus:outline-none focus:ring-0"
-      >
-        <option value="">Select community...</option>
-        <option value="option1">Option 1</option>
-        <option value="option2">Option 2</option>
-        <option value="option3">Option 3</option>
-      </select>
-      <div className="flex items-center justify-center mt-12">
-        <br></br>
+      <div className="flex w-full items-center justify-center mt-12">
         <button
-          onClick={handleModalToggle}
+          onClick={handleSave}
           style={{ width: 300 }}
-          className="rounded-full px-4 py-2 bg-purple-500 text-white focus:outline-none focus:ring-0"
+          disabled={!formIsValid}
+          className="rounded-full px-4 py-2 bg-purple-500 disabled:opacity-75 text-white focus:outline-none focus:ring-0"
         >
-          Save my meme
+          {isSaving ? "Saving..." : "Save my meme"}
         </button>
       </div>
       <Modal isOpen={isModalOpen} onClose={handleModalToggle}></Modal>

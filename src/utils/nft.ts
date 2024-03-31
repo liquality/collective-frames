@@ -1,18 +1,8 @@
 import type { PublicClient, WalletClient } from "viem";
 import { create1155CreatorClient } from "@zoralabs/protocol-sdk";
 import axios from "axios"
-import FormData from "form-data"
 import fs from "fs"
 
-
-export async function POST(req: Request) {
-    const body = await req.json();
-    console.log(body, 'wat body?')
-
-
-
-    return Response.json({ data: "HI" })
-}
 
 export async function create1155Contract({
     publicClient,
