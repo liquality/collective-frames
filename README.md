@@ -16,7 +16,8 @@ POSTGRES_URL=""
 6. Run drizzle studio to alter and check the tables `npm run db:studio`
 
 ### Development server
-First, run the development server:
+First, copy the file `.env.example` and rename it to `.env` 
+Second, run the development server:
 
 ```bash
 npm run dev
