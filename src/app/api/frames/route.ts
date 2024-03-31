@@ -1,9 +1,9 @@
-
 import { put } from "@vercel/blob";
 import { NextRequest, NextResponse } from "next/server";
 import { v4 as uuid } from "uuid";
 import { slugify } from "@/utils";
 import { db, frame } from "@/db";
+
 export async function POST(request: NextRequest) {
   try {
     const form = await request.formData();
@@ -35,9 +35,16 @@ export async function POST(request: NextRequest) {
         createdBy: 1,
       })
       .returning();
+      // TODO: integrate nft creation or put in a queue
     return NextResponse.json(newFrame[0]);
   } catch (error) {
     console.error(error);
     return NextResponse.json({ error }, { status: 500 });
   }
+}
+
+export async function GET(request: NextRequest) {
+  // TODO: add filter by user if it's auth or have two routes to list global frames created or filter by user
+  const res = await db.select().from(frame);
+  return Response.json(res);
 }

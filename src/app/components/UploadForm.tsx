@@ -155,7 +155,7 @@ export default function UploadForm() {
                 onInput={handleDescriptionChange}
                 value={description}
                 placeholder="Enter description..."
-                className="description p-2 text-xs h-50 border border-purple-500 focus:outline-none focus:ring-0"
+                className="description mb-3 p-2 text-xs h-50 border border-purple-500 focus:outline-none focus:ring-0"
               ></textarea>
               <input
                 type="text"
@@ -181,7 +181,7 @@ export default function UploadForm() {
             ))}
           </select>
         </div>
-        <div className="flex flex-col items-center w-full">
+        <div className="flex items-center justify-center w-full h-full">
           <div className="flex items-center justify-center container-border">
             {imageContent ? (
               <img
