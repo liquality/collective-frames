@@ -6,3 +6,8 @@ export type CollectiveItem = typeof collective.$inferSelect;
 export type CreateFrameResult = NewFrame | {
     imageUrl: string;
 }
+
+export interface UserInfo {
+    signerUuid: string;
+    fid: string;
+  }
