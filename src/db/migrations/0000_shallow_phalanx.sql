@@ -1,6 +1,6 @@
-CREATE SCHEMA "collective_frames_app";
+CREATE SCHEMA "collective_frames";
 --> statement-breakpoint
-CREATE TABLE IF NOT EXISTS "collective_frames_app"."collective" (
+CREATE TABLE IF NOT EXISTS "collective_frames"."collective" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"name" varchar(256) NOT NULL,
 	"c_address" varchar(256) NOT NULL,
@@ -11,9 +11,10 @@ CREATE TABLE IF NOT EXISTS "collective_frames_app"."collective" (
 	CONSTRAINT "collective_name_unique" UNIQUE("name")
 );
 --> statement-breakpoint
-CREATE TABLE IF NOT EXISTS "collective_frames_app"."frame" (
+CREATE TABLE IF NOT EXISTS "collective_frames"."frame" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"name" varchar(256) NOT NULL,
+	"description" varchar(256),
 	"slug" varchar(256) NOT NULL,
 	"image_url" varchar(256) NOT NULL,
 	"token_address" varchar(256) NOT NULL,
@@ -22,7 +23,7 @@ CREATE TABLE IF NOT EXISTS "collective_frames_app"."frame" (
 	"created_at" timestamp DEFAULT now()
 );
 --> statement-breakpoint
-CREATE TABLE IF NOT EXISTS "collective_frames_app"."user" (
+CREATE TABLE IF NOT EXISTS "collective_frames"."user" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"identifier" integer NOT NULL,
 	"wallet_address" varchar(256) NOT NULL,
@@ -32,13 +33,13 @@ CREATE TABLE IF NOT EXISTS "collective_frames_app"."user" (
 );
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "collective_frames_app"."frame" ADD CONSTRAINT "frame_collective_id_collective_id_fk" FOREIGN KEY ("collective_id") REFERENCES "collective_frames_app"."collective"("id") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "collective_frames"."frame" ADD CONSTRAINT "frame_collective_id_collective_id_fk" FOREIGN KEY ("collective_id") REFERENCES "collective_frames"."collective"("id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "collective_frames_app"."frame" ADD CONSTRAINT "frame_created_by_user_id_fk" FOREIGN KEY ("created_by") REFERENCES "collective_frames_app"."user"("id") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "collective_frames"."frame" ADD CONSTRAINT "frame_created_by_user_id_fk" FOREIGN KEY ("created_by") REFERENCES "collective_frames"."user"("id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;

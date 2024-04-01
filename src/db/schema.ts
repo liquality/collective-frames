@@ -6,7 +6,7 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 
-export const appSchema = pgSchema("collective_frames_app")
+export const appSchema = pgSchema("collective_frames")
 
 export const user = appSchema.table("user", {
   id: serial("id").primaryKey(),

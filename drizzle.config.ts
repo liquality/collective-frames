@@ -5,9 +5,9 @@ export default {
   out: "./src/db/migrations",
   driver: "pg",
   dbCredentials: {
-    host: process.env.POSTGRES_HOST || "",
-    user: process.env.POSTGRES_USER,
-    password: process.env.POSTGRES_PASSWORD,
-    database: process.env.POSTGRES_DATABASE || "",
+    host: process.env.NEXT_PUBLIC_POSTGRES_HOST || "",
+    user: process.env.NEXT_PUBLIC_POSTGRES_USER,
+    password: process.env.NEXT_PUBLIC_POSTGRES_PASSWORD,
+    database: process.env.NEXT_PUBLIC_POSTGRES_DATABASE || "",
   },
 } satisfies Config;
