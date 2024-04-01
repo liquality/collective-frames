@@ -10,7 +10,8 @@
     "lint": "next lint",
     "migrate:generate": "drizzle-kit generate:pg",
     "migrate:run": "npx tsx ./src/scripts/migrate.ts",
-    "db:studio": "drizzle-kit studio"
+    "db:studio": "drizzle-kit studio",
+    "db:start": "brew services restart postgresql@16"
   },
   "dependencies": {
     "@neynar/nodejs-sdk": "^1.14.0",

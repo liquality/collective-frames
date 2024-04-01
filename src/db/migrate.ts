@@ -6,7 +6,6 @@ import { VercelPgDatabase } from "drizzle-orm/vercel-postgres";
 import path from "path";
 
 export async function migrate() {
-  console.log('db', process.env)
   if (process.env.NODE_ENV === "production")
     await migrateVercel(db as VercelPgDatabase, {
       migrationsFolder: path.join(__dirname, "./migrations"),
