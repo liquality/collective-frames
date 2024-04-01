@@ -30,6 +30,7 @@ export const frame = appSchema.table("frame", {
   description: varchar("description", { length: 256 }),
   slug: varchar("slug", { length: 256 }).notNull(),
   imageUrl: varchar("image_url", { length: 256 }).notNull(),
+  metaDataUrl: varchar("metadata_url", { length: 256 }).notNull(),
   tokenId: integer("token_id").notNull(),
   tokenAddress: varchar("token_address", { length: 256 }).notNull(),
   collectiveId: integer("collective_id").references(() => collective.id),

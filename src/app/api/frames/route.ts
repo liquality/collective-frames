@@ -30,10 +30,12 @@ export async function POST(request: NextRequest) {
       access: "public",
     });
     //2 upload the nft metadata to vercel
-    const { url } = await put('nft_metadata', JSON.stringify({ name, description }), { access: 'public' },);
+    const { url: metaDataUrl } = await put('nft_metadata', JSON.stringify({ name, description }), { access: 'public' },);
 
 
     console.log(blob, 'here is the blob and coming here')
+
+
 
     const newFrame = await db
       .insert(frame)
@@ -43,8 +45,9 @@ export async function POST(request: NextRequest) {
         imageUrl: blob.url,
         description,
         collectiveId: 1,
+        metaDataUrl,
         tokenAddress: "some tokn address",
-        createdBy: 1 //TODO add get userId from db by selecting walletAddress/fid that is signed in with Neynar
+        createdBy: 3 //TODO add get userId from db by selecting walletAddress/fid that is signed in with Neynar
       })
       .returning();
     // TODO: integrate nft creation or put in a queue
