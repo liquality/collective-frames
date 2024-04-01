@@ -18,7 +18,6 @@ export default function UploadForm() {
   const [imageContent, setImageContent] = useState<string>();
   const [imageFile, setImagefile] = useState<File | null>(null);
   const [name, setName] = useState<string>("");
-  const [tokenAddress, setTokenAddress] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [collective, setCollective] = useState<number>(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -50,10 +49,6 @@ export default function UploadForm() {
     setDescription(e.currentTarget.value || "");
   };
 
-  const handleTokenAddressChange = (e: FormEvent<HTMLInputElement>) => {
-    setTokenAddress(e.currentTarget.value || "");
-  };
-
   const handleSave = async () => {
     if (formIsValid) {
       setIsSaving(true);
@@ -61,9 +56,9 @@ export default function UploadForm() {
         const formData = new FormData();
         formData.set("name", name);
         formData.set("description", description);
-        formData.set("tokenAddress", tokenAddress);
         formData.set("imageFile", imageFile!);
-        const response = await fetch("/api/frames/create", {
+        console.log(formData, "what is form data???", typeof formData);
+        const response = await fetch("/api/frames", {
           method: "POST",
           body: formData,
         });
@@ -112,19 +107,11 @@ export default function UploadForm() {
   }, [imageFile]);
 
   const formIsValid = useMemo(() => {
-    if (
-      imageFile &&
-      collective &&
-      collective > 0 &&
-      name &&
-      name.length > 4 &&
-      tokenAddress &&
-      tokenAddress.length > 4
-    ) {
+    if (imageFile && collective && collective > 0 && name) {
       return true;
     }
     return false;
-  }, [imageFile, collective, name, tokenAddress]);
+  }, [imageFile, collective, name]);
 
   return (
     <div className="flex flex-col min-h-screen p-24">
@@ -157,13 +144,6 @@ export default function UploadForm() {
                 placeholder="Enter description..."
                 className="description mb-3 p-2 text-xs h-50 border border-purple-500 focus:outline-none focus:ring-0"
               ></textarea>
-              <input
-                type="text"
-                onInput={handleTokenAddressChange}
-                value={tokenAddress}
-                className="p-2 mb-3 text-xs h-50 border border-purple-500 focus:outline-none focus:ring-0"
-                placeholder="Enter the token address"
-              />
             </div>
           </div>
           <select

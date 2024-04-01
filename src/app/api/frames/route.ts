@@ -6,38 +6,54 @@ import { db, frame } from "@/db";
 
 export async function POST(request: NextRequest) {
   try {
+    console.log(request.body, 'what is body request??')
     const form = await request.formData();
+
+    console.log('Form data:', form)
 
     const data = {
       name: (form.get("name") as string) || "",
       description: (form.get("description") as string) || "",
-      tokenAddress: (form.get("tokenAddress") as string) || "",
+      // tokenAddress: (form.get("tokenAddress") as string) || "",
       imageFile: form.get("imageFile"),
     };
 
+    const { name, description, } = data;
+
+
+
+    console.log(data.imageFile, 'data img file?')
     const slug = slugify(data.name);
     const fileName = uuid();
-    //1 create a blod
+    //1 create a vercel blob
     const blob = await put(fileName, data.imageFile!, {
       access: "public",
     });
+    //2 upload the nft metadata to vercel
+    const { url: metaDataUrl } = await put('nft_metadata', JSON.stringify({ name, description }), { access: 'public' },);
 
-    const { name, description, tokenAddress } = data;
+
+    console.log(blob, 'here is the blob and coming here')
+
+
+
     const newFrame = await db
       .insert(frame)
       .values({
         name,
         slug,
         imageUrl: blob.url,
-        tokenAddress,
         description,
         collectiveId: 1,
-        createdBy: 1,
+        metaDataUrl,
+        tokenAddress: "some tokn address",
+        createdBy: 3 //TODO add get userId from db by selecting walletAddress/fid that is signed in with Neynar
       })
       .returning();
-      // TODO: integrate nft creation or put in a queue
+    // TODO: integrate nft creation or put in a queue
     return NextResponse.json(newFrame[0]);
-  } catch (error) {
+  }
+  catch (error) {
     console.error(error);
     return NextResponse.json({ error }, { status: 500 });
   }

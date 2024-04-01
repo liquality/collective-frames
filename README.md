@@ -3,20 +3,24 @@ This is a Collective Frames builder project from Liquality.
 ## Getting Started
 
 ### Database
+
 - Local Database
-1. You should has up and running a local instance of postgresql 
+
+1. You should has up and running a local instance of postgresql
+
 - Mac / Homebrew: [https://wiki.postgresql.org/wiki/Homebrew](https://wiki.postgresql.org/wiki/Homebrew)
-POSTGRES_URL=""
+  POSTGRES_URL=""
 - Linux: [https://w3resource.com/PostgreSQL/install-postgresql-on-linux-and-windows.php](https://w3resource.com/PostgreSQL/install-postgresql-on-linux-and-windows.php)
 
 2. create the local database: `createdb collective_frames`
 3. connect to the database: `psql collective_frames`
-4. create role and password `CREATE ROLE collective_frames_app WITH LOGIN PASSWORD 'my_secure_password';`
+4. create role and password `CREATE ROLE collective_frames WITH LOGIN PASSWORD 'my_secure_password';`
 5. Run migration `npm run migrate:run`;
 6. Run drizzle studio to alter and check the tables `npm run db:studio`
 
 ### Development server
-First, copy the file `.env.example` and rename it to `.env` 
+
+First, copy the file `.env.example` and rename it to `.env`
 Second, run the development server:
 
 ```bash

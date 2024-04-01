@@ -1,18 +1,23 @@
-import type { PublicClient, WalletClient } from "viem";
+import { createPublicClient, createWalletClient, http, type PublicClient, type WalletClient } from "viem";
 import { create1155CreatorClient } from "@zoralabs/protocol-sdk";
 import axios from "axios"
 import fs from "fs"
+import { base, mainnet } from "viem/chains";
+
 
 
 export async function create1155Contract({
-    publicClient,
-    walletClient,
+
     creator,
 }: {
-    publicClient: PublicClient;
-    walletClient: WalletClient;
+
     creator: `0x${string}`
 }) {
+
+
+    // Initialize public client
+    const publicClient = await publicClient()
+
     //TODO: we need to use Pinata here to upload the creators tokenmetadata
     const demoTokenMetadataURI = "ipfs://DUMMY/token.json";
     const demoContractMetadataURI = "ipfs://DUMMY/contract.json";
@@ -33,7 +38,7 @@ export async function create1155Contract({
 }
 
 
-const pinFileToIPFS = async () => {
+/* const pinFileToIPFS = async () => {
     const JWT = process.env.NEXT_PUBLIC_PINATA_API_KEY
 
     const formData = new FormData();
@@ -64,4 +69,29 @@ const pinFileToIPFS = async () => {
     } catch (error) {
         console.log(error);
     }
+}
+ */
+
+
+async function walletClient() {
+    if (process.env.RPC_URL) {
+        return createWalletClient({ transport: http("https://base-mainnet.g.alchemy.com/v2/47hMa2y_Ow1YLx3fAsb_VqRcbwrUd-Tx") });
+
+    } else {
+        throw Error("You need to provide RPC URL")
+    }
+
+}
+
+async function publicClient() {
+    if (process.env.RPC_URL) {
+        return createPublicClient({
+            chain: base,
+            transport: http()
+
+        });
+    } else {
+        throw Error("You need to provide RPC URL")
+    }
+
 }

@@ -11,8 +11,12 @@ export async function migrate() {
     await migrateVercel(db as VercelPgDatabase, {
       migrationsFolder: path.join(__dirname, "./migrations"),
     });
-  else
+  else {
+    console.log('Migrating here!!')
+
     await migrateNode(db, {
       migrationsFolder: path.join(__dirname, "./migrations"),
     });
+  }
+
 }

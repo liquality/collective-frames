@@ -6,7 +6,7 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 
-export const appSchema = pgSchema("collective_frames_app")
+export const appSchema = pgSchema("collective_frames")
 
 export const user = appSchema.table("user", {
   id: serial("id").primaryKey(),
@@ -21,7 +21,6 @@ export const collective = appSchema.table("collective", {
   cAddress: varchar("c_address", { length: 256 }).notNull(),
   cwallet: varchar("c_wallet", { length: 256 }).notNull(),
   cPool: varchar("c_pool", { length: 256 }).notNull(),
-  tokenId: integer("token_id").notNull(),
   createdAt: timestamp("created_at").defaultNow(),
 });
 
@@ -31,6 +30,8 @@ export const frame = appSchema.table("frame", {
   description: varchar("description", { length: 256 }),
   slug: varchar("slug", { length: 256 }).notNull(),
   imageUrl: varchar("image_url", { length: 256 }).notNull(),
+  metaDataUrl: varchar("metadata_url", { length: 256 }).notNull(),
+  tokenId: integer("token_id").notNull(),
   tokenAddress: varchar("token_address", { length: 256 }).notNull(),
   collectiveId: integer("collective_id").references(() => collective.id),
   createdBy: integer("created_by").references(() => user.id),
