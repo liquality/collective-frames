@@ -8,5 +8,5 @@ import { Pool } from "pg";
 export const db: VercelPgDatabase | NodePgDatabase =
   process.env.NODE_ENV === "production"
     ? drizzleVercel(sqlVercel)
-    : drizzleNode(new Pool({ connectionString: process.env.NEXT_PUBLIC_POSTGRES_URL }));
+    : drizzleNode(new Pool({ connectionString: process.env.POSTGRES_URL }));
 
