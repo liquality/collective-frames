@@ -2,12 +2,15 @@ import { createPublicClient, createWalletClient, http, type PublicClient, type W
 import { create1155CreatorClient } from "@zoralabs/protocol-sdk";
 import axios from "axios"
 import { base, mainnet } from "viem/chains";
+import { mnemonicToAccount } from 'viem/accounts'
+
 
 
 
 export async function create1155Contract(creator: `0x${string}`, tokenMetaDataUri: string, name: string) {
+    const walletAccount = mnemonicToAccount(process.env.OPERATOR_MNEMONIC)
 
-    const walletClient = createWalletClient({ transport: http("https://base-mainnet.g.alchemy.com/v2/47hMa2y_Ow1YLx3fAsb_VqRcbwrUd-Tx") });
+    const walletClient = createWalletClient({ account: walletAccount, chain: base, transport: http("https://base-mainnet.g.alchemy.com/v2/47hMa2y_Ow1YLx3fAsb_VqRcbwrUd-Tx") });
     const publicClient = createPublicClient({
         chain: base,
         transport: http("https://base-mainnet.g.alchemy.com/v2/47hMa2y_Ow1YLx3fAsb_VqRcbwrUd-Tx")

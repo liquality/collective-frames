@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
     const { url: metaDataUri } = await put('metadata_uri', JSON.stringify(tokenMetaData), { access: 'public' },);
     console.log(blob, 'here is the blob and coming here')
 
-    const nft = await create1155Contract("0xb81B9B88e764cb6b4E02c5D0F6D6D9051A61E020", metaDataUri, name)
+    const nft = await create1155Contract("0x229ef326FE08C8b2423B786052D7E1a1AdDaD226", metaDataUri, name)
     console.log(nft, 'wats nft after await?')
 
     const newFrame = await db
