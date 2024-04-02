@@ -10,13 +10,13 @@ import React, {
 import Modal from "./CopyModal";
 import "./UploadForm.css";
 import { CollectiveItem } from "@/types";
+import DragNdropFile from "./DragNdropFile";
 
 export default function UploadForm() {
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const [loadingCollectives, setLoadingCollectives] = useState<boolean>(true);
   const [collectives, setCollectives] = useState<CollectiveItem[]>([]);
-  const [imageContent, setImageContent] = useState<string>();
-  const [imageFile, setImagefile] = useState<File | null>(null);
+  const [imageFile, setImagefile] = useState<File>();
   const [name, setName] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [collective, setCollective] = useState<number>(0);
@@ -26,8 +26,12 @@ export default function UploadForm() {
     setIsModalOpen(!isModalOpen);
   };
 
-  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setImagefile(e.target.files?.[0] || null);
+  const handleFileChange = (file?: File) => {
+    setImagefile(file);
+  };
+
+  const handleRemove = () => {
+    setImagefile(undefined);
   };
 
   const handleCollectiveChange = (e: ChangeEvent<HTMLSelectElement>) => {
@@ -92,20 +96,6 @@ export default function UploadForm() {
     loadData();
   }, []);
 
-  useEffect(() => {
-    if (imageFile) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        setImageContent(reader.result as string);
-      };
-      reader.onerror = (e) => {
-        setImageContent("");
-        console.log(e, "Error reading image file");
-      };
-      reader.readAsDataURL(imageFile);
-    }
-  }, [imageFile]);
-
   const formIsValid = useMemo(() => {
     if (imageFile && collective && collective > 0 && name) {
       return true;
@@ -114,68 +104,69 @@ export default function UploadForm() {
   }, [imageFile, collective, name]);
 
   return (
-    <div className="flex flex-col min-h-screen p-24">
-      <div className="flex w-full">
-        <div className="flex flex-col w-full">
-          <div className="flex mb-5 font-mono text-sm">
-            <label className="ml-3 border border-purple-500 rounded-full px-4 py-2 bg-white focus:outline-none focus:ring-0 hover:bg-white hover:border-purple-500 cursor-pointer">
-              Upload your meme
-              <input
-                id="avatarInput"
-                type="file"
-                accept="image/*"
-                onChange={handleImageChange}
-                className="hidden"
-              />
-            </label>
-          </div>
-          <div className="flex flex-row">
-            <div className="ml-3 flex flex-col w-full">
-              <input
-                type="text"
-                onInput={handleNameChange}
-                value={name}
-                className="p-2 mb-3 text-xs h-50 border border-purple-500 focus:outline-none focus:ring-0"
-                placeholder="Enter name..."
-              />
-              <textarea
-                onInput={handleDescriptionChange}
-                value={description}
-                placeholder="Enter description..."
-                className="description mb-3 p-2 text-xs h-50 border border-purple-500 focus:outline-none focus:ring-0"
-              ></textarea>
+    <>
+      <div className="flex w-full mt-8">
+        <div className="flex flex-col flex-1">
+          <div className="flex flex-col">
+            <div className="flex mb-2">Your meme</div>
+            <DragNdropFile onFileSelected={handleFileChange} file={imageFile} />
+            <div className="flex justify-between">
+              <div className="text-gray-400">Max 15MB (JPG, JPEG, PNG)</div>
+              {imageFile && (
+                <div
+                  className="text-purple-500 cursor-pointer"
+                  onClick={handleRemove}
+                >
+                  Remove
+                </div>
+              )}
             </div>
           </div>
-          <select
-            value={collective}
-            onChange={handleCollectiveChange}
-            className="ml-3 w-full mt-12 mb-12 p-2 text-xs border border-purple-500 focus:outline-none focus:ring-0"
-          >
-            <option value="">
-              {loadingCollectives ? "Loading..." : "Select community..."}
-            </option>
-            {collectives.map((collective: CollectiveItem) => (
-              <option key={collective.id} value={collective.id}>
-                {collective.name}
-              </option>
-            ))}
-          </select>
+          <div className="flex flex-col mt-6">
+            <input
+              type="text"
+              onInput={handleNameChange}
+              value={name}
+              className="p-2 h-50 border border-purple-500 focus:outline-none focus:ring-0"
+              placeholder="Name your Meme*"
+            />
+          </div>
+          <div className="flex mt-6">
+            <div className="flex flex-col w-full">
+              <div className="flex mb-2">Who shares your mint profits?</div>
+              <select
+                value={collective}
+                onChange={handleCollectiveChange}
+                className="w-full p-2 border border-purple-500 focus:outline-none focus:ring-0"
+              >
+                <option value="">
+                  {loadingCollectives ? "Loading..." : "Select community..."}
+                </option>
+                {collectives.map((collective: CollectiveItem) => (
+                  <option key={collective.id} value={collective.id}>
+                    {collective.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
         </div>
-        <div className="flex items-center justify-center w-full h-full">
-          <div className="flex items-center justify-center container-border">
-            {imageContent ? (
-              <img
-                src={imageContent}
-                alt="Uploaded meme"
-                className="max-w-md w-full h-full object-cover container-border"
-              />
-            ) : (
-              "Upload image"
-            )}
+        <div className="flex flex-1">
+          <div className="flex flex-col mt-8 ml-12 w-full">
+            <textarea
+              onInput={handleDescriptionChange}
+              value={description}
+              disabled={description.length > 255}
+              placeholder="Enter description..."
+              className="description mb-3 p-2 text-xs h-50 border border-purple-500 focus:outline-none focus:ring-0"
+            ></textarea>
+            <div className="text-gray-400 flex justify-end">
+              <b>{description.length}</b>/255
+            </div>
           </div>
         </div>
       </div>
-      <div className="flex w-full items-center justify-center mt-12">
+      <div className="flex items-center justify-center mt-12">
         <button
           onClick={handleSave}
           style={{ width: 300 }}
@@ -186,6 +177,6 @@ export default function UploadForm() {
         </button>
       </div>
       <Modal isOpen={isModalOpen} onClose={handleModalToggle}></Modal>
-    </div>
+    </>
   );
 }

@@ -63,8 +63,8 @@ const Navbar = () => {
     };
   }, []);
   return (
-    <nav className="flex items-center justify-betweenp">
-      <div className="flex items-center space-x-4 font-mono text-lg lg:flex p-5">
+    <nav className="flex items-center justify-between">
+      <div className="flex items-center space-x-4 font-mono text-lg lg:flex">
         Liquality Nft Meme Generator
       </div>
       <div
