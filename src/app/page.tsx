@@ -55,6 +55,14 @@ export default function Home() {
           </div>
         </div>
       </div>
+      <div className="flex flex-col mt-24 bottom-0">
+        <div className="flex text-sm">Collective SDK by Liquality 2024. </div>
+        <div className="flex mt-2">
+          <a href="#" className="text-sm text-purple-500">
+            Terms of Use
+          </a>
+        </div>
+      </div>
     </div>
   );
 }
