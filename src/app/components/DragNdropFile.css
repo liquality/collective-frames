@@ -8,12 +8,6 @@
   position: relative;
   border-radius: 8px;
   cursor: pointer;
-
-  &.active {
-    border-color: #6dc24b;
-  }
-
-
 }
 
 

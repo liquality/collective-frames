@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 "use client";
 import React, {
   ChangeEvent,
@@ -113,7 +112,7 @@ export default function UploadForm() {
             <div className="flex mb-2">Your meme</div>
             <DragNdropFile onFileSelected={handleFileChange} file={imageFile} />
             <div className="flex justify-between">
-              <div className="text-gray-400">Max 15MB (JPG, JPEG, PNG)</div>
+              <div className="text-gray-400">Max 5MB (JPG, JPEG, PNG)</div>
               {imageFile && (
                 <div
                   className="text-purple-500 cursor-pointer"

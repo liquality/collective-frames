@@ -11,7 +11,15 @@ const DragNdropFile = ({ onFileSelected, file }: DragNdropFileProps) => {
   const [imageContent, setImageContent] = useState<string>();
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-    onFileSelected(e.target.files?.[0]);
+    const _file = e.target.files?.[0]
+    if(_file && _file.size <= (5 * 1024) * 1024) {
+        onFileSelected(_file);
+    } else {
+        if(file) {
+            onFileSelected();
+        }
+        console.error('not allowed file size', file?.size)
+    }
   };
 
   const handleDrop = (event: DragEvent<HTMLLabelElement>) => {
@@ -48,7 +56,9 @@ const DragNdropFile = ({ onFileSelected, file }: DragNdropFileProps) => {
         id="browse"
         onChange={handleFileChange}
         accept=".jpg,.jpeg,.png"
-        multiple
+        multiple={false}
+        max-size="2000" 
+        required
       />
       {imageContent ? (
         <img
