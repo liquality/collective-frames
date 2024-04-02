@@ -1,41 +1,64 @@
 import { createPublicClient, createWalletClient, http, type PublicClient, type WalletClient } from "viem";
 import { create1155CreatorClient } from "@zoralabs/protocol-sdk";
 import axios from "axios"
-import fs from "fs"
 import { base, mainnet } from "viem/chains";
 
 
 
-export async function create1155Contract({
+export async function create1155Contract(creator: `0x${string}`) {
 
-    creator,
-}: {
-
-    creator: `0x${string}`
-}) {
-
-
-    // Initialize public client
-    const publicClient = await publicClient()
-
-    //TODO: we need to use Pinata here to upload the creators tokenmetadata
-    const demoTokenMetadataURI = "ipfs://DUMMY/token.json";
-    const demoContractMetadataURI = "ipfs://DUMMY/contract.json";
-    const creatorClient = create1155CreatorClient({ publicClient });
-    const { request } = await creatorClient.createNew1155Token({
-        contract: {
-            name: "testContract",
-            uri: demoContractMetadataURI,
-        },
-        tokenMetadataURI: demoTokenMetadataURI,
-        account: creator,
-        mintToCreatorCount: 1,
+    const walletClient = createWalletClient({ transport: http("https://base-mainnet.g.alchemy.com/v2/47hMa2y_Ow1YLx3fAsb_VqRcbwrUd-Tx") });
+    const publicClient = createPublicClient({
+        chain: base,
+        transport: http("https://base-mainnet.g.alchemy.com/v2/47hMa2y_Ow1YLx3fAsb_VqRcbwrUd-Tx")
     });
-    const { request: simulateRequest } = await publicClient.simulateContract(request);
-    const hash = await walletClient.writeContract(simulateRequest);
-    const receipt = await publicClient.waitForTransactionReceipt({ hash });
-    return receipt;
+
+    console.log(publicClient, 'wats publicclient?')
+
+    if (publicClient) {
+        //TODO: we need to use Pinata here to upload the creators tokenmetadata
+        const demoTokenMetadataURI = "https://tnadjt2kpodqd17b.public.blob.vercel-storage.com/nft_metadata-HcVvTJITE15SjwJxrf9BX1Hq490aFh";
+        const demoContractMetadataURI = "ipfs://DUMMY/contract.json";
+
+        // @ts-ignore
+        const creatorClient = create1155CreatorClient({ publicClient });
+        console.log(creatorClient, 'wats creatorclient?')
+
+        const { request } = await creatorClient.createNew1155Token({
+            contract: {
+                name: "testContract",
+                uri: demoContractMetadataURI,
+            },
+            tokenMetadataURI: demoTokenMetadataURI,
+            account: creator,
+            mintToCreatorCount: 1,
+        });
+        console.log(console.log(request, 'wats request 1155?')
+        )
+        /*       const { request: simulateRequest } = await publicClient.simulateContract(request);
+              const hash = await walletClient.writeContract(simulateRequest);
+              const receipt = await publicClient.waitForTransactionReceipt({ hash });
+              return receipt; */
+    }
+
 }
+//Contract URI Format
+type CollectionMetadata = {
+    name?: string
+    description?: string
+    image?: string
+    imageURI?: string
+
+}
+
+type TokenUriFormat = {
+    "name": "Letter To My Scammer",
+    "description": "",
+    "image": "ipfs://bafkreih6yobhar5bjobwymzpuc27y3mbkosmz3acy5ouvf22iee3utjpcm"
+}
+
+
+
 
 
 /* const pinFileToIPFS = async () => {
@@ -73,25 +96,3 @@ export async function create1155Contract({
  */
 
 
-async function walletClient() {
-    if (process.env.RPC_URL) {
-        return createWalletClient({ transport: http("https://base-mainnet.g.alchemy.com/v2/47hMa2y_Ow1YLx3fAsb_VqRcbwrUd-Tx") });
-
-    } else {
-        throw Error("You need to provide RPC URL")
-    }
-
-}
-
-async function publicClient() {
-    if (process.env.RPC_URL) {
-        return createPublicClient({
-            chain: base,
-            transport: http()
-
-        });
-    } else {
-        throw Error("You need to provide RPC URL")
-    }
-
-}

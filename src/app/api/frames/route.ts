@@ -1,7 +1,7 @@
 import { put } from "@vercel/blob";
 import { NextRequest, NextResponse } from "next/server";
 import { v4 as uuid } from "uuid";
-import { slugify } from "@/utils";
+import { create1155Contract, slugify } from "@/utils";
 import { db, frame } from "@/db";
 
 export async function POST(request: NextRequest) {
@@ -14,7 +14,6 @@ export async function POST(request: NextRequest) {
     const data = {
       name: (form.get("name") as string) || "",
       description: (form.get("description") as string) || "",
-      // tokenAddress: (form.get("tokenAddress") as string) || "",
       imageFile: form.get("imageFile"),
     };
 
@@ -22,6 +21,7 @@ export async function POST(request: NextRequest) {
 
 
 
+    console.log(data.imageFile)
     console.log(data.imageFile, 'data img file?')
     const slug = slugify(data.name);
     const fileName = uuid();
@@ -30,12 +30,14 @@ export async function POST(request: NextRequest) {
       access: "public",
     });
     //2 upload the nft metadata to vercel
-    const { url: metaDataUrl } = await put('nft_metadata', JSON.stringify({ name, description }), { access: 'public' },);
+    const { url: metaDataUrl } = await put('nft_metadata', JSON.stringify({ name, description, image: blob.url }), { access: 'public' },);
 
 
     console.log(blob, 'here is the blob and coming here')
 
 
+    const nft = await create1155Contract("0xb81B9B88e764cb6b4E02c5D0F6D6D9051A61E020")
+    console.log(nft, 'wats nft after await?')
 
     const newFrame = await db
       .insert(frame)
