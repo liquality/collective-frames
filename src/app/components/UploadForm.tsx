@@ -175,7 +175,7 @@ export default function UploadForm() {
           disabled={!formIsValid}
           className="rounded-full px-4 py-2 bg-purple-500 disabled:opacity-75 text-white focus:outline-none focus:ring-0"
         >
-          {isSaving ? "Saving..." : "Save my meme"}
+          {isSaving ? "Saving..." : "Save my Meme"}
         </button>
       </div>
       {frameData ? (
