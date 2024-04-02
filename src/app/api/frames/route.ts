@@ -43,21 +43,25 @@ export async function POST(request: NextRequest) {
     const nft = await create1155Contract("0x229ef326FE08C8b2423B786052D7E1a1AdDaD226", metaDataUri, name)
     console.log(nft, 'wats nft after await?')
 
-    const newFrame = await db
-      .insert(frame)
-      .values({
-        name,
-        slug,
-        imageUrl: blob.url,
-        description,
-        collectiveId: 1,
-        metaDataUrl: metaDataUri,
-        tokenAddress: "some tokn address",
-        createdBy: 3 //TODO add get userId from db by selecting walletAddress/fid that is signed in with Neynar
-      })
-      .returning();
-    // TODO: integrate nft creation or put in a queue
-    return NextResponse.json(newFrame[0]);
+    if (nft) {
+      const newFrame = await db
+        .insert(frame)
+        .values({
+          name,
+          slug,
+          imageUrl: blob.url,
+          description,
+          collectiveId: 1,
+          metaDataUrl: metaDataUri,
+          tokenId: 1, //always 1 after creating new erc1155 contract
+          tokenAddress: nft.logs[0].address,
+          createdBy: 3 //TODO add get userId from db by selecting walletAddress/fid that is signed in with Neynar
+        })
+        .returning();
+      // TODO: integrate nft creation or put in a queue
+      return NextResponse.json(newFrame[0]);
+    } else throw Error("NFT failed to be created using Zora SDK")
+
   }
   catch (error) {
     console.error(error);
