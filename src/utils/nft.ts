@@ -5,7 +5,7 @@ import { base, mainnet } from "viem/chains";
 
 
 
-export async function create1155Contract(creator: `0x${string}`) {
+export async function create1155Contract(creator: `0x${string}`, tokenMetaDataUri: string, name: string) {
 
     const walletClient = createWalletClient({ transport: http("https://base-mainnet.g.alchemy.com/v2/47hMa2y_Ow1YLx3fAsb_VqRcbwrUd-Tx") });
     const publicClient = createPublicClient({
@@ -17,8 +17,6 @@ export async function create1155Contract(creator: `0x${string}`) {
 
     if (publicClient) {
         //TODO: we need to use Pinata here to upload the creators tokenmetadata
-        const demoTokenMetadataURI = "https://tnadjt2kpodqd17b.public.blob.vercel-storage.com/nft_metadata-HcVvTJITE15SjwJxrf9BX1Hq490aFh";
-        const demoContractMetadataURI = "ipfs://DUMMY/contract.json";
 
         // @ts-ignore
         const creatorClient = create1155CreatorClient({ publicClient });
@@ -26,19 +24,22 @@ export async function create1155Contract(creator: `0x${string}`) {
 
         const { request } = await creatorClient.createNew1155Token({
             contract: {
-                name: "testContract",
-                uri: demoContractMetadataURI,
+                name,
+                uri: tokenMetaDataUri
             },
-            tokenMetadataURI: demoTokenMetadataURI,
+            tokenMetadataURI: tokenMetaDataUri,
             account: creator,
             mintToCreatorCount: 1,
         });
         console.log(console.log(request, 'wats request 1155?')
         )
-        /*       const { request: simulateRequest } = await publicClient.simulateContract(request);
-              const hash = await walletClient.writeContract(simulateRequest);
-              const receipt = await publicClient.waitForTransactionReceipt({ hash });
-              return receipt; */
+        const { request: simulateRequest } = await publicClient.simulateContract(request);
+        console.log(simulateRequest, 'what is simulated req?')
+        const hash = await walletClient.writeContract(simulateRequest);
+        console.log(hash, 'wat is hash?')
+        const receipt = await publicClient.waitForTransactionReceipt({ hash });
+        console.log(receipt, 'this should be nft reciept')
+        return receipt;
     }
 
 }

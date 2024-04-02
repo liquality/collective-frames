@@ -30,13 +30,17 @@ export async function POST(request: NextRequest) {
       access: "public",
     });
     //2 upload the nft metadata to vercel
-    const { url: metaDataUrl } = await put('nft_metadata', JSON.stringify({ name, description, image: blob.url }), { access: 'public' },);
+    const tokenMetaData = {
+      name,
+      description,
+      image: blob.url,
+      imageURI: blob.url
 
-
+    }
+    const { url: metaDataUri } = await put('metadata_uri', JSON.stringify(tokenMetaData), { access: 'public' },);
     console.log(blob, 'here is the blob and coming here')
 
-
-    const nft = await create1155Contract("0xb81B9B88e764cb6b4E02c5D0F6D6D9051A61E020")
+    const nft = await create1155Contract("0xb81B9B88e764cb6b4E02c5D0F6D6D9051A61E020", metaDataUri, name)
     console.log(nft, 'wats nft after await?')
 
     const newFrame = await db
@@ -47,7 +51,7 @@ export async function POST(request: NextRequest) {
         imageUrl: blob.url,
         description,
         collectiveId: 1,
-        metaDataUrl,
+        metaDataUrl: metaDataUri,
         tokenAddress: "some tokn address",
         createdBy: 3 //TODO add get userId from db by selecting walletAddress/fid that is signed in with Neynar
       })
