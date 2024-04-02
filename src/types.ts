@@ -11,4 +11,23 @@ export type CreateFrameResult = NewFrame | {
 export interface UserInfo {
     signerUuid: string;
     fid: string;
-  }
+}
+
+export type Frame = {
+    id: number;
+    name: string;
+    description: string;
+    slug: string;
+    imageUrl: string;
+    metaDataUrl: string;
+    tokenId: number;
+    tokenAddress: string;
+    collectiveId: number;
+    createdBy: number;
+    createdAt: string;
+};
+
+export type FrameWithZoraUrl = {
+    frame: Frame;
+    zoraUrl: string;
+};
