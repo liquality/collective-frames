@@ -1,0 +1,1 @@
+ALTER TABLE "collective_frames"."collective" ADD COLUMN "expiresAt" timestamp;

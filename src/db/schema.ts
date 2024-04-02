@@ -22,6 +22,7 @@ export const collective = appSchema.table("collective", {
   cwallet: varchar("c_wallet", { length: 256 }).notNull(),
   cPool: varchar("c_pool", { length: 256 }).notNull(),
   createdAt: timestamp("created_at").defaultNow(),
+  expiresAt: timestamp("expiresAt")
 });
 
 export const frame = appSchema.table("frame", {
