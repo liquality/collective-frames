@@ -1,97 +1,91 @@
 import { createPublicClient, createWalletClient, http, type PublicClient, type WalletClient } from "viem";
 import { create1155CreatorClient } from "@zoralabs/protocol-sdk";
-import axios from "axios"
-import fs from "fs"
-import { base, mainnet } from "viem/chains";
+import { base } from "viem/chains";
+import { mnemonicToAccount } from 'viem/accounts'
+
+import axios from "axios";
 
 
+export async function create1155Contract(creator: `0x${string}`, tokenMetaDataUri: string, name: string) {
+    const walletAccount = mnemonicToAccount(process.env.OPERATOR_MNEMONIC)
 
-export async function create1155Contract({
-
-    creator,
-}: {
-
-    creator: `0x${string}`
-}) {
-
-
-    // Initialize public client
-    const publicClient = await publicClient()
-
-    //TODO: we need to use Pinata here to upload the creators tokenmetadata
-    const demoTokenMetadataURI = "ipfs://DUMMY/token.json";
-    const demoContractMetadataURI = "ipfs://DUMMY/contract.json";
-    const creatorClient = create1155CreatorClient({ publicClient });
-    const { request } = await creatorClient.createNew1155Token({
-        contract: {
-            name: "testContract",
-            uri: demoContractMetadataURI,
-        },
-        tokenMetadataURI: demoTokenMetadataURI,
-        account: creator,
-        mintToCreatorCount: 1,
+    console.log(walletAccount, 'walletaccount????')
+    const walletClient = createWalletClient({
+        account: walletAccount,
+        chain: base,
+        transport: http("https://base-mainnet.g.alchemy.com/v2/47hMa2y_Ow1YLx3fAsb_VqRcbwrUd-Tx")
     });
-    const { request: simulateRequest } = await publicClient.simulateContract(request);
-    const hash = await walletClient.writeContract(simulateRequest);
-    const receipt = await publicClient.waitForTransactionReceipt({ hash });
-    return receipt;
+    const publicClient = createPublicClient({
+        chain: base,
+        transport: http("https://base-mainnet.g.alchemy.com/v2/47hMa2y_Ow1YLx3fAsb_VqRcbwrUd-Tx")
+    });
+
+
+    if (publicClient) {
+        // @ts-ignore
+        const creatorClient = create1155CreatorClient({ publicClient });
+
+        //TODO: set the creator to the address that is connected with Farcaster instead of Liq OPERATOR
+        //Liq operator should only pay for gas
+        const { request } = await creatorClient.createNew1155Token({
+            contract: {
+                name,
+                uri: tokenMetaDataUri
+            },
+            tokenMetadataURI: tokenMetaDataUri,
+            account: creator,
+            mintToCreatorCount: 1,
+        });
+
+        const { request: simulateRequest } = await publicClient.simulateContract(request);
+        const { abi, address, functionName, args } = simulateRequest
+        const hash = await walletClient.writeContract({
+            account: walletAccount,
+            abi,
+            address,
+            functionName,
+            args
+        });
+        console.log(hash, 'wat is hash?')
+        const receipt = await publicClient.waitForTransactionReceipt({ hash });
+        console.log(receipt, 'this should be nft reciept')
+        return receipt;
+    }
+
 }
 
 
-/* const pinFileToIPFS = async () => {
-    const JWT = process.env.NEXT_PUBLIC_PINATA_API_KEY
+
+
+export async function pinFileToIPFS(file: any, name: string, description: string) {
+    const JWT = process.env.PINATA_API_KEY
 
     const formData = new FormData();
-    const src = "path/to/file.png";
-
-    const file = fs.createReadStream(src)
-    formData.append('file', file)
-
-    const pinataMetadata = JSON.stringify({
-        name: 'File name',
-    });
-    formData.append('pinataMetadata', pinataMetadata);
-
+    const pinataMetadata = JSON.stringify({ name, description });
     const pinataOptions = JSON.stringify({
         cidVersion: 0,
     })
+    formData.append('file', file)
+    formData.append('pinataMetadata', pinataMetadata);
     formData.append('pinataOptions', pinataOptions);
+
 
     try {
         const res = await axios.post("https://api.pinata.cloud/pinning/pinFileToIPFS", formData, {
-            maxBodyLength: 500,
+            maxContentLength: Infinity,
+            maxBodyLength: Infinity,
             headers: {
+                // @ts-ignore
                 'Content-Type': `multipart/form-data; boundary=${formData._boundary}`,
                 'Authorization': `Bearer ${JWT}`
             }
         });
-        console.log(res.data);
+        console.log(res.data, 'RESULT FROM PINATA API CALL');
+        const ipfsImageUrl = `ipfs://${res.data.IpfsHash}`
+        return { ipfsImageUrl, ipfsGatewayUrl: `https://ipfs.io/ipfs/${res.data.IpfsHash}` }
     } catch (error) {
         console.log(error);
     }
 }
- */
 
 
-async function walletClient() {
-    if (process.env.RPC_URL) {
-        return createWalletClient({ transport: http("https://base-mainnet.g.alchemy.com/v2/47hMa2y_Ow1YLx3fAsb_VqRcbwrUd-Tx") });
-
-    } else {
-        throw Error("You need to provide RPC URL")
-    }
-
-}
-
-async function publicClient() {
-    if (process.env.RPC_URL) {
-        return createPublicClient({
-            chain: base,
-            transport: http()
-
-        });
-    } else {
-        throw Error("You need to provide RPC URL")
-    }
-
-}

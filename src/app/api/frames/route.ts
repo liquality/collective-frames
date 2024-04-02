@@ -1,57 +1,57 @@
 import { put } from "@vercel/blob";
 import { NextRequest, NextResponse } from "next/server";
 import { v4 as uuid } from "uuid";
-import { slugify } from "@/utils";
+import { create1155Contract, pinFileToIPFS, slugify } from "@/utils";
 import { db, frame } from "@/db";
 
 export async function POST(request: NextRequest) {
   try {
-    console.log(request.body, 'what is body request??')
     const form = await request.formData();
-
-    console.log('Form data:', form)
-
     const data = {
       name: (form.get("name") as string) || "",
       description: (form.get("description") as string) || "",
-      // tokenAddress: (form.get("tokenAddress") as string) || "",
       imageFile: form.get("imageFile"),
     };
-
     const { name, description, } = data;
-
-
-
-    console.log(data.imageFile, 'data img file?')
     const slug = slugify(data.name);
-    const fileName = uuid();
-    //1 create a vercel blob
-    const blob = await put(fileName, data.imageFile!, {
-      access: "public",
-    });
-    //2 upload the nft metadata to vercel
-    const { url: metaDataUrl } = await put('nft_metadata', JSON.stringify({ name, description }), { access: 'public' },);
 
+    //1 upload the nft metadata to vercel
+    const ipfs = await pinFileToIPFS(data.imageFile, name, description)
 
-    console.log(blob, 'here is the blob and coming here')
-
-
-
-    const newFrame = await db
-      .insert(frame)
-      .values({
+    if (ipfs) {
+      const tokenMetaData = {
         name,
-        slug,
-        imageUrl: blob.url,
         description,
-        collectiveId: 1,
-        metaDataUrl,
-        tokenAddress: "some tokn address",
-        createdBy: 3 //TODO add get userId from db by selecting walletAddress/fid that is signed in with Neynar
-      })
-      .returning();
-    // TODO: integrate nft creation or put in a queue
-    return NextResponse.json(newFrame[0]);
+        image: ipfs.ipfsImageUrl,
+        imageURI: ipfs.ipfsImageUrl
+      }
+      //2 upload the JSON metadatauri to vercel blob
+      const { url: metaDataUri } = await put('metadata_uri', JSON.stringify(tokenMetaData), { access: 'public' },);
+      //3) create the erc1155 using Liq Operator account as sponsor + Zora SDK
+      const nft = await create1155Contract(process.env.OPERATOR_ADDRESS, metaDataUri, name)
+
+      if (nft) {
+        //4) add new created nft mint frame to db so we can track
+        const newFrame = await db
+          .insert(frame)
+          .values({
+            name,
+            slug,
+            imageUrl: ipfs.ipfsGatewayUrl,
+            description,
+            collectiveId: 1,
+            metaDataUrl: metaDataUri,
+            tokenId: 1, //always 1 after creating new erc1155 contract with zora
+            tokenAddress: nft.logs[0].address,
+            createdBy: 3 //TODO add get userId from db by selecting walletAddress/fid that is signed in with Neynar
+          })
+          .returning();
+        return NextResponse.json({ frame: newFrame[0], zoraUrl: `https://zora.co/collect/base:${nft.logs[0].address}/1` });
+      } else throw Error("NFT failed to be created using Zora SDK")
+    }
+
+
+
   }
   catch (error) {
     console.error(error);

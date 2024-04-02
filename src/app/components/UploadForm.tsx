@@ -7,9 +7,9 @@ import React, {
   useMemo,
   useState,
 } from "react";
-import Modal from "./CopyModal";
+import CopyFrameModal from "./CopyModal";
 import "./UploadForm.css";
-import { CollectiveItem } from "@/types";
+import { CollectiveItem, FrameWithZoraUrl } from "@/types";
 import DragNdropFile from "./DragNdropFile";
 
 export default function UploadForm() {
@@ -21,6 +21,7 @@ export default function UploadForm() {
   const [description, setDescription] = useState<string>("");
   const [collective, setCollective] = useState<number>(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [frameData, setFrameData] = useState<FrameWithZoraUrl | null>(null);
 
   const handleModalToggle = () => {
     setIsModalOpen(!isModalOpen);
@@ -67,13 +68,14 @@ export default function UploadForm() {
           body: formData,
         });
 
-        // Handle response if necessary
         const data = await response.json();
-        console.log({ data });
+        console.log("Frame data from POST req:", data);
+        setFrameData(data);
       } catch (error) {
         console.error({ error });
       } finally {
         setIsSaving(false);
+        setIsModalOpen(true);
       }
     } else {
       console.log("form invalid");
@@ -176,7 +178,13 @@ export default function UploadForm() {
           {isSaving ? "Saving..." : "Save my Meme"}
         </button>
       </div>
-      <Modal isOpen={isModalOpen} onClose={handleModalToggle}></Modal>
+      {frameData ? (
+        <CopyFrameModal
+          isOpen={isModalOpen}
+          frameData={frameData}
+          onClose={handleModalToggle}
+        />
+      ) : null}
     </>
   );
 }
