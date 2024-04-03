@@ -11,9 +11,12 @@ import "./CreateFrame.css";
 import { CollectiveItem, FrameWithZoraUrl } from "@/types";
 import DragNdropFile from "./DragNdropFile";
 import { Auth } from "@/utils/cookie-auth";
+import CopyFrameModal from "./CopyModal";
 
 export default function CreateFrame() {
   const [isSaving, setIsSaving] = useState<boolean>(false);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+
   const [loadingCollectives, setLoadingCollectives] = useState<boolean>(true);
   const [collectives, setCollectives] = useState<CollectiveItem[]>([]);
   const [imageFile, setImagefile] = useState<File>();
@@ -154,14 +157,13 @@ export default function CreateFrame() {
             />
           </div>
           <div className="flex mt-12 justify-center">
-            <a
-              target="_blank"
-              href="https://warpcast.com"
+            <button
+              onClick={() => setIsModalOpen(!isModalOpen)}
               style={{ width: 300 }}
               className="rounded-full text-center px-4 py-2 bg-purple-500 text-white focus:outline-none focus:ring-0"
             >
               Share on Warpcast
-            </a>
+            </button>
           </div>
           <div className="flex mt-4 justify-center">
             <a
@@ -263,6 +265,13 @@ export default function CreateFrame() {
           </div>
         </>
       )}
+      {frameData ? (
+        <CopyFrameModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          frameData={frameData}
+        />
+      ) : null}
     </div>
   );
 }
