@@ -56,7 +56,7 @@ export async function POST(request: NextRequest) {
             metaDataUrl: metaDataUri,
             tokenId: 1, //always 1 after creating new erc1155 contract with zora
             tokenAddress: nft.logs[0].address,
-            createdBy: 1, //TODO add get userId from db by selecting walletAddress/fid that is signed in with Neynar
+            createdBy: user?.id, //TODO add get userId from db by selecting walletAddress/fid that is signed in with Neynar
           })
           .returning();
         return NextResponse.json({
