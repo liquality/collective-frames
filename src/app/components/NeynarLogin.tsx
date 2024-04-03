@@ -1,9 +1,7 @@
 "use client";
 import React, { useEffect } from "react";
-import { useApp } from "@/context/AppContext";
 import { Auth } from "@/utils/cookie-auth";
 import axios from "axios";
-import { User } from "@neynar/nodejs-sdk/build/neynar-api/v2";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 
