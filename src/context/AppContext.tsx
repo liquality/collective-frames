@@ -11,8 +11,7 @@ import {
   useCallback,
 } from "react";
 import axios, { AxiosError } from "axios";
-import { removeSearchParams, verifyUser } from "@/utils/helpers";
-import { UserInfo } from "@/types";
+import { verifyUser } from "@/utils/helpers";
 import { toast } from "react-toastify";
 import { ErrorRes } from "@neynar/nodejs-sdk/build/neynar-api/v2";
 import { User } from "@neynar/nodejs-sdk/build/neynar-api/v1";

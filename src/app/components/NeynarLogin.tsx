@@ -2,6 +2,8 @@
 import React, { useEffect } from "react";
 import { useApp } from "@/context/AppContext";
 import { Auth } from "@/utils/cookie-auth";
+import axios from "axios";
+import { User } from "@neynar/nodejs-sdk/build/neynar-api/v2";
 
 const Login = () => {
   const { setSignerUuid, setFid } = useApp();
@@ -47,9 +49,17 @@ const Login = () => {
   }, []);
 
   useEffect(() => {
-    (window.onSignInSuccess = (data) => {
-      console.log("onSignInSuccess", { data });
-      Auth.setUser(data.fid, data.signer_uuid);
+    (window.onSignInSuccess = async (neynarData) => {
+      console.log("onSignInSuccess", { data: neynarData });
+      Auth.setUser(neynarData.fid, neynarData.signer_uuid);
+
+      //This route gets the user by fid, if it doesnt exist
+      //it creates a new user with that fid
+      const { data } = await axios.post(
+        `/api/user/${Auth.getUser.userFid}`,
+        {}
+      );
+
       return () => {
         delete window.onSignInSuccess; // Clean up the global callback
       };

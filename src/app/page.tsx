@@ -3,7 +3,7 @@ import CreateFrame from "./components/CreateFrame";
 import sdkImage from "@/assets/img/graphic_placeholder.svg";
 import Image from "next/image";
 import { useState } from "react";
-import Login from "./components/Login";
+import Login from "./components/NeynarLogin";
 import { ScreenState, useApp } from "@/context/AppContext";
 
 export default function Home() {
