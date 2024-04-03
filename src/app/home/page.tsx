@@ -1,7 +1,10 @@
 "use client";
 import sdkImage from "@/assets/img/graphic_placeholder.svg";
 import Image from "next/image";
-import Login from "./components/NeynarLogin";
+import { useState } from "react";
+
+import { ScreenState, useApp } from "@/context/AppContext";
+import CreateFrame from "../components/CreateFrame";
 
 export default function Home() {
   return (
@@ -14,22 +17,7 @@ export default function Home() {
         your meme is minted, your chosen pool benefits.
       </p>
 
-      <div className="flex flex-col my-48 w-full">
-        <div className="flex items-center justify-center">
-          <Login />
-        </div>
-        <div className="flex items-center justify-center mt-5">
-          Not on Warpcast yet?
-          <a
-            href="https://warpcast.com/~/signup"
-            className="text-purple-400 mx-2"
-            target="_blank"
-          >
-            Sign up now
-          </a>{" "}
-          and return with your ID
-        </div>
-      </div>
+      <CreateFrame />
 
       <div className="flex items-center justify-center mt-24">
         <a

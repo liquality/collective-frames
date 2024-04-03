@@ -1,14 +1,15 @@
 "use client";
 import React, { useEffect } from "react";
-import { useApp } from "@/context/AppContext";
-import useLocalStorage from "@/hooks/use-local-storage-state";
+import { Auth } from "@/utils/cookie-auth";
+import axios from "axios";
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
 const Login = () => {
-  const { setSignerUuid, setFid } = useApp();
-  const [_, setUser] = useLocalStorage("user");
+  const route = useRouter();
+
   const clientId = process.env.NEXT_PUBLIC_NEYNAR_CLIENT_ID;
-  const loginUrl =
-    process.env.NEXT_PUBLIC_NEYNAR_LOGIN_URL || "https://app.neynar.com/login";
+  const loginUrl = "https://app.neynar.com/login";
 
   if (!clientId) {
     throw new Error("NEXT_PUBLIC_NEYNAR_CLIENT_ID is not defined in .env");
@@ -48,28 +49,38 @@ const Login = () => {
   }, []);
 
   useEffect(() => {
-    window.onSignInSuccess = (data) => {
-      console.log('onSignInSuccess', {data})
-      setUser({
-        signerUuid: data.signer_uuid,
-        fid: data.fid,
-      });
-      setSignerUuid(data.signer_uuid);
-      setFid(data.fid);
-    };
+    (window.onSignInSuccess = async (neynarData) => {
+      console.log("onSignInSuccess", { data: neynarData });
 
-    return () => {
-      delete window.onSignInSuccess; // Clean up the global callback
-    };
-  }, []);
+      //This route gets the user by fid, if it doesnt exist
+      //it creates a new user with that fid
+      try {
+        const { data } = await axios.post(`/api/user/`, neynarData);
+        console.log(data, "wat is data");
+        if (data) {
+          Auth.setUser(neynarData.fid, neynarData.signer_uuid);
+          route.push("/home");
+        } else {
+          throw Error("Could not get or create user in server");
+        }
+      } catch (error) {
+        toast("Something went wrong. Contact support");
+      }
+
+      return () => {
+        delete window.onSignInSuccess; // Clean up the global callback
+      };
+    }),
+      [];
+  });
   return (
     <div
-        className="neynar_signin"
-        data-client_id={clientId}
-        data-neynar_login_url={loginUrl}
-        data-success-callback="onSignInSuccess"
-        data-theme="dark"
-      ></div>
+      className="neynar_signin"
+      data-client_id={clientId}
+      data-neynar_login_url={loginUrl}
+      data-success-callback="onSignInSuccess"
+      data-theme="dark"
+    ></div>
   );
 };
 
