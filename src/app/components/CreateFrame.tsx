@@ -156,7 +156,7 @@ export default function CreateFrame() {
               style={{ width: 300 }}
               className="rounded-full text-center px-4 py-2 bg-purple-500 text-white focus:outline-none focus:ring-0"
             >
-              Sahre on Warpcast
+              Share on Warpcast
             </a>
           </div>
           <div className="flex mt-4 justify-center">

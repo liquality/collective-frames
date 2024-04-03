@@ -30,8 +30,8 @@ interface Props {
 }
 
 interface AppContextInterface {
-  screen: ScreenState;
-  setScreen: SetState<ScreenState>;
+  //screen: ScreenState;
+  //setScreen: SetState<ScreenState>;
   displayName: string | null;
   setDisplayName: SetState<string | null>;
   pfp: string | null;
@@ -56,7 +56,7 @@ export const AppProvider: FC<Props> = ({ children }) => {
     null
   );
 
-  
+  console.log(user, "what is user?");
 
   const lookupUser = useCallback(async () => {
     if (user && user.fid) {
@@ -89,25 +89,25 @@ export const AppProvider: FC<Props> = ({ children }) => {
     lookupUser();
   }, [lookupUser]);
 
+  console.log(user, "wats user?");
   const isUserLoggedIn = useCallback(async () => {
     if (user) {
-      setScreen(ScreenState.Home);
     } else {
       if (signerUuid && fid) {
         const verifiedUser = await verifyUser(signerUuid, fid);
         if (verifiedUser) {
           setUser({ signerUuid, fid });
-          setScreen(ScreenState.Home);
+          //setScreen(ScreenState.Home);
         } else {
           removeUser();
-          setScreen(ScreenState.Signin);
+          //setScreen(ScreenState.Signin);
         }
       } else {
-        setScreen(ScreenState.Signin);
+        //setScreen(ScreenState.Signin);
       }
     }
     // TODO: remove and change for local manual testing
-    setScreen(ScreenState.Home);
+    //setScreen(ScreenState.Home);
     // setScreen(ScreenState.Signin);
   }, [user, signerUuid, fid, setUser, removeUser]);
 
@@ -117,8 +117,8 @@ export const AppProvider: FC<Props> = ({ children }) => {
 
   const value: AppContextInterface | null = useMemo(
     () => ({
-      screen,
-      setScreen,
+      //screen,
+      //setScreen,
       displayName,
       setDisplayName,
       pfp,
@@ -128,7 +128,7 @@ export const AppProvider: FC<Props> = ({ children }) => {
       fid,
       setFid,
     }),
-    [screen, displayName, pfp, signerUuid, fid]
+    [displayName, pfp, signerUuid, fid]
   );
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 };

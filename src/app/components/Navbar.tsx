@@ -12,15 +12,24 @@ const Navbar = () => {
     removeItem();
     window.location.reload();
   };
+
+  console.log(
+    screen,
+    "what is scren?",
+    screen === ScreenState.Signin,
+    screen === "signin"
+  );
   return (
     <nav className="flex items-center justify-between">
       <div className="flex items-center space-x-4 font-mono text-lg lg:flex">
         Liquality Nft Meme Generator
       </div>
-      {screen !== ScreenState.Signin && (
+      {screen === ScreenState.Signin ? (
         <div className="flex items-center">
-          <button onClick={handleSignout}>Sign Out</button>
+          <button onClick={handleSignout}>Sign Out aa</button>
         </div>
+      ) : (
+        <button>sing in with neynar</button>
       )}
     </nav>
   );

@@ -7,8 +7,7 @@ const Login = () => {
   const { setSignerUuid, setFid } = useApp();
   const [_, setUser] = useLocalStorage("user");
   const clientId = process.env.NEXT_PUBLIC_NEYNAR_CLIENT_ID;
-  const loginUrl =
-    process.env.NEXT_PUBLIC_NEYNAR_LOGIN_URL || "https://app.neynar.com/login";
+  const loginUrl = "https://app.neynar.com/login";
 
   if (!clientId) {
     throw new Error("NEXT_PUBLIC_NEYNAR_CLIENT_ID is not defined in .env");
@@ -49,7 +48,7 @@ const Login = () => {
 
   useEffect(() => {
     window.onSignInSuccess = (data) => {
-      console.log('onSignInSuccess', {data})
+      console.log("onSignInSuccess", { data });
       setUser({
         signerUuid: data.signer_uuid,
         fid: data.fid,
@@ -64,12 +63,12 @@ const Login = () => {
   }, []);
   return (
     <div
-        className="neynar_signin"
-        data-client_id={clientId}
-        data-neynar_login_url={loginUrl}
-        data-success-callback="onSignInSuccess"
-        data-theme="dark"
-      ></div>
+      className="neynar_signin"
+      data-client_id={clientId}
+      data-neynar_login_url={loginUrl}
+      data-success-callback="onSignInSuccess"
+      data-theme="dark"
+    ></div>
   );
 };
 
