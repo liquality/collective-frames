@@ -2,8 +2,10 @@
 import React from "react";
 import { UserInfo } from "@/types";
 import { Auth } from "@/utils/cookie-auth";
+import useGetUserById from "@/hooks/useGetUserByFid";
 
 const Navbar = () => {
+  //const { user, loading } = useGetUserById();
   const handleSignout = () => {
     Auth.removeUser();
     window.location.reload();
@@ -16,7 +18,9 @@ const Navbar = () => {
       </div>
       {Auth.getUser.userFid ? (
         <div className="flex items-center">
-          <button onClick={handleSignout}>Sign Out</button>
+          <button onClick={handleSignout}>
+            Sign Out FID: #{Auth.getUser.userFid}
+          </button>
         </div>
       ) : null}
     </nav>
