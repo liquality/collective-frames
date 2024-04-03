@@ -1,8 +1,14 @@
-import UploadForm from "./components/UploadForm";
+"use client";
+import CreateFrame from "./components/CreateFrame";
 import sdkImage from "@/assets/img/graphic_placeholder.svg";
 import Image from "next/image";
+import { useState } from "react";
+import Login from "./components/Login";
+import { ScreenState, useApp } from "@/context/AppContext";
 
 export default function Home() {
+  const { screen } = useApp();
+
   return (
     <div className="w-full items-center font-mono">
       <h2 style={{ fontSize: 30, lineHeight: 1 }}>
@@ -12,7 +18,27 @@ export default function Home() {
         Upload your meme to create a custom a mint frame for sharing. Each time
         your meme is minted, your chosen pool benefits.
       </p>
-      <UploadForm />
+
+      {screen !== ScreenState.Signin ? (
+        <CreateFrame />
+      ) : (
+        <div className="flex flex-col my-48 w-full">
+          <div className="flex items-center justify-center">
+            <Login />
+          </div>
+          <div className="flex items-center justify-center mt-5">
+            Not on Warpcast yet?
+            <a
+              href="https://warpcast.com/~/signup"
+              className="text-purple-400 mx-2"
+              target="_blank"
+            >
+              Sign up now
+            </a>{" "}
+            and return with your ID
+          </div>
+        </div>
+      )}
       <div className="flex items-center justify-center mt-24">
         <a
           href="https://warpcast.com/liquality"
