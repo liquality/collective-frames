@@ -1,36 +1,61 @@
 /* eslint-disable react/jsx-key */
+import { db, frame } from "@/db";
+import { eq } from "drizzle-orm";
 import { createFrames, Button } from "frames.js/next";
-import { NextResponse } from "next/server";
+import Image from "next/image";
 
-const frames = createFrames({ basePath: "/frames"});
-const handleRequest = frames(async (ctx) => {
-    const parts = ctx.url.pathname.split('/')
-    if(parts.length <= 2 || !parts[2]) {
-      throw new Error('Frame id not found');
-    }
-    const frameId = parts[2];
-    console.log({ parts: ctx.url.pathname });
-    
+const frames = createFrames({ basePath: "/frames" });
+export const GET = frames(async (ctx) => {
+  const parts = ctx.url.pathname.split("/");
+  if (parts.length <= 2 || !parts[2]) {
+    throw new Error("Frame id not found");
+  }
+  const slug = parts[2] || "";
+
+  const data = await db
+    .select()
+    .from(frame)
+    .where(eq(frame.slug, slug.toLowerCase()))
+    .limit(1);
+  const _frame = data ? data[0] : null;
+  console.log({ data });
+
   return {
-    image: (
-     <>
-     <p>The Frame Id is {frameId}</p>
-      <span>
-        {ctx.pressedButton
-          ? `I clicked ${ctx.searchParams.value}`
-          : `Click some button`}
-      </span></>
-    ),
+    image: <Image src={_frame?.imageUrl || ""} alt={_frame?.name || ''}/>,
     buttons: [
-      <Button action="post" target={{ pathname: `/${frameId}`, query: { value: "Yes" }}}>
-        Say Yes
-      </Button>,
-      <Button action="post" target={{ pathname: `/${frameId}`, query: { value: "No" }}}>
-        Say No
+      <Button
+        action="post"
+        target={{ pathname: `/${slug}`, query: { value: "MINT" } }}
+      >
+        MINT
       </Button>,
     ],
   };
 });
- 
-export const GET = handleRequest;
-export const POST = handleRequest;
+
+export const POST = frames(async (ctx) => {
+  const parts = ctx.url.pathname.split("/");
+  if (parts.length <= 2 || !parts[2]) {
+    throw new Error("Frame id not found");
+  }
+  const slug = parts[2] || "";
+
+  const data = await db
+    .select()
+    .from(frame)
+    .where(eq(frame.slug, slug.toLowerCase()))
+    .limit(1);
+  const _frame = data ? data[0] : null;
+
+  console.log({ data });
+
+  return {
+    image: (
+      <>
+        <p>You Minted in {slug}</p>
+        <span>Value: ${ctx.searchParams.value}</span>
+      </>
+    ),
+    buttons: [],
+  };
+});

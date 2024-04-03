@@ -106,6 +106,9 @@ export const AppProvider: FC<Props> = ({ children }) => {
         setScreen(ScreenState.Signin);
       }
     }
+    // TODO: remove and change for local manual testing
+    setScreen(ScreenState.Home);
+    // setScreen(ScreenState.Signin);
   }, [user, signerUuid, fid, setUser, removeUser]);
 
   useEffect(() => {
@@ -127,7 +130,6 @@ export const AppProvider: FC<Props> = ({ children }) => {
     }),
     [screen, displayName, pfp, signerUuid, fid]
   );
-
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 };
 

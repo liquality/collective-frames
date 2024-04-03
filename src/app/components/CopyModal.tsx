@@ -10,7 +10,7 @@ interface ModalProps {
 const CopyFrameModal: React.FC<ModalProps> = (props) => {
   const { isOpen, onClose, frameData } = props;
   if (!isOpen) return null;
-  const frameUrl = "http://localhost:3001/meme/";
+  const frameUrl = "http://localhost:3001/frames/";
 
   const handleCopyClick = (text: string) => {
     navigator.clipboard
@@ -36,11 +36,11 @@ const CopyFrameModal: React.FC<ModalProps> = (props) => {
           Use this link for others to promote your meme & mint on Farcaster{" "}
         </h2>
         {/* QUESTION: Should the link refrence the frame.id or frame.slug?  */}
-        <div className="text-center">{frameUrl + frameData.frame.id}</div>
+        <div className="text-center">{frameUrl + frameData?.frame?.slug}</div>
         <div className="flex items-center justify-center mt-12">
           <br></br>
           <button
-            onClick={() => handleCopyClick(frameUrl + frameData.frame.id)}
+            onClick={() => handleCopyClick(frameUrl + frameData?.frame?.slug)}
             style={{ width: 300 }}
             className="rounded-full px-4 py-2 bg-purple-500 text-white focus:outline-none focus:ring-0 mb-3"
           >
