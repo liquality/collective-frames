@@ -19,53 +19,7 @@ export const getMessage = (messagesList: string[]) => {
   return messagesList[Math.floor(Math.random() * messagesList.length)];
 };
 
-export const verifyUser = async (signerUuid: string, fid: string) => {
-  let _isVerifiedUser = false;
-  try {
-    const {
-      data: { isVerifiedUser },
-    } = await axios.post("/api/verify-user", { signerUuid, fid });
-    _isVerifiedUser = isVerifiedUser;
-  } catch (err) {
-    const { message } = (err as AxiosError).response?.data as ErrorRes;
-    toast(message, {
-      type: "error",
-      theme: "dark",
-      autoClose: 3000,
-      position: "bottom-right",
-      pauseOnHover: true,
-    });
-  }
-  return _isVerifiedUser;
-};
 
 export const removeSearchParams = () => {
   window.history.replaceState({}, document.title, window.location.pathname);
 };
-
-export async function getAddrByFid(fid: number): Promise<string | void> {
-  const options = {
-    method: 'GET',
-    headers: {
-      accept: 'application/json',
-    },
-  }
-  try {
-    // Searchcaster API
-    const resp = await fetch(
-      `https://searchcaster.xyz/api/profiles?fid=${fid}`,
-      options
-    )
-    if (!resp.ok) {
-      throw new Error('Network response was not ok')
-    }
-    const data = await resp.json()
-
-    // Extract connected address if available, otherwise use address from body
-    const connectedAddress = data[0]?.connectedAddress || data[0]?.body.address
-
-    return connectedAddress
-  } catch (error) {
-    return console.error('Error fetching profile data:', error)
-  }
-}

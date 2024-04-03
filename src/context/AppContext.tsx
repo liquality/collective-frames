@@ -8,9 +8,6 @@ import {
   FC,
   ReactNode,
 } from "react";
-import { toast } from "react-toastify";
-import { ErrorRes } from "@neynar/nodejs-sdk/build/neynar-api/v2";
-import { Auth } from "@/utils/cookie-auth";
 
 type SetState<T> = React.Dispatch<React.SetStateAction<T>>;
 

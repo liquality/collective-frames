@@ -42,7 +42,7 @@ export default function CreateFrame() {
   const handleRemove = () => {
     setImagefile(undefined);
   };
-
+  console.log(collective, "selected coll");
   const handleCollectiveChange = (e: ChangeEvent<HTMLSelectElement>) => {
     if (e.target.value) {
       const option = Number(e.target.value);
@@ -70,6 +70,7 @@ export default function CreateFrame() {
         formData.set("name", name);
         formData.set("description", description);
         formData.set("imageFile", imageFile!);
+        formData.set("collectiveId", Auth.getUser.userFid);
         formData.set("createdBy", Auth.getUser.userFid);
 
         console.log(formData, "what is form data???", typeof formData);

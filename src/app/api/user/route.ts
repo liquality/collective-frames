@@ -1,7 +1,5 @@
 import { db, user } from "@/db";
-import { getAddrByFid } from "@/utils/helpers";
-import { findUserByFid } from "@/utils/user";
-import { sql } from "drizzle-orm";
+import { findUserByFid, getAddrByFid } from "@/utils/user";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {

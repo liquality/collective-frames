@@ -14,6 +14,7 @@ export async function POST(request: NextRequest) {
       name: (form.get("name") as string) || "",
       description: (form.get("description") as string) || "",
       imageFile: form.get("imageFile"),
+      collectiveId: (form.get("collectiveId") as string) || "",
       createdBy: user?.id
     };
     console.log({ data })
