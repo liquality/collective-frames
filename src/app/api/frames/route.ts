@@ -3,14 +3,18 @@ import { NextRequest, NextResponse } from "next/server";
 import { v4 as uuid } from "uuid";
 import { create1155Contract, pinFileToIPFS, slugify } from "@/utils";
 import { db, frame } from "@/db";
+import { findUserByFid } from "@/utils/user";
 
 export async function POST(request: NextRequest) {
   try {
+
     const form = await request.formData();
+    const user = await findUserByFid(form.get("createdBy") as unknown as number)
     const data = {
       name: (form.get("name") as string) || "",
       description: (form.get("description") as string) || "",
       imageFile: form.get("imageFile"),
+      createdBy: user?.id
     };
     console.log({ data })
     const { name, description } = data;
