@@ -1,6 +1,5 @@
 import { put } from "@vercel/blob";
 import { NextRequest, NextResponse } from "next/server";
-import { v4 as uuid } from "uuid";
 import { create1155Contract, pinFileToIPFS, slugify } from "@/utils";
 import { db, frame } from "@/db";
 import { findUserByFid } from "@/utils/user";
@@ -18,7 +17,7 @@ export async function POST(request: NextRequest) {
       createdBy: user?.id
     };
     console.log({ data })
-    const { name, description } = data;
+    const { name, description, collectiveId } = data;
     const slug = slugify(data.name);
 
     //1 upload the nft metadata to vercel
@@ -53,11 +52,11 @@ export async function POST(request: NextRequest) {
             slug,
             imageUrl: ipfs.ipfsGatewayUrl,
             description,
-            collectiveId: 1,
+            collectiveId: Number(collectiveId),
             metaDataUrl: metaDataUri,
             tokenId: 1, //always 1 after creating new erc1155 contract with zora
             tokenAddress: nft.logs[0].address,
-            createdBy: user?.id, //TODO add get userId from db by selecting walletAddress/fid that is signed in with Neynar
+            createdBy: user?.id,
           })
           .returning();
         return NextResponse.json({
