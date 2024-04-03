@@ -1,11 +1,11 @@
 "use client";
 import React, { useEffect } from "react";
 import { useApp } from "@/context/AppContext";
-import useLocalStorage from "@/hooks/use-local-storage-state";
+import { Auth } from "@/utils/cookie-auth";
 
 const Login = () => {
   const { setSignerUuid, setFid } = useApp();
-  const [_, setUser] = useLocalStorage("user");
+
   const clientId = process.env.NEXT_PUBLIC_NEYNAR_CLIENT_ID;
   const loginUrl = "https://app.neynar.com/login";
 
@@ -47,20 +47,15 @@ const Login = () => {
   }, []);
 
   useEffect(() => {
-    window.onSignInSuccess = (data) => {
+    (window.onSignInSuccess = (data) => {
       console.log("onSignInSuccess", { data });
-      setUser({
-        signerUuid: data.signer_uuid,
-        fid: data.fid,
-      });
-      setSignerUuid(data.signer_uuid);
-      setFid(data.fid);
-    };
-
-    return () => {
-      delete window.onSignInSuccess; // Clean up the global callback
-    };
-  }, []);
+      Auth.setUser(data.fid, data.signer_uuid);
+      return () => {
+        delete window.onSignInSuccess; // Clean up the global callback
+      };
+    }),
+      [];
+  });
   return (
     <div
       className="neynar_signin"

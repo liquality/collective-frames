@@ -1,5 +1,5 @@
 "use client";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   useContext,
   createContext,
@@ -11,12 +11,12 @@ import {
   useCallback,
 } from "react";
 import axios, { AxiosError } from "axios";
-import useLocalStorage from "@/hooks/use-local-storage-state";
 import { removeSearchParams, verifyUser } from "@/utils/helpers";
 import { UserInfo } from "@/types";
 import { toast } from "react-toastify";
 import { ErrorRes } from "@neynar/nodejs-sdk/build/neynar-api/v2";
 import { User } from "@neynar/nodejs-sdk/build/neynar-api/v1";
+import { Auth } from "@/utils/cookie-auth";
 
 type SetState<T> = React.Dispatch<React.SetStateAction<T>>;
 
@@ -45,24 +45,19 @@ interface AppContextInterface {
 const AppContext = createContext<AppContextInterface | null>(null);
 
 export const AppProvider: FC<Props> = ({ children }) => {
-  const [screen, setScreen] = useState<ScreenState>(ScreenState.Signin);
   const [displayName, setDisplayName] = useState<string | null>(null);
   const [pfp, setPfp] = useState<string | null>(null);
   const [signerUuid, setSignerUuid] = useState<string | null>(null);
   const [fid, setFid] = useState<string | null>(null);
   const searchParams = useSearchParams();
-  const [user, setUser, removeUser] = useLocalStorage<UserInfo | null>(
-    "user",
-    null
-  );
-
-  console.log(user, "what is user?");
+  const route = useRouter();
+  let userSession = Auth.getUser.userFid && Auth.getUser.signerUuid;
 
   const lookupUser = useCallback(async () => {
-    if (user && user.fid) {
+    if (userSession) {
       try {
         const { data } = await axios.get<{ user: User }>(
-          `/api/user/${user.fid}`
+          `/api/user/${Auth.getUser.userFid}`
         );
         setDisplayName(data.user.displayName);
         setPfp(data.user.pfp.url);
@@ -77,7 +72,7 @@ export const AppProvider: FC<Props> = ({ children }) => {
         });
       }
     }
-  }, [user]);
+  }, []);
 
   useEffect(() => {
     // Read from URL query params if we need to support old flow
@@ -89,27 +84,22 @@ export const AppProvider: FC<Props> = ({ children }) => {
     lookupUser();
   }, [lookupUser]);
 
-  console.log(user, "wats user?");
   const isUserLoggedIn = useCallback(async () => {
-    if (user) {
+    if (userSession) {
     } else {
       if (signerUuid && fid) {
         const verifiedUser = await verifyUser(signerUuid, fid);
         if (verifiedUser) {
-          setUser({ signerUuid, fid });
-          //setScreen(ScreenState.Home);
+          Auth.setUser(fid, signerUuid);
+          route.push("/home");
         } else {
-          removeUser();
-          //setScreen(ScreenState.Signin);
+          Auth.removeUser();
         }
       } else {
-        //setScreen(ScreenState.Signin);
+        route.push("/");
       }
     }
-    // TODO: remove and change for local manual testing
-    //setScreen(ScreenState.Home);
-    // setScreen(ScreenState.Signin);
-  }, [user, signerUuid, fid, setUser, removeUser]);
+  }, [signerUuid, fid]);
 
   useEffect(() => {
     isUserLoggedIn();
@@ -117,8 +107,6 @@ export const AppProvider: FC<Props> = ({ children }) => {
 
   const value: AppContextInterface | null = useMemo(
     () => ({
-      //screen,
-      //setScreen,
       displayName,
       setDisplayName,
       pfp,

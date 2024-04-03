@@ -10,7 +10,7 @@ interface ModalProps {
 const CopyFrameModal: React.FC<ModalProps> = (props) => {
   const { isOpen, onClose, frameData } = props;
   if (!isOpen) return null;
-  const frameUrl = "http://localhost:3001/frames/";
+  const frameUrl = "http://localhost:3000/frames/";
 
   const handleCopyClick = (text: string) => {
     navigator.clipboard
