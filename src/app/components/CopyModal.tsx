@@ -15,6 +15,11 @@ const CopyFrameModal: React.FC<ModalProps> = (props) => {
   if (!isOpen) return null;
   const frameUrl = "http://localhost:3000/frames/";
 
+  const handleWriteCastClick = () => {
+    writeCast(castText);
+    onClose();
+  };
+
   const handleCopyClick = (text: string) => {
     navigator.clipboard
       .writeText(text)
@@ -61,7 +66,7 @@ const CopyFrameModal: React.FC<ModalProps> = (props) => {
           <br></br>
           <button
             disabled={!castText.length}
-            onClick={() => writeCast(castText)}
+            onClick={handleWriteCastClick}
             style={{ width: 300 }}
             className="rounded-full px-4 py-2 bg-purple-500 text-white focus:outline-none focus:ring-0 mb-3"
           >
