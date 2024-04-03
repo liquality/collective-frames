@@ -5,7 +5,6 @@ const cookies = new Cookies()
 
 export class Auth {
     static removeUser() {
-        cookies.remove(COOKIE_SIGNER_UUID)
         cookies.remove(COOKIE_USER_FID)
         return true
     }

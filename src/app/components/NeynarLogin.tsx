@@ -4,9 +4,11 @@ import { useApp } from "@/context/AppContext";
 import { Auth } from "@/utils/cookie-auth";
 import axios from "axios";
 import { User } from "@neynar/nodejs-sdk/build/neynar-api/v2";
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
 const Login = () => {
-  const { setSignerUuid, setFid } = useApp();
+  const route = useRouter();
 
   const clientId = process.env.NEXT_PUBLIC_NEYNAR_CLIENT_ID;
   const loginUrl = "https://app.neynar.com/login";
@@ -51,14 +53,21 @@ const Login = () => {
   useEffect(() => {
     (window.onSignInSuccess = async (neynarData) => {
       console.log("onSignInSuccess", { data: neynarData });
-      Auth.setUser(neynarData.fid, neynarData.signer_uuid);
 
       //This route gets the user by fid, if it doesnt exist
       //it creates a new user with that fid
-      const { data } = await axios.post(
-        `/api/user/${Auth.getUser.userFid}`,
-        {}
-      );
+      try {
+        const { data } = await axios.post(`/api/user/`, neynarData);
+        console.log(data, "wat is data");
+        if (data) {
+          Auth.setUser(neynarData.fid, neynarData.signer_uuid);
+          route.push("/home");
+        } else {
+          throw Error("Could not get or create user in server");
+        }
+      } catch (error) {
+        toast("Something went wrong. Contact support");
+      }
 
       return () => {
         delete window.onSignInSuccess; // Clean up the global callback

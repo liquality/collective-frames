@@ -10,6 +10,7 @@ import React, {
 import "./CreateFrame.css";
 import { CollectiveItem, FrameWithZoraUrl } from "@/types";
 import DragNdropFile from "./DragNdropFile";
+import { Auth } from "@/utils/cookie-auth";
 
 export default function CreateFrame() {
   const [isSaving, setIsSaving] = useState<boolean>(false);
@@ -69,6 +70,8 @@ export default function CreateFrame() {
         formData.set("name", name);
         formData.set("description", description);
         formData.set("imageFile", imageFile!);
+        formData.set("createdBy", Auth.getUser.userFid);
+
         console.log(formData, "what is form data???", typeof formData);
         const response = await fetch("/api/frames", {
           method: "POST",

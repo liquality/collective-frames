@@ -14,9 +14,9 @@ const Navbar = () => {
       <div className="flex items-center space-x-4 font-mono text-lg lg:flex">
         Liquality Nft Meme Generator
       </div>
-      {Auth.getUser.signerUuid ? (
+      {Auth.getUser.userFid ? (
         <div className="flex items-center">
-          <button onClick={handleSignout}>Sign Out aa</button>
+          <button onClick={handleSignout}>Sign Out</button>
         </div>
       ) : null}
     </nav>

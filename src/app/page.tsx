@@ -1,14 +1,9 @@
 "use client";
-import CreateFrame from "./components/CreateFrame";
 import sdkImage from "@/assets/img/graphic_placeholder.svg";
 import Image from "next/image";
-import { useState } from "react";
 import Login from "./components/NeynarLogin";
-import { ScreenState, useApp } from "@/context/AppContext";
 
 export default function Home() {
-  console.log(screen, "screen should be");
-
   return (
     <div className="w-full items-center font-mono">
       <h2 style={{ fontSize: 30, lineHeight: 1 }}>
