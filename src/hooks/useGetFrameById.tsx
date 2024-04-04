@@ -14,6 +14,7 @@ export function useGetFrameById() {
       try {
         if (frameId && !frame) {
           setLoading(true);
+
           const _frame = await ApiService.getFrameById(frameId as string);
 
           setFrame(_frame);

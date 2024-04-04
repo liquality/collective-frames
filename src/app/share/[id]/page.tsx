@@ -9,6 +9,8 @@ export default function Share() {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const { frame, loading } = useGetFrameById();
 
+  console.log("GOT HERE");
+
   const frameUrl = "http://localhost:3000/frames/";
 
   const handleCopyClick = (text: string) => {

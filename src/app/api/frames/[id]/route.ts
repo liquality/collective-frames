@@ -3,9 +3,10 @@ import { findFrameById } from "@/utils/frame";
 
 
 export async function GET(request: NextRequest) {
-  const id = request
-  console.log(request, 'what is request?')
+  const parts = request.url.split('/');
+  const id = parts[parts.length - 1];
+  console.log(id, 'WATS ID??')
   // TODO: add filter by user if it's auth or have two routes to list global frames created or filter by user
-  const res = await findFrameById(23);
+  const res = await findFrameById(Number(id));
   return Response.json(res);
 }
