@@ -1,5 +1,6 @@
 import { FrameWithZoraUrl } from "@/types";
-import { findFrameById } from "@/utils/frame";
+import ApiService from "@/utils/api-service";
+
 import { useParams } from "next/navigation";
 import { useState, useEffect } from "react";
 
@@ -7,14 +8,15 @@ export function useGetFrameById() {
   const [frame, setFrame] = useState<FrameWithZoraUrl | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   let { id: frameId } = useParams();
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         if (frameId && !frame) {
           setLoading(true);
-          const _user = await findFrameById(Number(frameId));
+          const _frame = await ApiService.getFrameById(frameId as string);
 
-          setFrame(_user);
+          setFrame(_frame);
           setLoading(false);
         }
       } catch (error) {
