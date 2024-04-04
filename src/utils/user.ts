@@ -1,6 +1,7 @@
 import { db, user } from "@/db";
-
 import { sql } from "drizzle-orm"
+//This file handles all calls related to user data or "user" table in db 
+
 
 export const findUserByFid = async (userFid: number) => {
     console.log(userFid, 'what is user fid in db?')
