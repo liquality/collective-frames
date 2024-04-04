@@ -6,8 +6,8 @@ CREATE TABLE IF NOT EXISTS "collective_frames"."collective" (
 	"c_address" varchar(256) NOT NULL,
 	"c_wallet" varchar(256) NOT NULL,
 	"c_pool" varchar(256) NOT NULL,
-	"token_id" integer NOT NULL,
 	"created_at" timestamp DEFAULT now(),
+	"expiresAt" timestamp,
 	CONSTRAINT "collective_name_unique" UNIQUE("name")
 );
 --> statement-breakpoint
@@ -17,6 +17,8 @@ CREATE TABLE IF NOT EXISTS "collective_frames"."frame" (
 	"description" varchar(256),
 	"slug" varchar(256) NOT NULL,
 	"image_url" varchar(256) NOT NULL,
+	"metadata_url" varchar(256) NOT NULL,
+	"token_id" integer NOT NULL,
 	"token_address" varchar(256) NOT NULL,
 	"collective_id" integer,
 	"created_by" integer,
@@ -25,10 +27,11 @@ CREATE TABLE IF NOT EXISTS "collective_frames"."frame" (
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "collective_frames"."user" (
 	"id" serial PRIMARY KEY NOT NULL,
-	"identifier" integer NOT NULL,
+	"fid" integer NOT NULL,
+	"signer_uuid" varchar(256) NOT NULL,
 	"wallet_address" varchar(256) NOT NULL,
 	"created_at" timestamp DEFAULT now(),
-	CONSTRAINT "user_identifier_unique" UNIQUE("identifier"),
+	CONSTRAINT "user_fid_unique" UNIQUE("fid"),
 	CONSTRAINT "user_wallet_address_unique" UNIQUE("wallet_address")
 );
 --> statement-breakpoint

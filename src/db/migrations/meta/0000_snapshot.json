@@ -1,5 +1,5 @@
 {
-  "id": "2dc45407-62f7-41a6-abe3-22f8c15be882",
+  "id": "cfc57e97-3263-41a9-88e3-8f42d4fdf2ce",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "5",
   "dialect": "pg",
@@ -38,18 +38,18 @@
           "primaryKey": false,
           "notNull": true
         },
-        "token_id": {
-          "name": "token_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
         "created_at": {
           "name": "created_at",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
           "default": "now()"
+        },
+        "expiresAt": {
+          "name": "expiresAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {},
@@ -96,6 +96,18 @@
         "image_url": {
           "name": "image_url",
           "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "metadata_url": {
+          "name": "metadata_url",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "token_id": {
+          "name": "token_id",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true
         },
@@ -169,9 +181,15 @@
           "primaryKey": true,
           "notNull": true
         },
-        "identifier": {
-          "name": "identifier",
+        "fid": {
+          "name": "fid",
           "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "signer_uuid": {
+          "name": "signer_uuid",
+          "type": "varchar(256)",
           "primaryKey": false,
           "notNull": true
         },
@@ -193,11 +211,11 @@
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "user_identifier_unique": {
-          "name": "user_identifier_unique",
+        "user_fid_unique": {
+          "name": "user_fid_unique",
           "nullsNotDistinct": false,
           "columns": [
-            "identifier"
+            "fid"
           ]
         },
         "user_wallet_address_unique": {

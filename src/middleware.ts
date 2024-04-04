@@ -1,13 +1,20 @@
-import { NextRequest, NextResponse } from "next/server";
-import { Auth } from "./utils/cookie-auth";
-export default function middleware(req: NextRequest) {
-    let verify = Auth.getUser.userFid;
-    let url = req.url;
 
-    if (verify && url === 'http://localhost:3000/api/collectives') {
-        return NextResponse.redirect("http://localhost:3000/home");
+import { NextRequest } from "next/server";
+import { COOKIE_USER_FID } from "./utils/cookie-auth";
 
-    }
+export async function middleware(request: NextRequest) {
+    const session = request.cookies.get(COOKIE_USER_FID)?.value;
+  if (session && !request.nextUrl.pathname.startsWith("/dashboard")) {
+    return Response.redirect(new URL("/dashboard", request.url));
+  }
 
-    return null;
+  if (!session && request.nextUrl.pathname !== "/") {
+    return Response.redirect(new URL("/", request.url));
+  }
+
+  return null;
 }
+
+export const config = {
+  matcher: ["/((?!api|_next/static|_next/image|.*\\.png$).*)"],
+};

@@ -1,18 +1,25 @@
 "use client";
 import React from "react";
-import { UserInfo } from "@/types";
 import { Auth } from "@/utils/cookie-auth";
-import useGetUserById from "@/hooks/useGetUserByFid";
+import { useSignIn } from "@farcaster/auth-kit";
+import { useRouter } from "next/navigation";
 
 const Navbar = () => {
-  //const { user, loading } = useGetUserById();
+  const router = useRouter();
+  
+  const {
+    signOut
+  } = useSignIn({
+  });
+  
   const handleSignout = () => {
+    signOut();
     Auth.removeUser();
-    window.location.reload();
+    window.location.href = "";
   };
 
   return (
-    <nav className="flex items-center justify-between">
+    <div className="flex items-center justify-between">
       <div className="flex items-center space-x-4 font-mono text-lg lg:flex">
         Liquality Nft Meme Generator
       </div>
@@ -23,7 +30,7 @@ const Navbar = () => {
           </button>
         </div>
       ) : null}
-    </nav>
+    </div>
   );
 };
 
