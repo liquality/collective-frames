@@ -1,9 +1,11 @@
 "use client";
 import React, { useEffect } from "react";
 import { Auth } from "@/utils/cookie-auth";
+
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+import ApiService from "@/utils/api-service";
 
 const Login = () => {
   const route = useRouter();
@@ -51,11 +53,10 @@ const Login = () => {
   useEffect(() => {
     (window.onSignInSuccess = async (neynarData) => {
       console.log("onSignInSuccess", { data: neynarData });
-
-      //This route gets the user by fid, if it doesnt exist
-      //it creates a new user with that fid
       try {
-        const { data } = await axios.post(`/api/user/`, neynarData);
+        //This route gets the user by fid and returns user: if it doesnt exist
+        //it creates a new user with that fid and returns it
+        const data = await ApiService.authenticateUser(neynarData);
         console.log(data, "wat is data");
         if (data) {
           Auth.setUser(neynarData.fid, neynarData.signer_uuid);
@@ -64,7 +65,7 @@ const Login = () => {
           throw Error("Could not get or create user in server");
         }
       } catch (error) {
-        toast("Something went wrong. Contact support");
+        toast("Something went wrong. Contact support: " + error);
       }
 
       return () => {
