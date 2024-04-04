@@ -55,7 +55,7 @@ export default function Share() {
           <img
             src={frame?.frame.imageUrl || ""}
             alt="Uploaded meme"
-            style={{ width: "40%", height: "40%" }}
+            style={{ width: "60%" }}
             className="object-cover"
           />
         </div>
