@@ -16,7 +16,6 @@ export default function Share() {
       .writeText(text)
       .then(() => {
         toast("Frame URL copied to clipboard, paste it in a cast!");
-        //"Text copied to clipboard: ", text);
       })
       .catch((error) => {
         console.error("Failed to copy text: ", error);
