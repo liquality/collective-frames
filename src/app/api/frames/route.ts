@@ -38,7 +38,6 @@ export async function POST(request: NextRequest) {
       );
       //3) create the erc1155 using Liq Operator account as sponsor + Zora SDK
       const nft = await create1155Contract(
-        process.env.OPERATOR_ADDRESS,
         metaDataUri,
         name
       );

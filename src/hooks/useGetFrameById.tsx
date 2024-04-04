@@ -24,7 +24,7 @@ export function useGetFrameById() {
       }
     };
     fetchData();
-  }, [frame]);
+  }, [frame, frameId]);
 
   return { frame, loading, setFrame };
 }
