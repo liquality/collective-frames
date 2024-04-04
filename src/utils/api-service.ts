@@ -6,6 +6,10 @@ const ApiService = {
         const { data } = await axios.post(`/api/user/`, neynarData);
         return data
     },
+    getFrameById: async function (frameId: string) {
+        const { data } = await axios.get(`/api/frames/${frameId}`);
+        return data
+    },
     /* 
         getUser: async function (userId: number) {
             return null

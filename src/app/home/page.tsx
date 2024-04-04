@@ -3,7 +3,6 @@ import sdkImage from "@/assets/img/graphic_placeholder.svg";
 import Image from "next/image";
 import { useState } from "react";
 
-import { ScreenState, useApp } from "@/context/AppContext";
 import CreateFrame from "../components/CreateFrame";
 
 export default function Home() {

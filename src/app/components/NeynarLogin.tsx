@@ -69,7 +69,7 @@ const Login = () => {
       }
 
       return () => {
-        delete window.onSignInSuccess; // Clean up the global callback
+        delete window.onSignInSuccess;
       };
     }),
       [];
