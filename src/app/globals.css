@@ -1,6 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import url("https://fonts.googleapis.com/css?family=Montserrat:400,600&display=swap");
 
 :root {
   --foreground-rgb: 0, 0, 0;
@@ -17,8 +18,9 @@
 }
 
 body {
-  color: black;
-  background: white;
+  color: white;
+  background: #371a56;
+  font-family: "Montserrat", sans-serif;
 }
 
 @layer utilities {
@@ -35,4 +37,10 @@ body {
 
 .description {
   height: 155px;
+}
+
+.line {
+  height: 1px;
+  background-color: white;
+  width: 80%;
 }

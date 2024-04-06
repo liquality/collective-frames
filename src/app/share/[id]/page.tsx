@@ -24,41 +24,26 @@ export default function Share() {
       });
   };
   return (
-    <div className="flex flex-col mt-8">
-      <div className="flex w-full mt-5 flex-col">
-        <div className="flex justify-center mx-24">
+    <div className="flex flex-col mt-8  bg-violet-50 p-3 rounded-[10px] text-black">
+      <div className="flex w-full  flex-col">
+        <div className="flex flex-1 items-center">
+          <div className="text-slate-900 text-3xl font-bold leading-loose mr-4">
+            2
+          </div>
+          Get link to share
+        </div>
+        <div className="mt-1">
           Share this frame link and encourage others to mint your meme. More
           mints = more hype and profits for you and your community
         </div>
 
-        <div className="flex w-full">
-          <div
-            className={
-              frame
-                ? "flex flex-1 text-gray-400 items-center"
-                : "flex flex-1 items-center"
-            }
-          >
-            <b className="text-lg mr-3">1</b>
-            Choose meme & community
-          </div>
-          <div
-            className={
-              frame
-                ? "flex flex-1 items-center"
-                : "flex flex-1 text-gray-400 items-center"
-            }
-          >
-            <b className="text-lg mr-3">2</b>
-            Get link to share
-          </div>
-        </div>
-        <div className="flex mt-4 justify-center">
+        <div className="flex flex-col mt-4 ">
+          <p>{frame?.frame.name || ""}</p>
           <img
             src={frame?.frame.imageUrl || ""}
             alt="Uploaded meme"
             style={{ width: "60%" }}
-            className="object-cover"
+            className="object-cover mt-3"
           />
         </div>
         <div className="flex mt-12 justify-center">
