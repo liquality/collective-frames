@@ -16,10 +16,28 @@ export default function Home() {
         share to mint & earn
       </h4>
 
-      <p className="mt-3 text-center ">
+      <p className="mt-3 text-center mb-5">
         Upload your meme to create a custom mint frame for sharing. Each time
         your meme is minted, your chosen pool benefits.
       </p>
+
+      <div className="flex items-center flex-col justify-center rounded-2xl bg-white bg-opacity-70 p-4">
+        {" "}
+        <button className="rounded-full px-4 py-2 bg-purple-500 disabled:opacity-75 text-white focus:outline-none focus:ring-0">
+          Log in with Warpcast ID
+        </button>
+        <p className="text-black flex text-xs mt-3">
+          Not on Warpcast yet?{" "}
+          <a
+            href="https://warpcast.com/~/signup"
+            className="text-purple-400 mx-2"
+            target="_blank"
+          >
+            Sign up now
+          </a>{" "}
+          and return with your ID
+        </p>
+      </div>
 
       <div className="flex flex-col my-48 w-full">
         <div className="flex items-center justify-center">
@@ -43,50 +61,10 @@ export default function Home() {
           href="https://warpcast.com/liquality"
           target="_blank"
           style={{ minWidth: 320 }}
-          className="rounded-full text-center border border-purple-500 px-4 py-2 bg-white disabled:opacity-75 text-purple-500 focus:outline-none focus:ring-0"
+          className="rounded-full text-center border border-white-700 px-4 py-2 bg-transparent disabled:opacity-75 text-white-500 focus:outline-none focus:ring-0"
         >
           Follow Liquality on Farcaster
         </a>
-      </div>
-      <div className="flex flex-col items-center justify-center mt-12">
-        <h2 className="uppercase text-2xl">Our Vision</h2>
-        <p className="mt-6">
-          We champion collective action as a cornerstone of Web3 by introducing
-          our tech to the Warpcast community, home to innovators. Your
-          participation earns rewards, and we value your feedback at{" "}
-          <a className="text-purple-500" href="mailto:info@liquality.io">
-            info@liquality.io
-          </a>
-          .
-        </p>
-      </div>
-      <div className="flex items-center mt-12">
-        <div className="flex flex-col mx-12">
-          <Image src={sdkImage} alt="" />
-        </div>
-        <div className="flex flex-1 flex-col">
-          <div className="flex text-xl">
-            Built with the Liquality Collective SDK
-          </div>
-          <div className="flex flex-col">
-            <div>
-              Liquality provides open-source infrastructure legos that make web3
-              easy for users and developers while maintaining the values of
-              Web3.
-            </div>
-            <div className="flex mt-12">
-              [Liquality socials & SDK documentation]
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="flex flex-col mt-24 bottom-0">
-        <div className="flex text-sm">Collective SDK by Liquality 2024. </div>
-        <div className="flex mt-2">
-          <a href="#" className="text-sm text-purple-500">
-            Terms of Use
-          </a>
-        </div>
       </div>
     </div>
   );

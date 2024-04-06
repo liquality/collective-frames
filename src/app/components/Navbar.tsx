@@ -18,7 +18,7 @@ const Navbar = () => {
 
   return (
     <nav className="flex">
-      <div className="flex justify-between font-monteserrat text-lg  w-100 space-x-4">
+      <div className="flex justify-between text-lg  w-100 space-x-4">
         <img src="https://docs.liquality.io/img/logo_dark.svg" width="100%" />
         <button className="">Log in</button>
       </div>
