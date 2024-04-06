@@ -21,7 +21,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <AppProvider>
-          <main className="flex flex-col justify-between px-12 py-2">
+          <main className="flex flex-col px-5 py-2 font-monteserrat">
             <Navbar />
             <div className="flex mt-8">{children}</div>
           </main>

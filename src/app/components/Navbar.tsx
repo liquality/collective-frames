@@ -17,10 +17,12 @@ const Navbar = () => {
   }, [userSession]);
 
   return (
-    <nav className="flex items-center justify-between">
-      <div className="flex items-center space-x-4 font-mono text-lg lg:flex">
-        Liquality Nft Meme Generator
+    <nav className="flex">
+      <div className="flex justify-between font-monteserrat text-lg  w-100 space-x-4">
+        <img src="https://docs.liquality.io/img/logo_dark.svg" width="100%" />
+        <button className="">Log in</button>
       </div>
+
       {userSession ? (
         <div className="flex items-center">
           <button onClick={handleSignout}>

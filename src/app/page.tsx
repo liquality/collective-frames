@@ -5,12 +5,19 @@ import Login from "./components/NeynarLogin";
 
 export default function Home() {
   return (
-    <div className="w-full items-center font-mono">
-      <h2 style={{ fontSize: 30, lineHeight: 1 }}>
-        Meme NFT generator is here - share to mint & earn
+    <div className="w-full items-center">
+      <h2
+        className="text-center font-bold text-7xl leading-normal tracking-tight uppercase mb-3"
+        style={{ fontSize: 30, lineHeight: 1 }}
+      >
+        Meme NFT generator is here
       </h2>
-      <p className="mt-3 font-mono">
-        Upload your meme to create a custom a mint frame for sharing. Each time
+      <h4 className="text-center font-bold text-xl leading-normal tracking-tight">
+        share to mint & earn
+      </h4>
+
+      <p className="mt-3 text-center ">
+        Upload your meme to create a custom mint frame for sharing. Each time
         your meme is minted, your chosen pool benefits.
       </p>
 

@@ -17,8 +17,9 @@
 }
 
 body {
-  color: black;
-  background: white;
+  color: white;
+  background: #371a56;
+  font-family: "Montserrat";
 }
 
 @layer utilities {
