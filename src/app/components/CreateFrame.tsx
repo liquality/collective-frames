@@ -108,35 +108,20 @@ export default function CreateFrame() {
   }, [imageFile, collective, name]);
 
   return (
-    <div className="flex flex-col mt-8">
-      <div className="flex w-full">
-        <div
-          className={
-            frameData
-              ? "flex flex-1 text-gray-400 items-center"
-              : "flex flex-1 items-center"
-          }
-        >
-          <b className="text-lg mr-3">1</b>
-          Choose meme & community
-        </div>
-        <div
-          className={
-            frameData
-              ? "flex flex-1 items-center"
-              : "flex flex-1 text-gray-400 items-center"
-          }
-        >
-          <b className="text-lg mr-3">2</b>
-          Get link to share
-        </div>
+    <div className="flex flex-col mt-8 bg-violet-50 p-3 rounded-[10px] text-black">
+      <div className="flex flex-1 items-center">
+        <b className="text-lg mr-3">1</b>
+        Choose your meme
       </div>
-
+      <div className="mt-1">
+        Share this frame link and encourage others to mint your meme. More mints
+        = more hype and profits for you and your community
+      </div>
       <>
         <div className="flex w-full mt-5">
           <div className="flex flex-col flex-1">
             <div className="flex flex-col">
-              <div className="flex mb-2">Your meme</div>
+              <div className="flex mb-2 text-black">Your meme</div>
               <DragNdropFile
                 onFileSelected={handleFileChange}
                 file={imageFile}
@@ -164,7 +149,9 @@ export default function CreateFrame() {
             </div>
             <div className="flex mt-6">
               <div className="flex flex-col w-full">
-                <div className="flex mb-2">Who shares your mint profits?</div>
+                <div className="flex mb-2 text-black">
+                  Who shares your mint profits?
+                </div>
                 <select
                   value={collective}
                   onChange={handleCollectiveChange}
