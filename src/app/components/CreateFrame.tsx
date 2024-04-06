@@ -110,7 +110,9 @@ export default function CreateFrame() {
   return (
     <div className="flex flex-col mt-8 bg-violet-50 p-3 rounded-[10px] text-black">
       <div className="flex flex-1 items-center">
-        <b className="text-lg mr-3">1</b>
+        <div className="text-slate-900 text-3xl font-bold leading-loose mr-4">
+          1
+        </div>
         Choose your meme
       </div>
       <div className="mt-1">
