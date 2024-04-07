@@ -5,8 +5,8 @@ export default function middleware(req: NextRequest) {
     let verify = Auth.getUser.userFid;
     let url = req.url;
 
-    if (verify && url === 'http://localhost:3000/api/collectives') {
-        return NextResponse.redirect("http://localhost:3000/home");
+    if (verify && url === `${process.env.NEXT_PUBLIC_SERVER_URL}api/collectives`) {
+        return NextResponse.redirect(`${process.env.NEXT_PUBLIC_SERVER_URL}/home`);
 
     }
 
