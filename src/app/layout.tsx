@@ -48,11 +48,11 @@ export default function RootLayout({
               </div>
               <OurVision />
             </div>
-            <Footer />
           </main>
 
           <ToastContainer />
         </AppProvider>
+        <Footer />
       </body>
     </html>
   );

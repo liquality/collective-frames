@@ -17,7 +17,15 @@
   }
 }
 
+main {
+  padding-bottom: 100px; /* protects the content from the overlapping footer. */
+  min-height: 100%;
+}
+
 body {
+  height: 100%;
+  padding: 0;
+  margin: 0;
   color: white;
   background: #371a56;
   font-family: "Montserrat", sans-serif;

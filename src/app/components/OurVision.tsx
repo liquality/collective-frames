@@ -2,6 +2,7 @@
 import Image from "next/image";
 import { isMobile } from "react-device-detect";
 import { useEffect, useState } from "react";
+import Footer from "./Footer";
 
 const OurVision = () => {
   const [isMobileState, setIsMobileState] = useState(false);
@@ -46,7 +47,7 @@ const OurVision = () => {
           </div>
         ) : (
           <div className="p-12 bg-violet-50 bg-opacity-30 rounded-[40px] border-2 border-violet-50 justify-start items-center gap-16 inline-flex">
-            <div className=" relative">
+            <div className="">
               <Image
                 layout="responsive"
                 width={40}

@@ -13,7 +13,7 @@ const CopyFrameModal: React.FC<ModalProps> = (props) => {
   const [castText, setCastText] = useState<string>("");
 
   if (!isOpen) return null;
-  const frameUrl = "http://localhost:3000/frames/";
+  const frameUrl = process.env.NEXT_PUBLIC_SERVER_URL + "/frames";
 
   const handleWriteCastClick = () => {
     writeCast(castText);
