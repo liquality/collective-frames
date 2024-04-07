@@ -24,7 +24,7 @@ export default function Share() {
       });
   };
   return (
-    <div className="flex flex-col mt-8  bg-violet-50 p-3 rounded-[10px] text-black">
+    <div className="flex  flex-col mt-8  bg-violet-50 p-3 rounded-[10px] text-black">
       <div className="flex w-full  flex-col">
         <div className="flex flex-1 items-center">
           <div className="text-slate-900 text-3xl font-bold leading-loose mr-4">
