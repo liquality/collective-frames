@@ -11,7 +11,7 @@ export default function Share() {
 
   console.log("GOT HERE");
 
-  const frameUrl = process.env.NEXT_PUBLIC_SERVER_URL + "frames";
+  const frameUrl = process.env.NEXT_PUBLIC_SERVER_URL + "frames/";
 
   const handleCopyClick = (text: string) => {
     navigator.clipboard

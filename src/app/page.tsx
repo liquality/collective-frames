@@ -8,9 +8,12 @@ export default function Home() {
     console.log("onSuccess", data);
   };
   return (
-    <div className="w-full items-center">
-      <div className="flex items-center flex-col justify-center rounded-2xl bg-white bg-opacity-70 p-4">
-      <Login />
+    <div className="flex flex-col w-full items-center justify-center">
+      <div
+        style={{ width: "80%" }}
+        className=" flex items-center flex-col justify-center rounded-2xl bg-white bg-opacity-70 p-4"
+      >
+        <Login />
         <p className="text-black flex text-xs mt-3">
           Not on Warpcast yet?{" "}
           <a
@@ -18,7 +21,7 @@ export default function Home() {
             className="text-purple-400 mx-2"
             target="_blank"
           >
-            Sign up now
+            <b>Sign up now</b>
           </a>{" "}
           and return with your ID
         </p>
