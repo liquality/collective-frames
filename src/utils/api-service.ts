@@ -1,9 +1,9 @@
-import { User } from "@neynar/nodejs-sdk/build/neynar-api/v2";
 import axios from "axios";
+import { StatusAPIResponse } from '@farcaster/auth-kit';
 
 const ApiService = {
-    authenticateUser: async function (neynarData: User) {
-        const { data } = await axios.post(`/api/user/`, neynarData);
+    authenticateUser: async function (authData: StatusAPIResponse) {
+        const { data } = await axios.post(`/api/user/`, authData);
         return data
     },
     getFrameById: async function (frameId: string) {

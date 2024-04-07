@@ -36,3 +36,14 @@ body {
 .description {
   height: 155px;
 }
+
+.nao3n42[role="dialog"] {
+  position: absolute !important;
+  z-index: 9999;
+
+  bottom: 0;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #ffffff !important;
+  padding: 1.5rem !important;
+}

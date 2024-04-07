@@ -11,7 +11,7 @@ const Navbar = () => {
   };
 
   useEffect(() => {
-    if (Auth.getUser.userFid && !userSession) {
+    if (Auth.fid && !userSession) {
       setUserSession(true);
     }
   }, [userSession]);
@@ -24,7 +24,7 @@ const Navbar = () => {
       {userSession ? (
         <div className="flex items-center">
           <button onClick={handleSignout}>
-            Sign Out FID: #{Auth.getUser.userFid}
+            Sign Out FID: #{Auth.fid}
           </button>
         </div>
       ) : null}

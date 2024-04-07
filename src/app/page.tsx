@@ -1,9 +1,12 @@
 "use client";
 import sdkImage from "@/assets/img/graphic_placeholder.svg";
 import Image from "next/image";
-import Login from "./components/NeynarLogin";
+import Login from "./components/FarcasterLogin";
 
 export default function Home() {
+  const onSuccess = (data: any) => {
+    console.log("onSuccess", data);
+  };
   return (
     <div className="w-full items-center font-mono">
       <h2 style={{ fontSize: 30, lineHeight: 1 }}>

@@ -8,9 +8,9 @@ export function useGetUserById() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        if (Auth.getUser.userFid && !user) {
+        if (Auth.fid && !user) {
           setLoading(true);
-          const _user = await findUserByFid(Auth.getUser.userFid);
+          const _user = await findUserByFid(Auth.fid);
 
           console.log(_user, "heee, wats user?, heej");
           setUser(_user);

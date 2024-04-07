@@ -9,14 +9,13 @@ export class Auth {
         return true
     }
 
-    static setUser(userFid: string, signerUuid: string) {
+    static setUser(userFid?: number) {
         cookies.set(COOKIE_USER_FID, userFid)
-        cookies.set(COOKIE_SIGNER_UUID, signerUuid)
         return true
     }
 
-    static get getUser() {
-        return { userFid: cookies.get(COOKIE_USER_FID), signerUuid: cookies.get(COOKIE_SIGNER_UUID) }
+    static get fid() {
+        return cookies.get(COOKIE_USER_FID)
 
     }
 }
