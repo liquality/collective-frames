@@ -1,6 +1,6 @@
 import { FrameWithZoraUrl } from "@/types";
-import { writeCast } from "@/utils/neynar";
 import React, { FormEvent, useState } from "react";
+import Modal from "./Modal";
 
 interface ModalProps {
   isOpen: boolean;
@@ -13,10 +13,10 @@ const CopyFrameModal: React.FC<ModalProps> = (props) => {
   const [castText, setCastText] = useState<string>("");
 
   if (!isOpen) return null;
-  const frameUrl = "http://localhost:3000/frames/";
+  const frameUrl = process.env.NEXT_PUBLIC_SERVER_URL + "/frames";
 
   const handleWriteCastClick = () => {
-    writeCast(castText);
+    // writeCast(castText);
     onClose();
   };
 
@@ -36,14 +36,8 @@ const CopyFrameModal: React.FC<ModalProps> = (props) => {
   };
 
   return (
-    <div className="fixed top-0 left-0 flex justify-center items-center w-full h-full bg-black bg-opacity-50 z-50">
-      <div className="relative bg-white border border-black rounded-lg p-8">
-        <button
-          className="absolute top-2 right-2 text-black hover:text-gray-500 focus:outline-none"
-          onClick={onClose}
-        >
-          X
-        </button>
+    <Modal isOpen={isOpen} onClose={onClose}>
+      <>
         <h2 className="text-xl font-bold mb-4 text-center">
           Share with your friends on Warpcast
         </h2>
@@ -73,8 +67,8 @@ const CopyFrameModal: React.FC<ModalProps> = (props) => {
             Cast
           </button>
         </div>
-      </div>
-    </div>
+      </>
+    </Modal>
   );
 };
 

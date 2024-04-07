@@ -1,8 +1,8 @@
+/* eslint-disable @next/next/no-img-element */
 /* eslint-disable react/jsx-key */
 import { db, frame } from "@/db";
 import { eq } from "drizzle-orm";
 import { createFrames, Button } from "frames.js/next";
-import Image from "next/image";
 
 const frames = createFrames({ basePath: "/frames" });
 export const GET = frames(async (ctx) => {
@@ -21,7 +21,7 @@ export const GET = frames(async (ctx) => {
   console.log({ data });
 
   return {
-    image: <Image src={_frame?.imageUrl || ""} alt={_frame?.name || ''}/>,
+    image: <img src={_frame?.imageUrl || ""} alt={_frame?.name || ''}/>,
     buttons: [
       <Button
         action="post"

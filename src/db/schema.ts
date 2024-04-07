@@ -11,7 +11,6 @@ export const appSchema = pgSchema("collective_frames")
 export const user = appSchema.table("user", {
   id: serial("id").primaryKey(),
   fid: integer("fid").notNull().unique(),
-  signerUuid: varchar("signer_uuid", { length: 256 }).notNull(),
   walletAddress: varchar("wallet_address", { length: 256 }).notNull().unique(),
   createdAt: timestamp("created_at").defaultNow(),
 });

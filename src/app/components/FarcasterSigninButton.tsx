@@ -1,44 +1,35 @@
 import { useCallback, useEffect, useState } from "react";
 import {
-    useSignIn,
-    StatusAPIResponse,
-    AuthClientError,
-    UseSignInArgs
-  } from "@farcaster/auth-kit";
+  useSignIn,
+  StatusAPIResponse,
+  AuthClientError,
+  UseSignInArgs,
+} from "@farcaster/auth-kit";
 import QRCode from "react-qr-code";
+import Modal from "./Modal";
 
-type SignInButtonProps = UseSignInArgs & {
+type SignInButtonProps = UseSignInArgs & {};
 
-};
+export default function SignInButton({ ...signInArgs }: SignInButtonProps) {
+  const { onSuccess, onStatusResponse, onError } = signInArgs;
 
-export default function SignInButton({
-  ...signInArgs
-}: SignInButtonProps) {
-    const { onSuccess, onStatusResponse, onError } = signInArgs;
-
-    const onSuccessCallback = useCallback(
-        (res: StatusAPIResponse) => {
-          onSuccess?.(res);
-        },
-        [onSuccess]
-      );
-
-  const onStatusCallback = useCallback(
+  const onSuccessCallback = useCallback(
     (res: StatusAPIResponse) => {
-        console.log('onStatusCallback', res);
+      onSuccess?.(res);
     },
-    []
+    [onSuccess]
   );
 
-  const onErrorCallback = useCallback(
-    (error?: AuthClientError) => {
-        console.log('onErrorCallback', error);
-    },
-    []
-  );
+  const onStatusCallback = useCallback((res: StatusAPIResponse) => {
+    console.log("onStatusCallback", res);
+  }, []);
+
+  const onErrorCallback = useCallback((error?: AuthClientError) => {
+    console.log("onErrorCallback", error);
+  }, []);
 
   const onSignOutCallback = useCallback(() => {
-    console.log('onSignOutCallback');
+    console.log("onSignOutCallback");
   }, []);
 
   const signInState = useSignIn({
@@ -93,22 +84,30 @@ export default function SignInButton({
         <p>authenticated: {data?.fid}</p>
       ) : (
         <>
-          <button onClick={onClick}>Sign In</button>
-          {url && showDialog && (
-            <div
-            style={{
-              height: "auto",
-              margin: "0 auto",
-              maxWidth: 120,
-              width: "100%",
-            }}
+          <button
+            onClick={onClick}
+            className="rounded-full px-4 py-2 bg-purple-500 disabled:opacity-75 text-white focus:outline-none focus:ring-0"
           >
-            <QRCode
-              style={{ height: "auto", maxWidth: "100%", width: "100%" }}
-              value={url}
-            />
-          </div>
-          )}
+            Log in with Warpcast ID
+          </button>
+          <Modal
+            isOpen={!!(url && showDialog)}
+            onClose={() => setShowDialog(false)}
+          >
+            <div
+              style={{
+                height: "auto",
+                margin: "0 auto",
+                maxWidth: 120,
+                width: "100%",
+              }}
+            >
+              <QRCode
+                style={{ height: "auto", maxWidth: "100%", width: "100%" }}
+                value={url!}
+              />
+            </div>
+          </Modal>
         </>
       )}
     </div>
