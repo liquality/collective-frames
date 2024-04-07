@@ -1,18 +1,13 @@
-import type { Metadata } from "next";
+"use client";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from "./components/Navbar";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
-import { AppProvider } from "@/context/AppContext";
+import { AuthKitProvider } from "@farcaster/auth-kit";
 import OurVision from "./components/OurVision";
 import Footer from "./components/Footer";
 const inter = Inter({ subsets: ["latin"] });
-
-export const metadata: Metadata = {
-  title: "Collective Frames",
-  description: "Collective Frames app",
-};
 
 export default function RootLayout({
   children,
@@ -22,7 +17,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <AppProvider>
+        <AuthKitProvider>
           <main className="flex flex-col relative">
             <div className="px-5 py-2 ">
               <Navbar />
@@ -51,7 +46,7 @@ export default function RootLayout({
           </main>
 
           <ToastContainer />
-        </AppProvider>
+        </AuthKitProvider>
         <Footer />
       </body>
     </html>

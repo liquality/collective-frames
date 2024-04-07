@@ -61,7 +61,7 @@ export default function CreateFrame() {
         formData.set("name", name);
         formData.set("description", description);
         formData.set("imageFile", imageFile!);
-        formData.set("createdBy", Auth.getUser.userFid);
+        formData.set("createdBy", Auth.fid);
         formData.set("collectiveId", collective.toString());
 
         console.log(formData, "what is form data???", typeof formData);

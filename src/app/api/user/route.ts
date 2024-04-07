@@ -19,7 +19,6 @@ export async function POST(request: NextRequest) {
           .insert(user)
           .values({
             fid: req.fid,
-            signerUuid: req.signer_uuid,
             walletAddress: walletAddress,
           })
           .returning();

@@ -9,7 +9,6 @@ export type CreateFrameResult = NewFrame | {
 }
 
 export interface UserInfo {
-    signerUuid: string;
     fid: string;
 }
 

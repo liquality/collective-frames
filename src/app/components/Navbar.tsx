@@ -11,7 +11,7 @@ const Navbar = () => {
   };
 
   useEffect(() => {
-    if (Auth.getUser.userFid && !userSession) {
+    if (Auth.fid && !userSession) {
       setUserSession(true);
     }
   }, [userSession]);
@@ -20,13 +20,12 @@ const Navbar = () => {
     <nav className="flex">
       <div className="flex justify-between text-lg  w-100 space-x-4">
         <img src="https://docs.liquality.io/img/logo_dark.svg" width="100%" />
-        <button className="">Log in</button>
       </div>
 
       {userSession ? (
         <div className="flex items-center">
           <button onClick={handleSignout}>
-            Sign Out FID: #{Auth.getUser.userFid}
+            Sign Out FID: #{Auth.fid}
           </button>
         </div>
       ) : null}

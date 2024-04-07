@@ -1,16 +1,16 @@
 "use client";
 import sdkImage from "@/assets/img/graphic_placeholder.svg";
 import Image from "next/image";
-import Login from "./components/NeynarLogin";
+import Login from "./components/FarcasterLogin";
 
 export default function Home() {
+  const onSuccess = (data: any) => {
+    console.log("onSuccess", data);
+  };
   return (
     <div className="w-full items-center">
       <div className="flex items-center flex-col justify-center rounded-2xl bg-white bg-opacity-70 p-4">
-        {" "}
-        <button className="rounded-full px-4 py-2 bg-purple-500 disabled:opacity-75 text-white focus:outline-none focus:ring-0">
-          Log in with Warpcast ID
-        </button>
+      <Login />
         <p className="text-black flex text-xs mt-3">
           Not on Warpcast yet?{" "}
           <a
@@ -22,23 +22,6 @@ export default function Home() {
           </a>{" "}
           and return with your ID
         </p>
-      </div>
-
-      <div className="flex flex-col my-48 w-full">
-        <div className="flex items-center justify-center">
-          <Login />
-        </div>
-        <div className="flex items-center justify-center mt-5">
-          Not on Warpcast yet?
-          <a
-            href="https://warpcast.com/~/signup"
-            className="text-purple-400 mx-2"
-            target="_blank"
-          >
-            Sign up now
-          </a>{" "}
-          and return with your ID
-        </div>
       </div>
 
       <div className="flex items-center justify-center mt-24">
