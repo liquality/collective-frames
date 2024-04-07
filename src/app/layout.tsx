@@ -41,7 +41,9 @@ export default function RootLayout({
                 time your meme is minted, your chosen pool benefits.
               </p>
             </div>
-            <div className="flex mt-8">{children}</div>
+            <div className="flex mt-8 justify-center  items-center">
+              {children}
+            </div>
             <OurVision />
           </main>
           <ToastContainer />
