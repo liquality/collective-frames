@@ -8,7 +8,10 @@ const Footer = () => {
     setIsMobileState(isMobile);
   }, [isMobile]);
   return (
-    <div className="fixed bottom-0 w-full px-16 py-20 bg-zinc-700 flex-col justify-start items-center gap-20 inline-flex">
+    <div
+      style={{ bottom: -1100 }}
+      className="absolute w-full px-16 py-20 bg-zinc-700 flex-col justify-start items-center gap-20 inline-flex"
+    >
       <div className="self-stretch justify-start items-center gap-8 inline-flex">
         <img src="https://docs.liquality.io/img/logo_dark.svg" width="20%" />
 
