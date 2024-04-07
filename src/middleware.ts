@@ -6,7 +6,7 @@ export default function middleware(req: NextRequest) {
     let url = req.url;
 
     if (verify && url === `${process.env.NEXT_PUBLIC_SERVER_URL}api/collectives`) {
-        return NextResponse.redirect(`${process.env.NEXT_PUBLIC_SERVER_URL}/home`);
+        return NextResponse.redirect(`${process.env.NEXT_PUBLIC_SERVER_URL}home`);
 
     }
 
