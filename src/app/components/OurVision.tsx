@@ -1,6 +1,5 @@
 "use client";
 import Image from "next/image";
-import "../../../public/sdk_logo.png";
 import { isMobile } from "react-device-detect";
 import { useEffect, useState } from "react";
 
@@ -9,6 +8,7 @@ const OurVision = () => {
   useEffect(() => {
     setIsMobileState(isMobile);
   }, [isMobile]);
+
   return (
     <div className="flex items-center justify-center flex-col mb-3">
       <div className="line mb-5 mt-12">
