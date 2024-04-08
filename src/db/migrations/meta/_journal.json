@@ -5,36 +5,8 @@
     {
       "idx": 0,
       "version": "5",
-      "when": 1711956103748,
-      "tag": "0000_shallow_phalanx",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "5",
-      "when": 1711982023051,
-      "tag": "0001_chemical_proemial_gods",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "5",
-      "when": 1712086269055,
-      "tag": "0002_lying_iron_patriot",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "5",
-      "when": 1712236645869,
-      "tag": "0003_large_reaper",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "5",
-      "when": 1712514325327,
-      "tag": "0004_dark_rhino",
+      "when": 1712585833158,
+      "tag": "0000_lively_beyonder",
       "breakpoints": true
     }
   ]

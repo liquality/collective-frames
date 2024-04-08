@@ -1,12 +1,12 @@
 {
-  "id": "2dc45407-62f7-41a6-abe3-22f8c15be882",
+  "id": "81ec078f-40ce-4239-8d95-a9e5a4197dd1",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "5",
   "dialect": "pg",
   "tables": {
     "collective": {
       "name": "collective",
-      "schema": "collective_frames",
+      "schema": "",
       "columns": {
         "id": {
           "name": "id",
@@ -38,18 +38,18 @@
           "primaryKey": false,
           "notNull": true
         },
-        "token_id": {
-          "name": "token_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
         "created_at": {
           "name": "created_at",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
           "default": "now()"
+        },
+        "expiresAt": {
+          "name": "expiresAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {},
@@ -67,7 +67,7 @@
     },
     "frame": {
       "name": "frame",
-      "schema": "collective_frames",
+      "schema": "",
       "columns": {
         "id": {
           "name": "id",
@@ -96,6 +96,18 @@
         "image_url": {
           "name": "image_url",
           "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "metadata_url": {
+          "name": "metadata_url",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "token_id": {
+          "name": "token_id",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true
         },
@@ -131,7 +143,6 @@
           "name": "frame_collective_id_collective_id_fk",
           "tableFrom": "frame",
           "tableTo": "collective",
-          "schemaTo": "collective_frames",
           "columnsFrom": [
             "collective_id"
           ],
@@ -145,7 +156,6 @@
           "name": "frame_created_by_user_id_fk",
           "tableFrom": "frame",
           "tableTo": "user",
-          "schemaTo": "collective_frames",
           "columnsFrom": [
             "created_by"
           ],
@@ -161,7 +171,7 @@
     },
     "user": {
       "name": "user",
-      "schema": "collective_frames",
+      "schema": "",
       "columns": {
         "id": {
           "name": "id",
@@ -169,8 +179,8 @@
           "primaryKey": true,
           "notNull": true
         },
-        "identifier": {
-          "name": "identifier",
+        "fid": {
+          "name": "fid",
           "type": "integer",
           "primaryKey": false,
           "notNull": true
@@ -193,11 +203,11 @@
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "user_identifier_unique": {
-          "name": "user_identifier_unique",
+        "user_fid_unique": {
+          "name": "user_fid_unique",
           "nullsNotDistinct": false,
           "columns": [
-            "identifier"
+            "fid"
           ]
         },
         "user_wallet_address_unique": {
@@ -211,9 +221,7 @@
     }
   },
   "enums": {},
-  "schemas": {
-    "collective_frames": "collective_frames"
-  },
+  "schemas": {},
   "_meta": {
     "columns": {},
     "schemas": {},

@@ -1,21 +1,20 @@
 import {
   integer,
-  pgSchema,
+  pgTable,
   serial,
   timestamp,
   varchar,
 } from "drizzle-orm/pg-core";
 
-export const appSchema = pgSchema("collective_frames")
 
-export const user = appSchema.table("user", {
+export const user = pgTable("user", {
   id: serial("id").primaryKey(),
   fid: integer("fid").notNull().unique(),
   walletAddress: varchar("wallet_address", { length: 256 }).notNull().unique(),
   createdAt: timestamp("created_at").defaultNow(),
 });
 
-export const collective = appSchema.table("collective", {
+export const collective = pgTable("collective", {
   id: serial("id").primaryKey(),
   name: varchar("name", { length: 256 }).unique().notNull(),
   cAddress: varchar("c_address", { length: 256 }).notNull(),
@@ -25,7 +24,7 @@ export const collective = appSchema.table("collective", {
   expiresAt: timestamp("expiresAt")
 });
 
-export const frame = appSchema.table("frame", {
+export const frame = pgTable("frame", {
   id: serial("id").primaryKey(),
   name: varchar("name", { length: 256 }).notNull(),
   description: varchar("description", { length: 256 }),
