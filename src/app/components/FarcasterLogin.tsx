@@ -19,7 +19,7 @@ const FarcasterLogin = () => {
       console.log(data, "wat is data");
       if (data) {
         Auth.setUser(res.fid);
-        route.push("/dashboard");
+        route.push("/create-frame");
       } else {
         throw Error("Could not get or create user in server");
       }
