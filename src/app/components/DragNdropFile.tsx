@@ -2,6 +2,7 @@
 import React, { ChangeEvent, DragEvent, useEffect, useState } from "react";
 import "./DragNdropFile.css";
 import { MdAdd } from "react-icons/md";
+import Resizer from "react-image-file-resizer";
 
 export interface DragNdropFileProps {
   onFileSelected: (file?: File) => void;
@@ -10,17 +11,41 @@ export interface DragNdropFileProps {
 const DragNdropFile = ({ onFileSelected, file }: DragNdropFileProps) => {
   const [imageContent, setImageContent] = useState<string>();
 
-  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const _file = e.target.files?.[0]
-    if(_file && _file.size <= (5 * 1024) * 1024) {
-        onFileSelected(_file);
-    } else {
-        if(file) {
-            onFileSelected();
+  const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
+    const _file = e.target.files?.[0];
+    console.log(_file, "_file what is??");
+
+    if (_file) {
+      //Resize the image before sending to server
+      const resizedFile = await resizeFile(_file);
+      console.log(resizedFile, "resized file what is??");
+
+      if (resizedFile) {
+        onFileSelected(resizedFile);
+      } else {
+        if (file) {
+          onFileSelected();
         }
-        console.error('not allowed file size', file?.size)
+        console.error("not allowed file size", file?.size);
+      }
     }
   };
+
+  const resizeFile = (file: File) =>
+    new Promise((resolve) => {
+      Resizer.imageFileResizer(
+        file,
+        300,
+        300,
+        "PNG",
+        100,
+        0,
+        (uri) => {
+          resolve(uri);
+        },
+        "base64"
+      );
+    });
 
   const handleDrop = (event: DragEvent<HTMLLabelElement>) => {
     event.preventDefault();
@@ -39,7 +64,7 @@ const DragNdropFile = ({ onFileSelected, file }: DragNdropFileProps) => {
       };
       reader.readAsDataURL(file);
     } else {
-        setImageContent('');
+      setImageContent("");
     }
   }, [file]);
 
@@ -57,7 +82,7 @@ const DragNdropFile = ({ onFileSelected, file }: DragNdropFileProps) => {
         onChange={handleFileChange}
         accept=".jpg,.jpeg,.png"
         multiple={false}
-        max-size="2000" 
+        max-size="2000"
         required
       />
       {imageContent ? (
@@ -68,7 +93,7 @@ const DragNdropFile = ({ onFileSelected, file }: DragNdropFileProps) => {
         />
       ) : (
         <div className="flex flex-col items-center p-10">
-          <MdAdd className="text-3xl text-purple-500"/>
+          <MdAdd className="text-3xl text-purple-500" />
           <div className="text-lg text-gray-500">Upload Picture</div>
         </div>
       )}
