@@ -30,7 +30,7 @@ const OurVision = () => {
         {isMobileState ? (
           <div className="flex flex-col items-center mt-12  border-2 border-white justify-center rounded-2xl bg-white bg-opacity-30 p-4">
             <Image
-              layout="responsive"
+              className="img-responsive"
               width={30}
               height={30}
               src="/sdk_logo.svg"
@@ -49,7 +49,7 @@ const OurVision = () => {
           <div className="p-12 bg-violet-50 bg-opacity-30 rounded-[40px] border-2 border-violet-50 justify-start items-center gap-16 inline-flex">
             <div className="">
               <Image
-                layout="responsive"
+                className="img-responsive"
                 width={40}
                 height={40}
                 src="/sdk_logo.svg"

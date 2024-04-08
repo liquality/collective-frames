@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { Auth } from "@/utils/cookie-auth";
 import { useRouter } from "next/navigation";
 import FarcasterSigninButton from "./FarcasterSigninButton";
-import { StatusAPIResponse } from "@farcaster/auth-kit";
+import { AuthClientError, StatusAPIResponse } from "@farcaster/auth-kit";
 import ApiService from "@/utils/api-service";
 import { toast } from "react-toastify";
 
@@ -19,7 +19,7 @@ const FarcasterLogin = () => {
       console.log(data, "wat is data");
       if (data) {
         Auth.setUser(res.fid);
-        route.push("/home");
+        route.push("/dashboard");
       } else {
         throw Error("Could not get or create user in server");
       }
@@ -28,9 +28,13 @@ const FarcasterLogin = () => {
     }
   };
 
+  const onError = (error?: AuthClientError) => {
+    toast("Something went wrong. Contact support: " + error);
+  };
+
   return (
     <div className="flex justify-center">
-      <FarcasterSigninButton onSuccess={onSignInSuccess} />
+      <FarcasterSigninButton onSuccess={onSignInSuccess} onError={onError}/>
     </div>
   );
 };
