@@ -17,11 +17,18 @@ const DragNdropFile = ({ onFileSelected, file }: DragNdropFileProps) => {
 
     if (_file) {
       //Resize the image before sending to server
-      const resizedFile = await resizeFile(_file);
-      console.log(resizedFile, "resized file what is??");
+      let sendThisFile;
+      const maxSize = 256 * 1024; //max 256kb
+      if (_file.size >= maxSize) {
+        console.log(_file.size >= maxSize, "max size exceeded");
+        sendThisFile = await resizeFile(_file);
+      } else {
+        sendThisFile = _file;
+      }
 
-      if (resizedFile) {
-        onFileSelected(resizedFile);
+      if (sendThisFile) {
+        console.log(sendThisFile, "file sent");
+        onFileSelected(sendThisFile as File);
       } else {
         if (file) {
           onFileSelected();
@@ -31,7 +38,7 @@ const DragNdropFile = ({ onFileSelected, file }: DragNdropFileProps) => {
     }
   };
 
-  const resizeFile = (file: File) =>
+  /*  const resizeFile = (file: File) =>
     new Promise((resolve) => {
       Resizer.imageFileResizer(
         file,
@@ -43,8 +50,43 @@ const DragNdropFile = ({ onFileSelected, file }: DragNdropFileProps) => {
         (uri) => {
           resolve(uri);
         },
-        "base64"
+        "file"
       );
+    }); */
+
+  const resizeFile = (file: File) =>
+    new Promise<File | null>((resolve) => {
+      const maxFileSizeKB = 256;
+      const qualityStep = 5;
+      let quality = 100;
+
+      const resizeWithQuality = () => {
+        Resizer.imageFileResizer(
+          file,
+          430, // maxWidth
+          430, // maxHeight
+          "PNG", // compressFormat
+          quality, // quality
+          0,
+          (uri) => {
+            // check if the resulting file size is within the limit
+            if (uri instanceof Blob && uri.size / 1024 <= maxFileSizeKB) {
+              resolve(uri as File);
+            } else {
+              quality -= qualityStep;
+              if (quality > 0) {
+                resizeWithQuality();
+              } else {
+                resolve(null);
+              }
+            }
+          },
+          "file"
+        );
+      };
+
+      // Start the recursive resizing process
+      resizeWithQuality();
     });
 
   const handleDrop = (event: DragEvent<HTMLLabelElement>) => {
