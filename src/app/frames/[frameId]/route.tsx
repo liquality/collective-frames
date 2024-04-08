@@ -43,7 +43,7 @@ export const POST = frames(async (ctx) => {
   const data = await db
     .select()
     .from(frame)
-    .where(eq(frame.slug, slug.toLowerCase()))
+    .where(eq(frame.slug, slug))
     .limit(1);
   const _frame = data ? data[0] : null;
 

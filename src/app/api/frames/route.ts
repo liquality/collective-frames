@@ -1,8 +1,11 @@
 import { put } from "@vercel/blob";
 import { NextRequest, NextResponse } from "next/server";
-import { create1155Contract, pinFileToIPFS, slugify } from "@/utils";
-import { db, frame } from "@/db";
+import { create1155Contract, pinFileToIPFS } from "@/utils";
+import { db, frame, user } from "@/db";
+import { eq } from "drizzle-orm";
 import { findUserByFid } from "@/utils/user";
+import { v4 as uuidv4 } from 'uuid';
+import { COOKIE_USER_FID } from "@/utils/cookie-auth";
 
 export async function POST(request: NextRequest) {
   try {
@@ -18,7 +21,8 @@ export async function POST(request: NextRequest) {
     };
     console.log({ data })
     const { name, description, collectiveId } = data;
-    const slug = slugify(data.name);
+    // Generate unique id for frame to not use the integer 
+    const slug = uuidv4();
 
     //1 upload the nft metadata to vercel
     const ipfs = await pinFileToIPFS(data.imageFile, name, description);
@@ -76,7 +80,15 @@ export async function POST(request: NextRequest) {
 }
 
 export async function GET(request: NextRequest) {
-  // TODO: add filter by user if it's auth or have two routes to list global frames created or filter by user
-  const res = await db.select().from(frame);
-  return Response.json(res);
+  const fid = request.cookies.get(COOKIE_USER_FID)?.value;
+  if(fid) {
+    const users = await db.select().from(user).where(eq(user.fid, Number(fid))).limit(1);
+    if(users && users.length > 0) {
+
+    const res = await db.select().from(frame).where(eq(frame.createdBy, users[0].id));
+
+    return Response.json(res || []);
+    }
+  }
+  return Response.json({}, { status: 404 })
 }

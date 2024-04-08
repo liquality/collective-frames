@@ -7,7 +7,11 @@ import {
 } from "@farcaster/auth-kit";
 import QRCode from "react-qr-code";
 import Modal from "./Modal";
-
+import {
+  MdArrowForward,
+  MdPhoneIphone,
+} from "react-icons/md";
+import { isMobile } from "react-device-detect";
 type SignInButtonProps = UseSignInArgs & {};
 
 export default function SignInButton({ ...signInArgs }: SignInButtonProps) {
@@ -25,8 +29,9 @@ export default function SignInButton({ ...signInArgs }: SignInButtonProps) {
   }, []);
 
   const onErrorCallback = useCallback((error?: AuthClientError) => {
-    console.log("onErrorCallback", error);
-  }, []);
+    onError?.(error);
+    setShowDialog(false);
+  }, [onError]);
 
   const onSignOutCallback = useCallback(() => {
     console.log("onSignOutCallback");
@@ -65,9 +70,9 @@ export default function SignInButton({ ...signInArgs }: SignInButtonProps) {
     }
     setShowDialog(true);
     signIn();
-    // if (url && isMobile()) {
-    //   window.location.href = url;
-    // }
+    if (url && isMobile) {
+      window.location.href = url;
+    }
   }, [isError, reconnect, signIn, url]);
 
   const authenticated = isSuccess && validSignature;
@@ -94,18 +99,30 @@ export default function SignInButton({ ...signInArgs }: SignInButtonProps) {
             isOpen={!!(url && showDialog)}
             onClose={() => setShowDialog(false)}
           >
-            <div
-              style={{
-                height: "auto",
-                margin: "0 auto",
-                maxWidth: 120,
-                width: "100%",
-              }}
-            >
-              <QRCode
-                style={{ height: "auto", maxWidth: "100%", width: "100%" }}
-                value={url!}
-              />
+            <div className="flex flex-col">
+              <div className="flex text-black text-xl font-semibold">
+                Sign in with Warpcast ID
+              </div>
+              <div className="flex text-gray-400">
+                Scan with your phone&apos;s camera to continue
+              </div>
+            </div>
+            <div className="flex m-4 justify-center">
+              {url && (
+                <QRCode
+                  style={{ height: "auto", maxWidth: "100%", width: "100%" }}
+                  value={url}
+                />
+              )}
+            </div>
+            <div className="flex justify-center mt-8">
+              <div className="flex text-black text-xl font-semibold">
+                <MdPhoneIphone className="text-2xl text-purple-500 mr-3" />
+                <a href={url} className="text-purple-500">
+                  I&apos;m using my phone
+                </a>
+                <MdArrowForward className="text-2xl text-purple-500 ml-3" />
+              </div>
             </div>
           </Modal>
         </>

@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 import CopyFrameModal from "@/app/components/CopyModal";
 import useGetFrameById from "@/hooks/useGetFrameById";

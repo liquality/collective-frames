@@ -1,5 +1,4 @@
 "use client";
-
 import CreateFrame from "../components/CreateFrame";
 
 export default function Home() {

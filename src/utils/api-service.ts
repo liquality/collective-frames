@@ -10,6 +10,10 @@ const ApiService = {
         const { data } = await axios.get(`/api/frames/${frameId}`);
         return data
     },
+    fetchFramesByCurrentUser: async function () {
+        const { data } = await axios.get(`/api/frames`);
+        return data
+    },
     /* 
         getUser: async function (userId: number) {
             return null

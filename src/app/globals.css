@@ -52,3 +52,8 @@ body {
   background-color: white;
   width: 80%;
 }
+
+.img-responsive {
+  width: 100%;
+  height: auto;
+}
