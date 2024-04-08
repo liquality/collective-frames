@@ -2,6 +2,7 @@
 import React, { ChangeEvent, DragEvent, useEffect, useState } from "react";
 import "./DragNdropFile.css";
 import { MdAdd } from "react-icons/md";
+import Resizer from "react-image-file-resizer";
 
 export interface DragNdropFileProps {
   onFileSelected: (file?: File) => void;
@@ -10,17 +11,83 @@ export interface DragNdropFileProps {
 const DragNdropFile = ({ onFileSelected, file }: DragNdropFileProps) => {
   const [imageContent, setImageContent] = useState<string>();
 
-  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const _file = e.target.files?.[0]
-    if(_file && _file.size <= (5 * 1024) * 1024) {
-        onFileSelected(_file);
-    } else {
-        if(file) {
-            onFileSelected();
+  const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
+    const _file = e.target.files?.[0];
+    console.log(_file, "_file what is??");
+
+    if (_file) {
+      //Resize the image before sending to server
+      let sendThisFile;
+      const maxSize = 256 * 1024; //max 256kb
+      if (_file.size >= maxSize) {
+        console.log(_file.size >= maxSize, "max size exceeded");
+        sendThisFile = await resizeFile(_file);
+      } else {
+        sendThisFile = _file;
+      }
+
+      if (sendThisFile) {
+        console.log(sendThisFile, "file sent");
+        onFileSelected(sendThisFile as File);
+      } else {
+        if (file) {
+          onFileSelected();
         }
-        console.error('not allowed file size', file?.size)
+        console.error("not allowed file size", file?.size);
+      }
     }
   };
+
+  /*  const resizeFile = (file: File) =>
+    new Promise((resolve) => {
+      Resizer.imageFileResizer(
+        file,
+        300,
+        300,
+        "PNG",
+        100,
+        0,
+        (uri) => {
+          resolve(uri);
+        },
+        "file"
+      );
+    }); */
+
+  const resizeFile = (file: File) =>
+    new Promise<File | null>((resolve) => {
+      const maxFileSizeKB = 256;
+      const qualityStep = 5;
+      let quality = 100;
+
+      const resizeWithQuality = () => {
+        Resizer.imageFileResizer(
+          file,
+          430, // maxWidth
+          430, // maxHeight
+          "PNG", // compressFormat
+          quality, // quality
+          0,
+          (uri) => {
+            // check if the resulting file size is within the limit
+            if (uri instanceof Blob && uri.size / 1024 <= maxFileSizeKB) {
+              resolve(uri as File);
+            } else {
+              quality -= qualityStep;
+              if (quality > 0) {
+                resizeWithQuality();
+              } else {
+                resolve(null);
+              }
+            }
+          },
+          "file"
+        );
+      };
+
+      // Start the recursive resizing process
+      resizeWithQuality();
+    });
 
   const handleDrop = (event: DragEvent<HTMLLabelElement>) => {
     event.preventDefault();
@@ -39,7 +106,7 @@ const DragNdropFile = ({ onFileSelected, file }: DragNdropFileProps) => {
       };
       reader.readAsDataURL(file);
     } else {
-        setImageContent('');
+      setImageContent("");
     }
   }, [file]);
 
@@ -57,7 +124,7 @@ const DragNdropFile = ({ onFileSelected, file }: DragNdropFileProps) => {
         onChange={handleFileChange}
         accept=".jpg,.jpeg,.png"
         multiple={false}
-        max-size="2000" 
+        max-size="2000"
         required
       />
       {imageContent ? (
@@ -68,7 +135,7 @@ const DragNdropFile = ({ onFileSelected, file }: DragNdropFileProps) => {
         />
       ) : (
         <div className="flex flex-col items-center p-10">
-          <MdAdd className="text-3xl text-purple-500"/>
+          <MdAdd className="text-3xl text-purple-500" />
           <div className="text-lg text-gray-500">Upload Picture</div>
         </div>
       )}
