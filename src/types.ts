@@ -30,3 +30,37 @@ export type FrameWithZoraUrl = {
     frame: Frame;
     zoraUrl: string;
 };
+
+export type MintParam = {
+    recipient: `0x${string}`;
+    creator: `0x${string}`;
+    quantity: bigint;
+    tokenAddress: `0x${string}`;
+    tokenID: bigint;
+    totalValue: string;
+    currency: `0x${string}`;
+    mintReferral: `0x${string}`;
+    tokenDecimal: number;
+    comment: string;
+}
+
+export type NFTData = {
+    name: string, 
+    pricePerMintETH: string, 
+    pricePerMintToken?: string,
+    tokenMetaDataUri: string, 
+    creator: `0x${string}`
+    paymentCurrency: `0x${string}`
+}
+
+export type Transaction = { 
+    to: `0x${string}`,
+    value: bigint,
+    data: string,
+}
+
+export type CMetadata = {
+    address: string;
+    wallet: string;
+    nonceKey: bigint;
+  }

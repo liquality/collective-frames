@@ -1,6 +1,6 @@
 import { put } from "@vercel/blob";
 import { NextRequest, NextResponse } from "next/server";
-import { create1155Contract, pinFileToIPFS } from "@/utils";
+import { create1155Contract, mint, pinFileToIPFS } from "@/utils";
 import { db, frame, user } from "@/db";
 import { eq } from "drizzle-orm";
 import { findUserByFid } from "@/utils/user";
@@ -9,7 +9,6 @@ import { COOKIE_USER_FID } from "@/utils/cookie-auth";
 
 export async function POST(request: NextRequest) {
   try {
-
     const form = await request.formData();
     console.log()
     const user = await findUserByFid(Number(form.get("createdBy")))
@@ -76,6 +75,7 @@ export async function POST(request: NextRequest) {
       } else { throw Error("Failed to upload NFT to IPFS") }
 
     } else { throw Error("Failed to find user by fid: " + form.get("createdBy")) }
+
   } catch (error) {
     console.error(error);
     return NextResponse.json({ error }, { status: 500 });
@@ -83,15 +83,17 @@ export async function POST(request: NextRequest) {
 }
 
 export async function GET(request: NextRequest) {
+
   const fid = request.cookies.get(COOKIE_USER_FID)?.value;
   if (fid) {
-    const users = await db.select().from(user).where(eq(user.fid, Number(fid))).limit(1);
-    if (users && users.length > 0) {
+      const users = await db.select().from(user).where(eq(user.fid, Number(fid))).limit(1);
+      if (users && users.length > 0) {
 
-      const res = await db.select().from(frame).where(eq(frame.createdBy, users[0].id));
+          const res = await db.select().from(frame).where(eq(frame.createdBy, users[0].id));
 
-      return Response.json(res || []);
-    }
+          return Response.json(res || []);
+      }
+    
+      return NextResponse.json({ fid });
   }
-  return Response.json({}, { status: 404 })
 }
