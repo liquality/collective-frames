@@ -1,8 +1,8 @@
+import ApiService from "@/utils/api-service";
 import { Auth } from "@/utils/cookie-auth";
-import { findUserByFid } from "@/utils/user";
 import { useState, useEffect } from "react";
 
-export function useGetUserById() {
+export function useGetUserByFid() {
   const [user, setUser] = useState<any | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   useEffect(() => {
@@ -10,9 +10,8 @@ export function useGetUserById() {
       try {
         if (Auth.fid && !user) {
           setLoading(true);
-          const _user = await findUserByFid(Auth.fid);
+          const _user = await ApiService.getUserByFid(Auth.fid);
 
-          console.log(_user, "heee, wats user?, heej");
           setUser(_user);
           setLoading(false);
         }
@@ -26,4 +25,4 @@ export function useGetUserById() {
   return { user, loading, setUser };
 }
 
-export default useGetUserById;
+export default useGetUserByFid;

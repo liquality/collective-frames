@@ -11,7 +11,6 @@ import "./CreateFrame.css";
 import { CollectiveItem, FrameWithZoraUrl } from "@/types";
 import DragNdropFile from "./DragNdropFile";
 import { Auth } from "@/utils/cookie-auth";
-import CopyFrameModal from "./CopyModal";
 import { useRouter } from "next/navigation";
 
 export default function CreateFrame() {
@@ -91,6 +90,7 @@ export default function CreateFrame() {
         const response = await fetch("/api/collectives");
         const data = await response.json();
         setCollectives(data);
+        console.log(data, "wats data");
       } catch (error) {
         console.error(error);
       } finally {

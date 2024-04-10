@@ -14,6 +14,11 @@ const ApiService = {
         const { data } = await axios.get(`/api/frames`);
         return data
     },
+
+    getUserByFid: async function (fid: string) {
+        const { data } = await axios.get(`/api/user/${fid}`);
+        return data
+    }
     /* 
         getUser: async function (userId: number) {
             return null
