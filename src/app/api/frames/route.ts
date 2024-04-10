@@ -14,6 +14,7 @@ export async function POST(request: NextRequest) {
     console.log()
     const user = await findUserByFid(Number(form.get("createdBy")))
 
+    console.log(user, 'what is user? FID:', Number(form.get("createdBy")))
     if (user) {
 
       const data = {
