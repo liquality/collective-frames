@@ -76,12 +76,12 @@ export async function pinFileToIPFS(file: any, name: string, description: string
     // @ts-ignore
     console.log('PINATA CALL:', formData, formData._boundary)
     try {
-        const res = await axios.post(`https://api.pinata.cloud/pinning/pinFileToIPFS?pinataGatewayToken=${process.env.PINATA_GATEWAY_ACCESS_KEY}`, formData, {
+        const res = await axios.post(`https://api.pinata.cloud/pinning/pinFileToIPFS`, formData, {
             maxContentLength: Infinity,
             maxBodyLength: Infinity,
             headers: {
                 // @ts-ignore
-                'Content-Type': `multipart/form-data; boundary=${formData._boundary}`,
+                'Content-Type': `multipart/form-data`,
                 'Authorization': `Bearer ${JWT}`
             }
         });
