@@ -53,7 +53,7 @@ export async function create1155Contract(tokenMetaDataUri: string, name: string)
             return receipt;
         }
 
-    }
+    } else throw Error("No .env variables for operator")
 
 
 }
@@ -73,9 +73,10 @@ export async function pinFileToIPFS(file: any, name: string, description: string
     formData.append('pinataMetadata', pinataMetadata);
     formData.append('pinataOptions', pinataOptions);
 
-
+    // @ts-ignore
+    console.log('PINATA CALL:', formData, formData._boundary)
     try {
-        const res = await axios.post("https://api.pinata.cloud/pinning/pinFileToIPFS", formData, {
+        const res = await axios.post(`https://api.pinata.cloud/pinning/pinFileToIPFS?pinataGatewayToken=${process.env.PINATA_GATEWAY_ACCESS_KEY}`, formData, {
             maxContentLength: Infinity,
             maxBodyLength: Infinity,
             headers: {
