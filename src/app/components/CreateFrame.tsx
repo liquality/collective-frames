@@ -64,7 +64,7 @@ export default function CreateFrame() {
         formData.set("collectiveId", collective.toString());
 
         console.log(formData, "what is form data???", typeof formData);
-        const response = await fetch("/api/frames", {
+        const response = await fetch("/api/create", {
           method: "POST",
           body: formData,
         });

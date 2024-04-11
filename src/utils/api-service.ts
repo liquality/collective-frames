@@ -7,11 +7,11 @@ const ApiService = {
         return data
     },
     getFrameById: async function (frameId: string) {
-        const { data } = await axios.get(`/api/frames/${frameId}`);
+        const { data } = await axios.get(`/api/create/${frameId}`);
         return data
     },
     fetchFramesByCurrentUser: async function () {
-        const { data } = await axios.get(`/api/frames`);
+        const { data } = await axios.get(`/api/create`);
         return data
     },
 
