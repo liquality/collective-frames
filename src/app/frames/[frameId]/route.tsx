@@ -5,8 +5,10 @@ import { eq } from "drizzle-orm";
 import { createFrames, Button } from "frames.js/next";
 
 const frames = createFrames({ basePath: "/frames" });
+
 export const GET = frames(async (ctx) => {
   const parts = ctx.url.pathname.split("/");
+  console.log({ parts })
   if (parts.length <= 2 || !parts[2]) {
     throw new Error("Frame id not found");
   }
@@ -15,7 +17,7 @@ export const GET = frames(async (ctx) => {
   const data = await db
     .select()
     .from(frame)
-    .where(eq(frame.slug, slug.toLowerCase()))
+    .where(eq(frame.slug, slug))
     .limit(1);
   const _frame = data ? data[0] : null;
   console.log({ data });
