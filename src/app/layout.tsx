@@ -2,8 +2,8 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from "./components/Navbar";
-import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { AuthKitProvider } from "@farcaster/auth-kit";
 import OurVision from "./components/OurVision";
 import Footer from "./components/Footer";
