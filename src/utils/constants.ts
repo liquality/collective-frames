@@ -774,7 +774,90 @@ export const ERC20MINTER_ABI = [
 ]
 
 export const ERC1155ABI = [
-   
+    {
+        "constant": true,
+        "inputs": [
+          {
+            "internalType": "uint256",
+            "name": "tokenId",
+            "type": "uint256"
+          }
+        ],
+        "name": "getCreatorRewardRecipient",
+        "outputs": [
+          {
+            "internalType": "address",
+            "name": "",
+            "type": "address"
+          }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+      },
+    {
+        "constant": true,
+        "inputs": [
+            {
+            "internalType": "uint256",
+            "name": "tokenId",
+            "type": "uint256"
+            }
+        ],
+        "name": "getTokenInfo",
+        "outputs": [
+            {
+            "components": [
+                {
+                "internalType": "string",
+                "name": "uri",
+                "type": "string"
+                },
+                {
+                "internalType": "uint256",
+                "name": "maxSupply",
+                "type": "uint256"
+                },
+                {
+                "internalType": "uint256",
+                "name": "totalMinted",
+                "type": "uint256"
+                }
+            ],
+            "internalType": "struct TokenData",
+            "name": "",
+            "type": "tuple"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [ 
+        {
+            "internalType": "address payable",
+            "name": "fundsRecipient",
+            "type": "address"
+        } ],
+    name: 'setFundsRecipient',
+    outputs: []
+  },
+    {
+        stateMutability: 'view',
+        type: 'function',
+        inputs: [],
+        name: 'mintFee',
+        outputs: [ 
+            {
+                internalType: 'uint256',
+                name: '',
+                type: 'uint256',
+            }
+        ]
+    },
     {
         "inputs": [
             {
@@ -1009,6 +1092,19 @@ export const COLLECTIVE_ABI = [
     stateMutability: 'nonpayable',
     type: 'function',
 },
+{
+  "inputs": [
+    {
+      "internalType": "address[]",
+      "name": "_targets",
+      "type": "address[]"
+    }
+  ],
+  "name": "whitelistTargets",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+}
 ]
 
 export const COLLECTIVE_FACTORY_ABI = [
@@ -2737,10 +2833,109 @@ export const C_WALLET_ABI =  [
       "stateMutability": "payable",
       "type": "receive"
     }
+]
+
+export const HONNEYPOT_FACTORY_ABI = [
+    {
+      inputs: [],
+      stateMutability: "nonpayable",
+      type: "constructor",
+    },
+    {
+      anonymous: false,
+      inputs: [
+        {
+          indexed: true,
+          internalType: "address",
+          name: "honeyPot",
+          type: "address",
+        },
+        {
+          indexed: true,
+          internalType: "address",
+          name: "operator",
+          type: "address",
+        },
+      ],
+      name: "HoneyPotCreated",
+      type: "event",
+    },
+    {
+      inputs: [
+        {
+          internalType: "address",
+          name: "_operator",
+          type: "address",
+        },
+        {
+          internalType: "uint256",
+          name: "_salt",
+          type: "uint256",
+        },
+      ],
+      name: "createHoneyPot",
+      outputs: [
+        {
+          internalType: "address",
+          name: "",
+          type: "address",
+        },
+      ],
+      stateMutability: "nonpayable",
+      type: "function",
+    },
+    {
+      inputs: [
+        {
+          internalType: "address",
+          name: "_operator",
+          type: "address",
+        },
+        {
+          internalType: "uint256",
+          name: "_salt",
+          type: "uint256",
+        },
+      ],
+      name: "getHoneyPot",
+      outputs: [
+        {
+          internalType: "address",
+          name: "",
+          type: "address",
+        },
+      ],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [],
+      name: "honeyPotImplementation",
+      outputs: [
+        {
+          internalType: "contract HoneyPot",
+          name: "",
+          type: "address",
+        },
+      ],
+      stateMutability: "view",
+      type: "function",
+    },
   ]
   
 export const COLLECTIVE_FACTORY = '0xA873EE07a0750F58Ae1cD3e5aA0dd77f4d284f26' //Base : '0xA873EE07a0750F58Ae1cD3e5aA0dd77f4d284f26'
-export const HONEYPOT = '0xCfC03cA81380338703860238d0d6caD552232877' // BASE : '0xCfC03cA81380338703860238d0d6caD552232877' // Sepolia Base : '0xd56672EF513dcfCEc7eE0e4CA342bd344e03a3c3'
+export const HONNEYPOT_FACTORY = "0xC1C1782a972cAf76Fb691592AE1b7cb403052E08" // honneypot1:0xcB951d0A3031208EC1b471dBfd5e92a6A7b4add7
 export const ENTRYPOINT = '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789'
-  
+export const ERC20_MINTER_ADDRESS="0x777777E8850d8D6d98De2B5f64fae401F96eFF31"
 export const ETH_CURRENCY_ADDRESS = "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE"
+export const OPERATOR_ADDRESS="0x229ef326FE08C8b2423B786052D7E1a1AdDaD226"
+
+// Configurations for the app
+export const SUPPORTED_COMMUNITIES: Array<{
+    id: number
+    question_id: number
+    name: string
+    followers: number
+  }> = [
+    { id: 1, question_id: 1, name: 'base', followers: 23000 },
+  ]

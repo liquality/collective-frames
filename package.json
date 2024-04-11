@@ -21,7 +21,7 @@
     "@vercel/postgres": "^0.8.0",
     "@zoralabs/openzeppelin-contracts-upgradeable": "^4.8.4",
     "@zoralabs/protocol-rewards": "^1.2.3",
-    "@zoralabs/protocol-sdk": "^0.5.9",
+    "@zoralabs/protocol-sdk": "^0.5.10",
     "axios": "^1.6.8",
     "drizzle-orm": "^0.30.4",
     "ethers": "^6.11.1",

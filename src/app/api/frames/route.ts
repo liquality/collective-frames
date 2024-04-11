@@ -1,11 +1,13 @@
 import { put } from "@vercel/blob";
 import { NextRequest, NextResponse } from "next/server";
-import { create1155Contract, mint, pinFileToIPFS } from "@/utils";
+import { create1155Contract, getETHMintPrice, mint, pinFileToIPFS } from "@/utils";
 import { db, frame, user } from "@/db";
 import { eq } from "drizzle-orm";
 import { findUserByFid } from "@/utils/user";
 import { v4 as uuidv4 } from 'uuid';
 import { COOKIE_USER_FID } from "@/utils/cookie-auth";
+import { getProvider } from "@/utils/collective";
+import { ethers } from "ethers";
 
 export async function POST(request: NextRequest) {
   try {
@@ -82,8 +84,7 @@ export async function POST(request: NextRequest) {
   }
 }
 
-export async function GET(request: NextRequest) {
-
+export async function GET(request: NextRequest, response: NextResponse) {
   const fid = request.cookies.get(COOKIE_USER_FID)?.value;
   if (fid) {
       const users = await db.select().from(user).where(eq(user.fid, Number(fid))).limit(1);

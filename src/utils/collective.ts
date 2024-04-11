@@ -1,13 +1,15 @@
-import ethers from 'ethers'
+import {ethers} from 'ethers'
 import { CMetadata } from '../types'
 import {
-  HONEYPOT,
   HONEYPOT_ABI,
   COLLECTIVE_FACTORY,
   COLLECTIVE_ABI,
   COLLECTIVE_FACTORY_ABI,
   POOL_ABI,
   C_WALLET_ABI,
+  HONNEYPOT_FACTORY,
+  HONNEYPOT_FACTORY_ABI,
+  OPERATOR_ADDRESS,
 } from './constants'
 import { QueryResultRow } from '@vercel/postgres'
 
@@ -52,22 +54,21 @@ export async function createCollective(): Promise<CMetadata> {
 
     console.log('Collective created successfully! ', tx1, tx2)
 
-    return { address: cAddress, wallet: cWallet, salt }
+    return { address: cAddress, wallet: cWallet, nonceKey: BigInt(salt) }
   } catch (error) {
     throw new Error('Error creating collective: ' + error)
   }
 }
 
-export async function createPool(cAddress: string): Promise<string> {
+export async function createPool(cAddress: string, tokenAddress: string, honeyPot: string): Promise<string> {
   try {
     const provider = getProvider()
     const signer = getSigner(provider)
 
-    const honeyPot = HONEYPOT!
     const collective = getCollective(signer, cAddress)
 
     const tx = await collective.createPools(
-      ['0x0000000000000000000000000000000000000000'],
+      [tokenAddress],
       [honeyPot]
     )
     await provider.waitForTransaction(tx.hash)
@@ -79,6 +80,37 @@ export async function createPool(cAddress: string): Promise<string> {
     throw new Error('Error creating pool: ' + error)
   }
 }
+
+ // create honeyPot contract
+ export async function createHoneyPot(salt : ethers.BigNumberish) {
+    try {
+        const provider = getProvider()
+        const signer = getSigner(provider)
+
+        // Get honeyPot factory
+        const hFactory = await getHoneyPotFactory(signer);
+        // Get honeyPot address
+        const honeyPot = await hFactory.getHoneyPot(OPERATOR_ADDRESS, ethers.toBigInt(salt));
+        // create honeyPot
+        const tx = await hFactory.createHoneyPot(OPERATOR_ADDRESS, ethers.toBigInt(salt));
+        await tx.wait();
+        
+        return {honeyPot, salt, tx:
+            {
+                address: honeyPot,
+                salt
+            }
+        }
+        
+    } catch (error) {
+        console.log("error create honeyPot >>>> ", error)
+        throw error;
+    }
+}
+
+
+
+// ======= TODO: Update Logic ==========
 
 export async function setTopCollective(
   topContributor: string
@@ -187,17 +219,17 @@ export async function withdrawRewards(
   }
 }
 
-async function getPool(signer: ethers.ethers.Wallet, poolAddress: string) {
+async function getPool(signer: ethers.Wallet, poolAddress: string) {
   const pool = new ethers.Contract(poolAddress, POOL_ABI, signer)
   return pool
 }
 
-function getCollective(signer: ethers.ethers.ContractRunner, cAddress: string) {
+function getCollective(signer: ethers.ContractRunner, cAddress: string) {
   const collective = new ethers.Contract(cAddress, COLLECTIVE_ABI, signer)
   return collective
 }
 
-function getCFactory(signer: ethers.ethers.ContractRunner) {
+function getCFactory(signer: ethers.ContractRunner) {
   const cFactory = new ethers.Contract(
     COLLECTIVE_FACTORY,
     COLLECTIVE_FACTORY_ABI,
@@ -206,24 +238,29 @@ function getCFactory(signer: ethers.ethers.ContractRunner) {
   return cFactory
 }
 
-function getCWallet(signer: ethers.ethers.Wallet, cWalletAddress: string) {
+function getCWallet(signer: ethers.Wallet, cWalletAddress: string) {
   const cWallet = new ethers.Contract(cWalletAddress, C_WALLET_ABI, signer)
   return cWallet
 }
 
-function getHonneyPot(signer: ethers.ethers.Wallet) {
-  const honeyPot = new ethers.Contract(HONEYPOT, HONEYPOT_ABI, signer)
+function getHonneyPot(signer: ethers.ContractRunner, honneyPotAddress: string) {
+  const honeyPot = new ethers.Contract(honneyPotAddress, HONEYPOT_ABI, signer)
   return honeyPot
 }
 
-function getSigner(provider: ethers.JsonRpcProvider) {
+async function getHoneyPotFactory(signer : ethers.ContractRunner) {
+    const hFactory = new ethers.Contract(HONNEYPOT_FACTORY, HONNEYPOT_FACTORY_ABI, signer)
+    return hFactory;
+}
+
+export function getSigner(provider: ethers.JsonRpcProvider) {
   const signer = ethers.Wallet.fromPhrase(
     process.env.OPERATOR_MNEMONIC as string
   ).connect(provider)
   return signer
 }
 
-function getProvider() {
+export function getProvider() {
   const provider = new ethers.JsonRpcProvider(process.env.RPC_URL)
   return provider
 }
