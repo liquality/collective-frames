@@ -1,63 +1,62 @@
-/* eslint-disable @next/next/no-img-element */
-/* eslint-disable react/jsx-key */
-import { db, frame } from "@/db";
-import { eq } from "drizzle-orm";
-import { createFrames, Button } from "frames.js/next";
+import { TransactionTargetResponse } from "frames.js";
+import { getFrameMessage } from "frames.js/next/server";
+import { NextRequest, NextResponse } from "next/server";
+import {
+  Abi,
+  createPublicClient,
+  encodeFunctionData,
+  getContract,
+  http,
+} from "viem";
+import { optimism } from "viem/chains";
+import { storageRegistryABI } from "../contract-abi";
 
-const frames = createFrames({ basePath: "/frames" });
+export async function POST(
+  req: NextRequest
+): Promise<NextResponse<TransactionTargetResponse>> {
+  console.log("Coming here /frames/slug");
 
-export const GET = frames(async (ctx) => {
-  const parts = ctx.url.pathname.split("/");
-  console.log({ parts })
-  if (parts.length <= 2 || !parts[2]) {
-    throw new Error("Frame id not found");
+  console.log(req, "wats req?");
+  const json = await req.json();
+
+  const frameMessage = await getFrameMessage(json);
+
+  if (!frameMessage) {
+    throw new Error("No frame message");
   }
-  const slug = parts[2] || "";
 
-  const data = await db
-    .select()
-    .from(frame)
-    .where(eq(frame.slug, slug))
-    .limit(1);
-  const _frame = data ? data[0] : null;
-  console.log({ data });
+  // Get current storage price
+  const units = BigInt(1);
 
-  return {
-    image: <img src={_frame?.imageUrl || ""} alt={_frame?.name || ''}/>,
-    buttons: [
-      <Button
-        action="post"
-        target={{ pathname: `/${slug}`, query: { value: "MINT" } }}
-      >
-        MINT
-      </Button>,
-    ],
-  };
-});
+  const calldata = encodeFunctionData({
+    abi: storageRegistryABI,
+    functionName: "rent",
+    args: [BigInt(frameMessage.requesterFid), units],
+  });
 
-export const POST = frames(async (ctx) => {
-  const parts = ctx.url.pathname.split("/");
-  if (parts.length <= 2 || !parts[2]) {
-    throw new Error("Frame id not found");
-  }
-  const slug = parts[2] || "";
+  const publicClient = createPublicClient({
+    chain: optimism,
+    transport: http(),
+  });
 
-  const data = await db
-    .select()
-    .from(frame)
-    .where(eq(frame.slug, slug))
-    .limit(1);
-  const _frame = data ? data[0] : null;
+  const STORAGE_REGISTRY_ADDRESS = "0x00000000fcCe7f938e7aE6D3c335bD6a1a7c593D";
 
-  console.log({ data });
+  const storageRegistry = getContract({
+    address: STORAGE_REGISTRY_ADDRESS,
+    abi: storageRegistryABI,
+    publicClient: publicClient,
+  });
 
-  return {
-    image: (
-      <>
-        <p>You Minted in {slug}</p>
-        <span>Value: ${ctx.searchParams.value}</span>
-      </>
-    ),
-    buttons: [],
-  };
-});
+  const unitPrice = await storageRegistry.read.price([units]);
+
+  return NextResponse.json({
+    chainId: "eip155:10", // OP Mainnet 10
+    method: "eth_sendTransaction",
+    params: {
+      abi: storageRegistryABI as Abi,
+      to: STORAGE_REGISTRY_ADDRESS,
+      data: calldata,
+      value: unitPrice.toString(),
+    },
+  });
+}
