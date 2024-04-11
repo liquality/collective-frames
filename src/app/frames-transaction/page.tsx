@@ -36,7 +36,7 @@ const reducer: FrameReducer<State> = (state, action) => {
 
 // This is a react server component only
 export default async function Home({ searchParams }: NextServerPageProps) {
-  const url = currentURL("/frames");
+  const url = currentURL("/frames-transaction");
   const previousFrame = getPreviousFrame<State>(searchParams);
   console.log(searchParams, "searchparams?");
   /*  const parts = ctx.url.pathname.split("/");
@@ -52,13 +52,13 @@ export default async function Home({ searchParams }: NextServerPageProps) {
     hubHttpUrl: "",
   });
 
-  console.log(frameMessage, "wats framemsg?");
+  console.log(frameMessage, "wats framemsg? 222");
 
   if (frameMessage?.transactionId) {
     return (
       <FrameContainer
-        pathname="/frames"
-        postUrl="/frames"
+        pathname="/frames-transaction"
+        postUrl="/frames-transaction/frames"
         state={state}
         previousFrame={previousFrame}
       >
@@ -82,8 +82,8 @@ export default async function Home({ searchParams }: NextServerPageProps) {
     <div>
       Rent farcaster storage example{" "}
       <FrameContainer
-        pathname="/frames"
-        postUrl="/frames"
+        pathname="/frames-transaction"
+        postUrl="/frames-transaction/frames"
         state={state}
         previousFrame={previousFrame}
       >
@@ -94,7 +94,7 @@ export default async function Home({ searchParams }: NextServerPageProps) {
         </FrameImage>
         <FrameButton
           action="tx"
-          target="/frames/46ef6fb4-be57-421a-b5bd-f2835c3fe15f"
+          target="/frames-transaction/txdata/46ef6fb4-be57-421a-b5bd-f2835c3fe15f"
         >
           Buy a unit
         </FrameButton>

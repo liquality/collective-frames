@@ -9,14 +9,13 @@ import {
   http,
 } from "viem";
 import { optimism } from "viem/chains";
-import { storageRegistryABI } from "../contract-abi";
+import { storageRegistryABI } from "../../contract-abi";
 
 export async function POST(
   req: NextRequest
 ): Promise<NextResponse<TransactionTargetResponse>> {
-  console.log("Coming here /frames/slug");
+  console.log("Coming here /frames-transaction/txdata/slug");
 
-  console.log(req, "wats req?");
   const json = await req.json();
 
   const frameMessage = await getFrameMessage(json);
@@ -48,6 +47,20 @@ export async function POST(
   });
 
   const unitPrice = await storageRegistry.read.price([units]);
+
+  console.log(
+    {
+      chainId: "eip155:10", // OP Mainnet 10
+      method: "eth_sendTransaction",
+      params: {
+        abi: storageRegistryABI as Abi,
+        to: STORAGE_REGISTRY_ADDRESS,
+        data: calldata,
+        value: unitPrice.toString(),
+      },
+    },
+    "DATA"
+  );
 
   return NextResponse.json({
     chainId: "eip155:10", // OP Mainnet 10
