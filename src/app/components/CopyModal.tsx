@@ -13,23 +13,16 @@ const CopyFrameModal: React.FC<ModalProps> = (props) => {
   const [castText, setCastText] = useState<string>("");
 
   if (!isOpen) return null;
-  const frameUrl = process.env.NEXT_PUBLIC_SERVER_URL + "/frames";
 
   const handleWriteCastClick = () => {
-    // writeCast(castText);
+    const text = encodeURIComponent(castText);
+    const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL || window.location.href;
+    const frameUrl =  `${baseUrl}/frames/${frameData?.frame?.slug}`;
+    window.open(`https://warpcast.com/~/compose?text=${text}&embeds[]=${frameUrl}`)
+    setCastText('')
     onClose();
   };
-
-  const handleCopyClick = (text: string) => {
-    navigator.clipboard
-      .writeText(text)
-      .then(() => {
-        //"Text copied to clipboard: ", text);
-      })
-      .catch((error) => {
-        console.error("Failed to copy text: ", error);
-      });
-  };
+  console.log({ frameData })
 
   const handleCastTextChange = (e: FormEvent<HTMLTextAreaElement>) => {
     setCastText(e.currentTarget.value || "");
