@@ -11,7 +11,7 @@ export const findFrameById = async (frameId: number) => {
     if (existingFrame[0]) {
         return {
             frame: existingFrame[0],
-            zoraUrl: `https://zora.co/collect/base:${existingFrame[0].tokenAddress}/1`,
+            zoraUrl: `https://zora.co/collect/base:${existingFrame[0].nftTokenAddress}/1`,
         }
     }
     else {

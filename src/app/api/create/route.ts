@@ -1,32 +1,38 @@
 import { put } from "@vercel/blob";
 import { NextRequest, NextResponse } from "next/server";
-import { create1155Contract, getETHMintPrice, mint, pinFileToIPFS } from "@/utils";
+import { create1155Contract, pinFileToIPFS, toTokenNativeAmount } from "@/utils";
 import { db, frame, user } from "@/db";
 import { eq } from "drizzle-orm";
 import { findUserByFid } from "@/utils/user";
 import { v4 as uuidv4 } from 'uuid';
 import { COOKIE_USER_FID } from "@/utils/cookie-auth";
-import { getProvider } from "@/utils/collective";
-import { ethers } from "ethers";
+import { getCollectiveById, } from "@/utils/collective";
+import { zeroAddress } from "viem";
+import { NFTData } from "@/types";
+import { HONEYPOT } from "@/utils/constants";
 
 export async function POST(request: NextRequest) {
   try {
     const form = await request.formData();
-    console.log()
     const user = await findUserByFid(Number(form.get("createdBy")))
-
-    console.log(user, 'what is user? FID:', Number(form.get("createdBy")))
-    if (user) {
+    const collective = await getCollectiveById(Number(form.get("collectiveId")))
+    if (user && collective) {
 
       const data = {
         name: (form.get("name") as string) || "",
         description: (form.get("description") as string) || "",
         imageFile: form.get("imageFile"),
         collectiveId: (form.get("collectiveId") as string) || "",
+        price: (form.get("price") as string) || "",
+        paymentCurrency: (form.get("paymentCurrency") as string) || "",
+        decimal: (form.get("decimal") as string) || "",
         createdBy: user.id
       };
-      console.log({ data })
-      const { name, description, collectiveId } = data;
+      const { name, description, collectiveId, price, paymentCurrency, decimal } = data;
+      let pricePerMintToken
+      //TODO how to convert to token amount? We should use a 3rd party api?
+      paymentCurrency !== zeroAddress ? pricePerMintToken = toTokenNativeAmount(price, Number(decimal)).toString() : null
+
       // Generate unique id for frame to not use the integer 
       const slug = uuidv4();
 
@@ -46,10 +52,19 @@ export async function POST(request: NextRequest) {
           JSON.stringify(tokenMetaData),
           { access: "public" }
         );
+
+
+        const nftData: NFTData = {
+          name,
+          pricePerMintETH: price,
+          pricePerMintToken,
+          tokenMetaDataUri: metaDataUri,
+          creator: user.walletAddress as `0x${string}`,
+          paymentCurrency: paymentCurrency as `0x${string}`,
+        }
         //3) create the erc1155 using Liq Operator account as sponsor + Zora SDK
         const nft = await create1155Contract(
-          metaDataUri,
-          name
+          collective.cAddress as `0x${string}`, HONEYPOT, nftData
         );
 
         if (nft) {
@@ -64,13 +79,15 @@ export async function POST(request: NextRequest) {
               collectiveId: Number(collectiveId),
               metaDataUrl: metaDataUri,
               tokenId: 1, //always 1 after creating new erc1155 contract with zora
-              tokenAddress: nft.logs[0].address,
+              nftTokenAddress: nft.nftContractAddress,
+              paymentCurrency: paymentCurrency,
+              priceInEth: price,
               createdBy: user?.id,
             })
             .returning();
           return NextResponse.json({
             frame: newFrame[0],
-            zoraUrl: `https://zora.co/collect/base:${nft.logs[0].address}/1`,
+            zoraUrl: `https://zora.co/collect/base:${nft.nftContractAddress}/1`,
           });
         } else { throw Error("NFT failed to be created using Zora SDK") }
 
@@ -87,14 +104,14 @@ export async function POST(request: NextRequest) {
 export async function GET(request: NextRequest, response: NextResponse) {
   const fid = request.cookies.get(COOKIE_USER_FID)?.value;
   if (fid) {
-      const users = await db.select().from(user).where(eq(user.fid, Number(fid))).limit(1);
-      if (users && users.length > 0) {
+    const users = await db.select().from(user).where(eq(user.fid, Number(fid))).limit(1);
+    if (users && users.length > 0) {
 
-          const res = await db.select().from(frame).where(eq(frame.createdBy, users[0].id));
+      const res = await db.select().from(frame).where(eq(frame.createdBy, users[0].id));
 
-          return Response.json(res || []);
-      }
-    
-      return NextResponse.json({ fid });
+      return Response.json(res || []);
+    }
+
+    return NextResponse.json({ fid });
   }
 }

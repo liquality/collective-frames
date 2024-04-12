@@ -12,6 +12,7 @@ import { CollectiveItem, FrameWithZoraUrl } from "@/types";
 import DragNdropFile from "./DragNdropFile";
 import { Auth } from "@/utils/cookie-auth";
 import { useRouter } from "next/navigation";
+import { erc20TokenData } from "@/constants/erc20-token-data";
 
 export default function CreateFrame() {
   const [isSaving, setIsSaving] = useState<boolean>(false);
@@ -22,6 +23,9 @@ export default function CreateFrame() {
   const [name, setName] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [collective, setCollective] = useState<number>(0);
+  const [erc20Token, setErc20Token] = useState<any | null>(null);
+  const [price, setPrice] = useState<string>("0.000");
+
   const [frameData, setFrameData] = useState<FrameWithZoraUrl | null>(null);
   const router = useRouter();
 
@@ -32,7 +36,6 @@ export default function CreateFrame() {
   const handleRemove = () => {
     setImagefile(undefined);
   };
-  console.log(collective, "selected coll");
   const handleCollectiveChange = (e: ChangeEvent<HTMLSelectElement>) => {
     if (e.target.value) {
       const option = Number(e.target.value);
@@ -48,8 +51,20 @@ export default function CreateFrame() {
     setName(e.currentTarget.value || "");
   };
 
+  const handlePriceChange = (e: FormEvent<HTMLInputElement>) => {
+    let amount = e.currentTarget.value;
+
+    if (!amount || amount.match(/^\d{1,}(\.\d{0,4})?$/)) {
+      setPrice(amount);
+    }
+  };
+
   const handleDescriptionChange = (e: FormEvent<HTMLTextAreaElement>) => {
     setDescription(e.currentTarget.value || "");
+  };
+
+  const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    setErc20Token(JSON.parse(e.target.value));
   };
 
   const handleSave = async () => {
@@ -62,8 +77,10 @@ export default function CreateFrame() {
         formData.set("imageFile", imageFile!);
         formData.set("createdBy", Auth.fid);
         formData.set("collectiveId", collective.toString());
+        formData.set("price", price);
+        formData.set("paymentCurrency", erc20Token.contractAddress);
+        formData.set("decimal", erc20Token.decimal);
 
-        console.log(formData, "what is form data???", typeof formData);
         const response = await fetch("/api/create", {
           method: "POST",
           body: formData,
@@ -90,7 +107,6 @@ export default function CreateFrame() {
         const response = await fetch("/api/collectives");
         const data = await response.json();
         setCollectives(data);
-        console.log(data, "wats data");
       } catch (error) {
         console.error(error);
       } finally {
@@ -101,11 +117,18 @@ export default function CreateFrame() {
   }, []);
 
   const formIsValid = useMemo(() => {
-    if (imageFile && collective && collective > 0 && name) {
+    if (
+      imageFile &&
+      collective &&
+      collective > 0 &&
+      name &&
+      erc20Token &&
+      price
+    ) {
       return true;
     }
     return false;
-  }, [imageFile, collective, name]);
+  }, [imageFile, collective, name, erc20Token, price]);
 
   return (
     <div className="flex flex-col mt-8 bg-violet-50 p-3 rounded-[10px] text-black">
@@ -149,8 +172,35 @@ export default function CreateFrame() {
                 placeholder="Name your Meme*"
               />
             </div>
+            {
+              <div className="flex flex-row mt-6">
+                <label className="flex mt-2 mr-3 text-black">
+                  Mint Price in ETH
+                </label>
+
+                <input
+                  type="text"
+                  onChange={handlePriceChange}
+                  value={price}
+                  className="p-2 h-50 border border-purple-500 focus:outline-none focus:ring-0"
+                  placeholder="Mint Price*"
+                />
+              </div>
+            }
             <div className="flex mt-6">
               <div className="flex flex-col w-full">
+                <select
+                  className="w-full p-2 border border-purple-500 focus:outline-none focus:ring-0"
+                  id="tokens"
+                  onChange={handleChange}
+                >
+                  <option value="">{"Select ERC20 or ETH payment"}</option>
+                  {erc20TokenData.map((token, index) => (
+                    <option key={index} value={JSON.stringify(token)}>
+                      {token.ticker}
+                    </option>
+                  ))}
+                </select>
                 <div className="flex mb-2 text-black">
                   Who shares your mint profits?
                 </div>

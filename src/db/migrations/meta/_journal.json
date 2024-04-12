@@ -8,6 +8,20 @@
       "when": 1712585833158,
       "tag": "0000_lively_beyonder",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1712911317139,
+      "tag": "0001_spooky_mikhail_rasputin",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1712913521350,
+      "tag": "0002_unknown_paper_doll",
+      "breakpoints": true
     }
   ]
 }
