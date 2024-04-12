@@ -5,7 +5,7 @@ import { mnemonicToAccount } from 'viem/accounts'
 import { ethers } from "ethers";
 import { ERC20Minter__factory } from "../../contracts/typechain-types/factories/contracts/minters/erc20/ERC20Minter__factory"
 import axios from "axios";
-import { COLLECTIVE_ABI, ERC1155ABI, ERC20MINTER_ABI, ERC20_ABI, ERC20_MINTER_ADDRESS, ETH_CURRENCY_ADDRESS, OPERATOR_ADDRESS } from "./constants";
+import { COLLECTIVE_ABI, C_WALLET_ABI, ERC1155ABI, ERC20MINTER_ABI, ERC20_ABI, ERC20_MINTER_ADDRESS, ETH_CURRENCY_ADDRESS, OPERATOR_ADDRESS } from "./constants";
 import { MintParam, NFTData, Transaction } from "@/types";
 import { collectiveBatchExecuteData, getProvider, getRecordPoolMintCallData } from "./collective";
 
@@ -162,6 +162,26 @@ export async function create1155Contract(c_address: `0x${string}`, honeyPot: `0x
     } else throw Error("No .env variables for operator")
 }
 
+
+export async function erc20PreMint(c_wallet: `0x${string}`, mintParam: MintParam): Promise<Transaction> {
+
+    const totalValue = toTokenNativeAmount(mintParam.totalValue, mintParam.tokenDecimal)
+    // transaction data for ERC20 transfer by minter to collective
+    const erc20TransferData = new ethers.Contract(mintParam.currency, ERC20_ABI).interface.encodeFunctionData(
+        'transfer',
+        [c_wallet, totalValue] // TODO: Update to use Per value or unbounded
+    )
+    const transferData = {
+        abi: ERC20_ABI,
+        to: mintParam.currency,
+        data: erc20TransferData,
+        value: BigInt(0)
+    }
+
+    return transferData
+
+}
+
 export async function mint(c_wallet: `0x${string}`, c_address: `0x${string}`, poolAddress: `0x${string}`, mintParam: MintParam): Promise<Transaction[]> {
 
     if (mintParam.currency == ETH_CURRENCY_ADDRESS) {
@@ -202,6 +222,7 @@ async function ethMint(c_wallet: `0x${string}`, c_address: `0x${string}`, poolAd
     // data for executeBatchWithPay on collective wallet
     let batchData = collectiveBatchExecuteData(value, data, dest, c_wallet)
     let batchTransactionData = {
+        abi: C_WALLET_ABI,
         to: c_wallet,
         data: batchData,
         value: totalValue
@@ -212,18 +233,8 @@ async function ethMint(c_wallet: `0x${string}`, c_address: `0x${string}`, poolAd
     ]
 }
 
-async function erc20Mint(c_wallet: `0x${string}`, c_address: `0x${string}`, poolAddress: `0x${string}`, mintParam: MintParam): Promise<Transaction[]> {
+async function erc20Mint(c_wallet: `0x${string}`, c_address: `0x${string}`, poolAddress: `0x${string}`, mintParam: MintParam): Promise<Transaction> {
     const totalValue = toTokenNativeAmount(mintParam.totalValue, mintParam.tokenDecimal)
-    // transaction data for ERC20 transfer by minter to collective
-    const erc20TransferData = new ethers.Contract(mintParam.currency, ERC20_ABI).interface.encodeFunctionData(
-        'transfer',
-        [c_wallet, totalValue] // TODO: Update to use Per value or unbounded
-    )
-    const transferData = {
-        to: mintParam.currency,
-        data: erc20TransferData,
-        value: BigInt(0)
-    }
 
     // data for approval of ERC20Minter on collective wallet
     const erc20ApprovalData = new ethers.Contract(mintParam.currency, ERC20_ABI).interface.encodeFunctionData(
@@ -263,15 +274,13 @@ async function erc20Mint(c_wallet: `0x${string}`, c_address: `0x${string}`, pool
     // data for executeBatchWithPay on collective wallet
     let batchData = collectiveBatchExecuteData(value, data, dest, c_wallet)
     let batchTransactionData = {
+        abi: C_WALLET_ABI,
         to: c_wallet,
         data: batchData,
         value: BigInt(0)
     }
 
-    return [
-        transferData,
-        batchTransactionData
-    ]
+    return batchTransactionData
 }
 
 export async function pinFileToIPFS(file: any, name: string, description: string) {

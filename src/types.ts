@@ -54,6 +54,7 @@ export type NFTData = {
 }
 
 export type Transaction = { 
+    abi: Array<any>,
     to: `0x${string}`,
     value: bigint,
     data: string,
