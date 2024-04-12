@@ -1,5 +1,5 @@
 {
-  "id": "81ec078f-40ce-4239-8d95-a9e5a4197dd1",
+  "id": "147b90aa-2825-4963-a762-252ce09f7378",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "5",
   "dialect": "pg",
@@ -105,14 +105,20 @@
           "primaryKey": false,
           "notNull": true
         },
+        "payment_currency": {
+          "name": "payment_currency",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": true
+        },
         "token_id": {
           "name": "token_id",
           "type": "integer",
           "primaryKey": false,
           "notNull": true
         },
-        "token_address": {
-          "name": "token_address",
+        "nft_token_address": {
+          "name": "nft_token_address",
           "type": "varchar(256)",
           "primaryKey": false,
           "notNull": true

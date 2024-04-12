@@ -1,4 +1,4 @@
-import {ethers} from 'ethers'
+import { ethers } from 'ethers'
 import { CMetadata } from '../types'
 import {
   HONEYPOT_ABI,
@@ -12,11 +12,13 @@ import {
   OPERATOR_ADDRESS,
 } from './constants'
 import { QueryResultRow } from '@vercel/postgres'
+import { collective, db } from '@/db'
+import { sql } from 'drizzle-orm'
 
 
-export function collectiveBatchExecuteData(value : bigint[], data: string[], dest: string[], cWalletAddress: string) : string {
-    const batchExecuteData = new ethers.Contract(cWalletAddress, C_WALLET_ABI).interface.encodeFunctionData('executeBatchWithPay', [dest, value, data])
-    return batchExecuteData
+export function collectiveBatchExecuteData(value: bigint[], data: string[], dest: string[], cWalletAddress: string): string {
+  const batchExecuteData = new ethers.Contract(cWalletAddress, C_WALLET_ABI).interface.encodeFunctionData('executeBatchWithPay', [dest, value, data])
+  return batchExecuteData
 }
 
 export async function createCollective(): Promise<CMetadata> {
@@ -81,31 +83,33 @@ export async function createPool(cAddress: string, tokenAddress: string, honeyPo
   }
 }
 
- // create honeyPot contract
- export async function createHoneyPot(salt : ethers.BigNumberish) {
-    try {
-        const provider = getProvider()
-        const signer = getSigner(provider)
+// create honeyPot contract
+export async function createHoneyPot(salt: ethers.BigNumberish) {
+  try {
+    const provider = getProvider()
+    const signer = getSigner(provider)
 
-        // Get honeyPot factory
-        const hFactory = await getHoneyPotFactory(signer);
-        // Get honeyPot address
-        const honeyPot = await hFactory.getHoneyPot(OPERATOR_ADDRESS, ethers.toBigInt(salt));
-        // create honeyPot
-        const tx = await hFactory.createHoneyPot(OPERATOR_ADDRESS, ethers.toBigInt(salt));
-        await tx.wait();
-        
-        return {honeyPot, salt, tx:
-            {
-                address: honeyPot,
-                salt
-            }
-        }
-        
-    } catch (error) {
-        console.log("error create honeyPot >>>> ", error)
-        throw error;
+    // Get honeyPot factory
+    const hFactory = await getHoneyPotFactory(signer);
+    // Get honeyPot address
+    console.log(hFactory, 'wats hfactory?')
+    const honeyPot = await hFactory.getHoneyPot(OPERATOR_ADDRESS, ethers.toBigInt(salt));
+    // create honeyPot
+    const tx = await hFactory.createHoneyPot(OPERATOR_ADDRESS, ethers.toBigInt(salt));
+    await tx.wait();
+
+    return {
+      honeyPot, salt, tx:
+      {
+        address: honeyPot,
+        salt
+      }
     }
+
+  } catch (error) {
+    console.log("error create honeyPot >>>> ", error)
+    throw error;
+  }
 }
 
 
@@ -248,9 +252,9 @@ function getHonneyPot(signer: ethers.ContractRunner, honneyPotAddress: string) {
   return honeyPot
 }
 
-async function getHoneyPotFactory(signer : ethers.ContractRunner) {
-    const hFactory = new ethers.Contract(HONNEYPOT_FACTORY, HONNEYPOT_FACTORY_ABI, signer)
-    return hFactory;
+async function getHoneyPotFactory(signer: ethers.ContractRunner) {
+  const hFactory = new ethers.Contract(HONNEYPOT_FACTORY, HONNEYPOT_FACTORY_ABI, signer)
+  return hFactory;
 }
 
 export function getSigner(provider: ethers.JsonRpcProvider) {
@@ -304,4 +308,14 @@ function getPoolWithdrawCallData(participant: string) {
     [participant]
   )
   return callData
+}
+
+export async function getCollectiveById(id: number) {
+  const existingCollective = await db.select().from(collective).where(sql`${collective.id} = ${id}`)
+  if (existingCollective[0]) {
+    return existingCollective[0]
+  }
+  else {
+    return null
+  }
 }

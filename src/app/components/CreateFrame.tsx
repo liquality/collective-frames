@@ -33,11 +33,9 @@ export default function CreateFrame() {
     setImagefile(file);
   };
 
-  console.log(erc20Token, "erc token");
   const handleRemove = () => {
     setImagefile(undefined);
   };
-  console.log(collective, "selected coll");
   const handleCollectiveChange = (e: ChangeEvent<HTMLSelectElement>) => {
     if (e.target.value) {
       const option = Number(e.target.value);
@@ -54,7 +52,6 @@ export default function CreateFrame() {
   };
 
   const handlePriceChange = (e: FormEvent<HTMLInputElement>) => {
-    console.log(e.currentTarget.value, "wats value?");
     let amount = e.currentTarget.value;
 
     if (!amount || amount.match(/^\d{1,}(\.\d{0,4})?$/)) {
@@ -67,10 +64,8 @@ export default function CreateFrame() {
   };
 
   const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
-    setErc20Token(e.target.value);
+    setErc20Token(JSON.parse(e.target.value));
   };
-
-  console.log(erc20Token, "erc20 token?");
 
   const handleSave = async () => {
     if (formIsValid) {
@@ -82,8 +77,10 @@ export default function CreateFrame() {
         formData.set("imageFile", imageFile!);
         formData.set("createdBy", Auth.fid);
         formData.set("collectiveId", collective.toString());
+        formData.set("price", price);
+        formData.set("paymentCurrency", erc20Token.contractAddress);
+        formData.set("decimal", erc20Token.decimal);
 
-        console.log(formData, "what is form data???", typeof formData);
         const response = await fetch("/api/create", {
           method: "POST",
           body: formData,
@@ -110,7 +107,6 @@ export default function CreateFrame() {
         const response = await fetch("/api/collectives");
         const data = await response.json();
         setCollectives(data);
-        console.log(data, "wats data");
       } catch (error) {
         console.error(error);
       } finally {
@@ -121,11 +117,18 @@ export default function CreateFrame() {
   }, []);
 
   const formIsValid = useMemo(() => {
-    if (imageFile && collective && collective > 0 && name) {
+    if (
+      imageFile &&
+      collective &&
+      collective > 0 &&
+      name &&
+      erc20Token &&
+      price
+    ) {
       return true;
     }
     return false;
-  }, [imageFile, collective, name]);
+  }, [imageFile, collective, name, erc20Token, price]);
 
   return (
     <div className="flex flex-col mt-8 bg-violet-50 p-3 rounded-[10px] text-black">

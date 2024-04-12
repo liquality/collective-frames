@@ -1,24 +1,21 @@
 import { put } from "@vercel/blob";
 import { NextRequest, NextResponse } from "next/server";
-import { create1155Contract, getETHMintPrice, mint, pinFileToIPFS, toTokenNativeAmount } from "@/utils";
+import { create1155Contract, pinFileToIPFS, toTokenNativeAmount } from "@/utils";
 import { db, frame, user } from "@/db";
 import { eq } from "drizzle-orm";
 import { findUserByFid } from "@/utils/user";
 import { v4 as uuidv4 } from 'uuid';
 import { COOKIE_USER_FID } from "@/utils/cookie-auth";
-import { getProvider } from "@/utils/collective";
-import { ethers } from "ethers";
+import { getCollectiveById, } from "@/utils/collective";
 import { zeroAddress } from "viem";
 import { NFTData } from "@/types";
 
 export async function POST(request: NextRequest) {
   try {
     const form = await request.formData();
-    console.log()
     const user = await findUserByFid(Number(form.get("createdBy")))
-
-    console.log(user, 'what is user? FID:', Number(form.get("createdBy")))
-    if (user) {
+    const collective = await getCollectiveById(Number(form.get("collectiveId")))
+    if (user && collective) {
 
       const data = {
         name: (form.get("name") as string) || "",
@@ -28,14 +25,11 @@ export async function POST(request: NextRequest) {
         price: (form.get("price") as string) || "",
         paymentCurrency: (form.get("paymentCurrency") as string) || "",
         decimal: (form.get("decimal") as string) || "",
-
         createdBy: user.id
       };
-      console.log({ data })
       const { name, description, collectiveId, price, paymentCurrency, decimal } = data;
-
-
       let pricePerMintToken
+      //TODO how to convert to token amount? We should use a 3rd party api?
       paymentCurrency !== zeroAddress ? pricePerMintToken = toTokenNativeAmount(price, Number(decimal)).toString() : null
 
       // Generate unique id for frame to not use the integer 
@@ -59,8 +53,6 @@ export async function POST(request: NextRequest) {
         );
 
 
-
-
         const nftData: NFTData = {
           name,
           pricePerMintETH: price,
@@ -71,7 +63,7 @@ export async function POST(request: NextRequest) {
         }
         //3) create the erc1155 using Liq Operator account as sponsor + Zora SDK
         const nft = await create1155Contract(
-
+          collective.cAddress as `0x${string}`, "0x000", nftData
         );
 
         if (nft) {
@@ -94,7 +86,7 @@ export async function POST(request: NextRequest) {
             .returning();
           return NextResponse.json({
             frame: newFrame[0],
-            zoraUrl: `https://zora.co/collect/base:${nft.logs[0].address}/1`,
+            zoraUrl: `https://zora.co/collect/base:${nft.nftContractAddress}/1`,
           });
         } else { throw Error("NFT failed to be created using Zora SDK") }
 

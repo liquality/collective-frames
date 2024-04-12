@@ -18,7 +18,7 @@ export const collective = pgTable("collective", {
   id: serial("id").primaryKey(),
   name: varchar("name", { length: 256 }).unique().notNull(),
   cAddress: varchar("c_address", { length: 256 }).notNull(),
-  cwallet: varchar("c_wallet", { length: 256 }).notNull(),
+  cWallet: varchar("c_wallet", { length: 256 }).notNull(),
   cPool: varchar("c_pool", { length: 256 }).notNull(),
   createdAt: timestamp("created_at").defaultNow(),
   expiresAt: timestamp("expiresAt")

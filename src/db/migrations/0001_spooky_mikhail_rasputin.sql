@@ -16,8 +16,9 @@ CREATE TABLE IF NOT EXISTS "frame" (
 	"slug" varchar(256) NOT NULL,
 	"image_url" varchar(256) NOT NULL,
 	"metadata_url" varchar(256) NOT NULL,
+	"payment_currency" varchar(256) NOT NULL,
 	"token_id" integer NOT NULL,
-	"token_address" varchar(256) NOT NULL,
+	"nft_token_address" varchar(256) NOT NULL,
 	"collective_id" integer,
 	"created_by" integer,
 	"created_at" timestamp DEFAULT now()
