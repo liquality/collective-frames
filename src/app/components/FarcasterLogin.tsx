@@ -24,7 +24,9 @@ const FarcasterLogin = () => {
         throw Error("Could not get or create user in server");
       }
     } catch (error) {
-      toast("Something went wrong. Contact support: " + error);
+      console.log(error, "what is error?");
+      /*       toast("Something went wrong. Contact support: " + error);
+       */
     }
   };
 
@@ -34,7 +36,9 @@ const FarcasterLogin = () => {
 
   return (
     <div className="flex justify-center">
-      <FarcasterSigninButton onSuccess={onSignInSuccess} onError={onError}/>
+      <FarcasterSigninButton
+        onSuccess={onSignInSuccess} /* onError={onError} */
+      />
     </div>
   );
 };

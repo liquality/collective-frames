@@ -7,9 +7,8 @@ import { findUserByFid } from "@/utils/user";
 import { v4 as uuidv4 } from 'uuid';
 import { COOKIE_USER_FID } from "@/utils/cookie-auth";
 import { getCollectiveById, } from "@/utils/collective";
-import { zeroAddress } from "viem";
 import { NFTData } from "@/types";
-import { HONEYPOT } from "@/utils/constants";
+import { ETH_CURRENCY_ADDRESS, HONEYPOT } from "@/utils/constants";
 
 export async function POST(request: NextRequest) {
   try {
@@ -31,7 +30,7 @@ export async function POST(request: NextRequest) {
       const { name, description, collectiveId, price, paymentCurrency, decimal } = data;
       let pricePerMintToken
       //TODO how to convert to token amount? We should use a 3rd party api?
-      paymentCurrency !== zeroAddress ? pricePerMintToken = toTokenNativeAmount(price, Number(decimal)).toString() : null
+      paymentCurrency !== ETH_CURRENCY_ADDRESS ? pricePerMintToken = toTokenNativeAmount(price, Number(decimal)).toString() : null
 
       // Generate unique id for frame to not use the integer 
       const slug = uuidv4();

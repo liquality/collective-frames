@@ -12,7 +12,7 @@ import { base, optimism } from "viem/chains";
 import { storageRegistryABI } from "../../contract-abi";
 import { findFrameById, findFrameBySlug } from "@/utils/frame";
 import { getCollectiveById } from "@/utils/collective";
-import { mint } from "@/utils";
+import { erc20PreMint, mint } from "@/utils";
 
 export async function POST(
   req: NextRequest
@@ -48,30 +48,6 @@ export async function POST(
     transport: http(),
   });
 
-  const STORAGE_REGISTRY_ADDRESS = "0x00000000fcCe7f938e7aE6D3c335bD6a1a7c593D";
-
-  const storageRegistry = getContract({
-    address: STORAGE_REGISTRY_ADDRESS,
-    abi: storageRegistryABI,
-    publicClient: publicClient,
-  });
-
-  const unitPrice = await storageRegistry.read.price([units]);
-
-  console.log(
-    {
-      chainId: "eip155:10", // OP Mainnet 10
-      method: "eth_sendTransaction",
-      params: {
-        abi: storageRegistryABI as Abi,
-        to: STORAGE_REGISTRY_ADDRESS,
-        data: calldata,
-        value: unitPrice.toString(),
-      },
-    },
-    "DATA"
-  );
-
   /*   const erc20TransferData = new ethers.Contract(mintParam.currency, ERC20_ABI).interface.encodeFunctionData(
     'transfer',
     [c_wallet, totalValue] // TODO: Update to use Per value or unbounded
@@ -103,7 +79,23 @@ return [
 }
 ] */
 
-  const mintTxs = await mint(
+  //TODO: Only call the premint if erc20mint
+  const premintTx = await erc20PreMint(
+    "0xb6B611c0A8F9Ae44B23154f2D95e939eefbb2D06",
+    {
+      tokenAddress: `0x${"fc96a6aa5b55c4caeefb7b04eb1d5ee3046217e2"}`,
+      currency: `0x${"833589fCD6eDb6E08f4c7C32D4f71b54bdA02913"}`, // "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",//`0x${"833589fCD6eDb6E08f4c7C32D4f71b54bdA02913"}`//,
+      recipient: `0x${"d5833B738C9ECDD12C06C78BedF16FA0788f0780"}`,
+      mintReferral: `0x${"cB951d0A3031208EC1b471dBfd5e92a6A7b4add7"}`,
+      creator: `0x${"f39Fd6e51aad88F6F4ce6aB8827279cffFb92266"}`,
+      quantity: BigInt(1),
+      tokenID: BigInt(1),
+      totalValue: "0.1", //ethers.formatEther(await getETHMintPrice(`0x${"48Fc3c982a022070cbC64d250Db398b82D123E68"}`)),
+      comment: "Minted via MyCollective",
+      tokenDecimal: 6,
+    }
+  );
+  /*  const mintTxs = await mint(
     "0xb6B611c0A8F9Ae44B23154f2D95e939eefbb2D06",
     "0xd75fbf394fF40A59f3635e72C0c8fB1e7a61F6dA",
     "0xF4225De6e4A0cEba4CA8394F7C956962BBABFA2F",
@@ -119,16 +111,18 @@ return [
       comment: "Minted via MyCollective",
       tokenDecimal: 6,
     }
-  );
+  ); */
+
+  console.log(premintTx, "MINT TX");
 
   return NextResponse.json({
-    chainId: "eip155:10", // OP Mainnet 10
+    chainId: "eip155:8453", // base mainnet
     method: "eth_sendTransaction",
     params: {
-      abi: storageRegistryABI as Abi,
-      to: STORAGE_REGISTRY_ADDRESS,
-      data: calldata,
-      value: unitPrice.toString(),
+      abi: premintTx.abi,
+      to: premintTx.to,
+      data: premintTx.data as `0x${string}`,
+      value: premintTx.value.toString(),
     },
   });
 }
