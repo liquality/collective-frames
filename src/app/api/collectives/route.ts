@@ -1,7 +1,7 @@
 export const dynamic = "force-dynamic";
 import { NextRequest, NextResponse } from "next/server";
 import { db, collective } from "@/db";
-import { ERC20_MINTER_ADDRESS, SUPPORTED_COMMUNITIES } from "@/utils/constants";
+import { ERC20_MINTER_ADDRESS, HONEYPOT, SUPPORTED_COMMUNITIES } from "@/utils/constants";
 import { sql } from "drizzle-orm";
 import { createCollective, createHoneyPot, createPool, generateSalt } from "@/utils/collective";
 
@@ -11,35 +11,37 @@ export async function GET() {
 
   //return Response.json(res);
 
+  const SUPPORTED_COMMUNITIES = ["DEGEN", "HPOS10", "MFERS"]
   try {
-    /*    for (const channel of SUPPORTED_COMMUNITIES) {
-         // Deploy a new collective and pool for each channel
-         let salt = generateSalt()
-         const createHoneyPotResult = await createHoneyPot(salt)
-         const cMetadata = await createCollective()
-         const cPool = await createPool(cMetadata.address, ERC20_MINTER_ADDRESS, createHoneyPotResult.honeyPot)
-   
-         console.log(createHoneyPotResult, 'honeypot')
-         console.log(cMetadata, 'cMetadata')
-         console.log(cPool, 'cPool')
-   
-         database.createChannel(
-           channel.id,
-           channel.question_id,
-           channel.name,
-           channel.followers,
-           cMetadata.address,
-           cMetadata.wallet,
-           cPool,
-           cMetadata.salt
-         )
-       } */
+    for (const community of SUPPORTED_COMMUNITIES) {
+      // Deploy a new collective and pool for each channel
+      const cMetadata = await createCollective()
+      const cPool = await createPool(cMetadata.address, ERC20_MINTER_ADDRESS, HONEYPOT)
 
-    let salt = generateSalt()
-    const createdHoneyPotResult = await createHoneyPot(salt)
-    console.log(createdHoneyPotResult, 'created???')
 
-    return Response.json({ status: createdHoneyPotResult, message: 'Collectives created successfully' })
+      console.log(cMetadata, 'cMetadata')
+      console.log(cPool, 'cPool')
+
+      //expires in 5 weeks time
+      const expiresAt = new Date(new Date().getTime() + (5 * 7 * 24 * 60 * 60 * 1000));
+
+      const newCollective = await db
+        .insert(collective)
+        .values({
+          name: community,
+          cAddress: cMetadata.address,
+          cWallet: cMetadata.wallet,
+          cPool: cPool,
+          expiresAt,
+        })
+        .returning();
+
+      console.log(newCollective, 'NEW COLLECTIVE!')
+    }
+
+
+
+    return Response.json({ status: "OK", message: 'Collectives created successfully' })
 
   } catch (error) {
     console.error('Error creating collectives:', error)

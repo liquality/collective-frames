@@ -9,6 +9,7 @@ import { COOKIE_USER_FID } from "@/utils/cookie-auth";
 import { getCollectiveById, } from "@/utils/collective";
 import { zeroAddress } from "viem";
 import { NFTData } from "@/types";
+import { HONEYPOT } from "@/utils/constants";
 
 export async function POST(request: NextRequest) {
   try {
@@ -63,7 +64,7 @@ export async function POST(request: NextRequest) {
         }
         //3) create the erc1155 using Liq Operator account as sponsor + Zora SDK
         const nft = await create1155Contract(
-          collective.cAddress as `0x${string}`, "0x000", nftData
+          collective.cAddress as `0x${string}`, HONEYPOT, nftData
         );
 
         if (nft) {
