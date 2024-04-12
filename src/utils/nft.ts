@@ -1,15 +1,15 @@
-import { createPublicClient, createWalletClient, http, encodeFunctionData} from "viem";
-import { create1155CreatorClient, createMintClient} from "@zoralabs/protocol-sdk";
+import { createPublicClient, createWalletClient, http, encodeFunctionData } from "viem";
+import { create1155CreatorClient, createMintClient } from "@zoralabs/protocol-sdk";
 import { base } from "viem/chains";
 import { mnemonicToAccount } from 'viem/accounts'
 import { ethers } from "ethers";
-import {ERC20Minter__factory} from "../../contracts/typechain-types/factories/contracts/minters/erc20/ERC20Minter__factory"
+import { ERC20Minter__factory } from "../../contracts/typechain-types/factories/contracts/minters/erc20/ERC20Minter__factory"
 import axios from "axios";
 import { COLLECTIVE_ABI, ERC1155ABI, ERC20MINTER_ABI, ERC20_ABI, ERC20_MINTER_ADDRESS, ETH_CURRENCY_ADDRESS, OPERATOR_ADDRESS } from "./constants";
 import { MintParam, NFTData, Transaction } from "@/types";
 import { collectiveBatchExecuteData, getProvider, getRecordPoolMintCallData } from "./collective";
 
-export async function create1155Contract(c_address: `0x${string}`, honeyPot: `0x${string}`,  nftData : NFTData ) {
+export async function create1155Contract(c_address: `0x${string}`, honeyPot: `0x${string}`, nftData: NFTData) {
 
     if (process.env.OPERATOR_MNEMONIC) {
         let tokenDecimal = 18;
@@ -26,7 +26,7 @@ export async function create1155Contract(c_address: `0x${string}`, honeyPot: `0x
 
         if (publicClient) {
             // Get the current timestamp in milliseconds
-            const currentTimestamp = Date.now();const hundredYearsInMilliseconds = 100 * 365.25 * 24 * 60 * 60 * 1000;
+            const currentTimestamp = Date.now(); const hundredYearsInMilliseconds = 100 * 365.25 * 24 * 60 * 60 * 1000;
             const futureTimestamp = currentTimestamp + hundredYearsInMilliseconds;
             const futureUnixTimestamp = Math.floor(futureTimestamp / 1000);
 
@@ -43,8 +43,8 @@ export async function create1155Contract(c_address: `0x${string}`, honeyPot: `0x
                 account: OPERATOR_ADDRESS as `0x${string}`,// This should be the creator address
                 mintToCreatorCount: 1,
                 salesConfig: {
-                    saleStart: BigInt(Math.floor(Date.now() / 1000)), 
-                    saleEnd: BigInt(futureUnixTimestamp), 
+                    saleStart: BigInt(Math.floor(Date.now() / 1000)),
+                    saleEnd: BigInt(futureUnixTimestamp),
                     pricePerToken: toTokenNativeAmount(nftData.pricePerMintETH, tokenDecimal), // Price in Wei
                     fundsRecipient: honeyPot as `0x${string}` // collective wallet
                 }
@@ -52,14 +52,14 @@ export async function create1155Contract(c_address: `0x${string}`, honeyPot: `0x
 
             const { request: simulateRequest } = await publicClient.simulateContract(request);
             const { abi, address, functionName, args } = simulateRequest
-            console.log("functionName >> ", functionName, args , ' << args')
+            console.log("functionName >> ", functionName, args, ' << args')
             const hash = await walletClient.writeContract({
                 account: walletAccount,
                 abi,
                 address,
                 functionName,
                 args
-            } );
+            });
             const receipt = await publicClient.waitForTransactionReceipt({ hash });
             let nftContractAddress = receipt.logs[0].address;
             console.log(receipt, ' deployed NFT receipt')
@@ -74,13 +74,13 @@ export async function create1155Contract(c_address: `0x${string}`, honeyPot: `0x
                     address: nftContractAddress as `0x${string}`,
                     functionName: 'addPermission',
                     args:
-                    [
-                        0, // permission bit
-                        ERC20_MINTER_ADDRESS as `0x${string}`, // minter address
-                        2**1
-                    ]
+                        [
+                            0, // permission bit
+                            ERC20_MINTER_ADDRESS as `0x${string}`, // minter address
+                            2 ** 1
+                        ]
                 });
-                const addERC20MinterPermissionReceipt = await publicClient.waitForTransactionReceipt({hash: erc20MinterPermissionHash});
+                const addERC20MinterPermissionReceipt = await publicClient.waitForTransactionReceipt({ hash: erc20MinterPermissionHash });
                 console.log(addERC20MinterPermissionReceipt, ' added permission to mint ERC20 tokens receipt')
 
                 // Get currency decimal
@@ -107,7 +107,7 @@ export async function create1155Contract(c_address: `0x${string}`, honeyPot: `0x
                     ]
                 });
                 console.log(salesHash, ' set sales on ERC20 Minter')
-                const setSalesReceipt = await publicClient.waitForTransactionReceipt({hash: salesHash});
+                const setSalesReceipt = await publicClient.waitForTransactionReceipt({ hash: salesHash });
                 console.log(setSalesReceipt, ' set sales on ERC20 Minter receipt')
             }
 
@@ -119,7 +119,7 @@ export async function create1155Contract(c_address: `0x${string}`, honeyPot: `0x
                 functionName: 'whitelistTargets',
                 args: [[nftData.paymentCurrency, nftContractAddress as `0x${string}`]]
             });
-            const whitelistReceipt = await publicClient.waitForTransactionReceipt({hash: whitelistHash});
+            const whitelistReceipt = await publicClient.waitForTransactionReceipt({ hash: whitelistHash });
             console.log(whitelistReceipt, ' whitelisted currency receipt')
 
             // Add permission to creator on nft contract
@@ -129,13 +129,13 @@ export async function create1155Contract(c_address: `0x${string}`, honeyPot: `0x
                 address: nftContractAddress as `0x${string}`,
                 functionName: 'addPermission',
                 args:
-                [
-                    0, // Token id
-                    nftData.creator, // creator address
-                    2**1 // Permission bit
-                ]
+                    [
+                        0, // Token id
+                        nftData.creator, // creator address
+                        2 ** 1 // Permission bit
+                    ]
             });
-            const addPermissionCreatorReceipt = await publicClient.waitForTransactionReceipt({hash: addPermissionCreatorHash});
+            const addPermissionCreatorReceipt = await publicClient.waitForTransactionReceipt({ hash: addPermissionCreatorHash });
             console.log(addPermissionCreatorReceipt, ' added permission to creator receipt')
 
             // Set the creator as the owner of the contract
@@ -145,11 +145,11 @@ export async function create1155Contract(c_address: `0x${string}`, honeyPot: `0x
                 address: nftContractAddress as `0x${string}`,
                 functionName: 'setOwner',
                 args:
-                [
-                    nftData.creator
-                ]
+                    [
+                        nftData.creator
+                    ]
             });
-            const setOwnerReceipt = await publicClient.waitForTransactionReceipt({hash: setCreatorToOwnerHash});
+            const setOwnerReceipt = await publicClient.waitForTransactionReceipt({ hash: setCreatorToOwnerHash });
             console.log(setOwnerReceipt, ' set creator as owner receipt')
 
             return {
@@ -167,7 +167,7 @@ export async function mint(c_wallet: `0x${string}`, c_address: `0x${string}`, po
     if (mintParam.currency == ETH_CURRENCY_ADDRESS) {
         // ETH Mint
         return await ethMint(c_wallet, c_address, poolAddress, mintParam)
-    } 
+    }
     // ERC20 Mint
     return await erc20Mint(c_wallet, c_address, poolAddress, mintParam);
 
@@ -216,7 +216,7 @@ async function erc20Mint(c_wallet: `0x${string}`, c_address: `0x${string}`, pool
     const totalValue = toTokenNativeAmount(mintParam.totalValue, mintParam.tokenDecimal)
     // transaction data for ERC20 transfer by minter to collective
     const erc20TransferData = new ethers.Contract(mintParam.currency, ERC20_ABI).interface.encodeFunctionData(
-        'transfer', 
+        'transfer',
         [c_wallet, totalValue] // TODO: Update to use Per value or unbounded
     )
     const transferData = {
@@ -224,20 +224,20 @@ async function erc20Mint(c_wallet: `0x${string}`, c_address: `0x${string}`, pool
         data: erc20TransferData,
         value: BigInt(0)
     }
-    
+
     // data for approval of ERC20Minter on collective wallet
     const erc20ApprovalData = new ethers.Contract(mintParam.currency, ERC20_ABI).interface.encodeFunctionData(
-        'approve', 
+        'approve',
         [ERC20_MINTER_ADDRESS as `0x${string}`, totalValue] // TODO: Update to use Per value or unbounded
     )
     const mintData = ERC20Minter__factory.createInterface().encodeFunctionData('mint', [
-        mintParam.recipient, 
-        mintParam.quantity, 
-        mintParam.tokenAddress, 
-        mintParam.tokenID, 
-        totalValue, 
-        mintParam.currency, 
-        mintParam.mintReferral, 
+        mintParam.recipient,
+        mintParam.quantity,
+        mintParam.tokenAddress,
+        mintParam.tokenID,
+        totalValue,
+        mintParam.currency,
+        mintParam.mintReferral,
         mintParam.comment
     ])
     // data for recording creator participation on pool
@@ -306,12 +306,12 @@ export async function pinFileToIPFS(file: any, name: string, description: string
     }
 }
 
-function toTokenNativeAmount(amount: string, decimals: number) {
+export function toTokenNativeAmount(amount: string, decimals: number) {
     return ethers.parseUnits(amount, decimals);
 }
 
-function getSetSalesData(saleEnd: number, pricePerToken: string, fundsRecipient: `0x${string}`, paymentCurrency: `0x${string}`, currencyDecimal: number) : string {
-    let setSalesData = new ethers.Contract(ERC20_MINTER_ADDRESS as `0x${string}`, ERC20MINTER_ABI).interface.encodeFunctionData("setSale", [ 
+function getSetSalesData(saleEnd: number, pricePerToken: string, fundsRecipient: `0x${string}`, paymentCurrency: `0x${string}`, currencyDecimal: number): string {
+    let setSalesData = new ethers.Contract(ERC20_MINTER_ADDRESS as `0x${string}`, ERC20MINTER_ABI).interface.encodeFunctionData("setSale", [
         BigInt(1), // tokenId
         [
             BigInt(Math.floor(Date.now() / 1000)), // saleStart
@@ -327,8 +327,8 @@ function getSetSalesData(saleEnd: number, pricePerToken: string, fundsRecipient:
 
 async function getETHMintData(c_wallet: `0x${string}`, mintParam: MintParam) {
 
-    const mintClient = createMintClient({chain: base});
-     const prepared = await mintClient.makePrepareMintTokenParams({
+    const mintClient = createMintClient({ chain: base });
+    const prepared = await mintClient.makePrepareMintTokenParams({
         minterAccount: mintParam.recipient,
         tokenAddress: mintParam.tokenAddress,
         tokenId: mintParam.tokenID,
@@ -349,7 +349,7 @@ async function getETHMintData(c_wallet: `0x${string}`, mintParam: MintParam) {
         functionName: prepared.functionName,
         args: [...(prepared.args as Array<any>)]
     })
-    
+
     return mintData;
 }
 
@@ -365,7 +365,7 @@ function getChain(chains: any, chainId: any) {
         if (chains[chain].id === chainId) {
             return chains[chain];
         }
-      }
+    }
 }
 
 async function directMint(tokenAddress: `0x${string}`, tokenId: number, mintParam: MintParam) {
@@ -380,24 +380,24 @@ async function directMint(tokenAddress: `0x${string}`, tokenId: number, mintPara
         chain: base,
         transport: http(process.env.RPC_URL!)
     });
-    
+
     const hash = await walletClient.writeContract({
         account: walletAccount,
         abi: ERC20MINTER_ABI,
         address: ERC20_MINTER_ADDRESS as `0x${string}`,
         functionName: 'mint',
         args: [
-                mintParam.recipient, 
-                mintParam.quantity, 
-                tokenAddress, 
-                tokenId, 
-                toTokenNativeAmount(mintParam.totalValue, mintParam.tokenDecimal), 
-                mintParam.currency, 
-                mintParam.mintReferral, 
-                mintParam.comment]
+            mintParam.recipient,
+            mintParam.quantity,
+            tokenAddress,
+            tokenId,
+            toTokenNativeAmount(mintParam.totalValue, mintParam.tokenDecimal),
+            mintParam.currency,
+            mintParam.mintReferral,
+            mintParam.comment]
     });
     console.log(hash, ' mint hash')
-    const receipt = await publicClient.waitForTransactionReceipt({hash});
+    const receipt = await publicClient.waitForTransactionReceipt({ hash });
     console.log(receipt, 'mint receipt')
     return receipt;
 }

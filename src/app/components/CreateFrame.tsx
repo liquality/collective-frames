@@ -12,6 +12,7 @@ import { CollectiveItem, FrameWithZoraUrl } from "@/types";
 import DragNdropFile from "./DragNdropFile";
 import { Auth } from "@/utils/cookie-auth";
 import { useRouter } from "next/navigation";
+import { erc20TokenData } from "@/constants/erc20-token-data";
 
 export default function CreateFrame() {
   const [isSaving, setIsSaving] = useState<boolean>(false);
@@ -22,6 +23,9 @@ export default function CreateFrame() {
   const [name, setName] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [collective, setCollective] = useState<number>(0);
+  const [erc20Token, setErc20Token] = useState<any | null>(null);
+  const [price, setPrice] = useState<string>("0.000");
+
   const [frameData, setFrameData] = useState<FrameWithZoraUrl | null>(null);
   const router = useRouter();
 
@@ -29,6 +33,7 @@ export default function CreateFrame() {
     setImagefile(file);
   };
 
+  console.log(erc20Token, "erc token");
   const handleRemove = () => {
     setImagefile(undefined);
   };
@@ -48,9 +53,24 @@ export default function CreateFrame() {
     setName(e.currentTarget.value || "");
   };
 
+  const handlePriceChange = (e: FormEvent<HTMLInputElement>) => {
+    console.log(e.currentTarget.value, "wats value?");
+    let amount = e.currentTarget.value;
+
+    if (!amount || amount.match(/^\d{1,}(\.\d{0,4})?$/)) {
+      setPrice(amount);
+    }
+  };
+
   const handleDescriptionChange = (e: FormEvent<HTMLTextAreaElement>) => {
     setDescription(e.currentTarget.value || "");
   };
+
+  const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    setErc20Token(e.target.value);
+  };
+
+  console.log(erc20Token, "erc20 token?");
 
   const handleSave = async () => {
     if (formIsValid) {
@@ -149,8 +169,35 @@ export default function CreateFrame() {
                 placeholder="Name your Meme*"
               />
             </div>
+            {
+              <div className="flex flex-row mt-6">
+                <label className="flex mt-2 mr-3 text-black">
+                  Mint Price in ETH
+                </label>
+
+                <input
+                  type="text"
+                  onChange={handlePriceChange}
+                  value={price}
+                  className="p-2 h-50 border border-purple-500 focus:outline-none focus:ring-0"
+                  placeholder="Mint Price*"
+                />
+              </div>
+            }
             <div className="flex mt-6">
               <div className="flex flex-col w-full">
+                <select
+                  className="w-full p-2 border border-purple-500 focus:outline-none focus:ring-0"
+                  id="tokens"
+                  onChange={handleChange}
+                >
+                  <option value="">{"Select ERC20 or ETH payment"}</option>
+                  {erc20TokenData.map((token, index) => (
+                    <option key={index} value={JSON.stringify(token)}>
+                      {token.ticker}
+                    </option>
+                  ))}
+                </select>
                 <div className="flex mb-2 text-black">
                   Who shares your mint profits?
                 </div>
