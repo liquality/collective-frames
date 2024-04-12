@@ -10,6 +10,7 @@ import {
   HONNEYPOT_FACTORY,
   HONNEYPOT_FACTORY_ABI,
   OPERATOR_ADDRESS,
+  HONEYPOT,
 } from './constants'
 import { QueryResultRow } from '@vercel/postgres'
 import { collective, db } from '@/db'
@@ -122,7 +123,7 @@ export async function setTopCollective(
   try {
     const provider = getProvider()
     const signer = getSigner(provider)
-    const honeyPot = getHonneyPot(signer)
+    const honeyPot = getHonneyPot(signer, HONEYPOT)
 
     // console.log("topContributor: ", await honeyPot.getTopContributor());
     const tx = await honeyPot.setTopContributor(topContributor)
@@ -140,7 +141,7 @@ export async function sendRewardToTopCollective(): Promise<string> {
   try {
     const provider = getProvider()
     const signer = getSigner(provider)
-    const honeyPot = getHonneyPot(signer)
+    const honeyPot = getHonneyPot(signer, HONEYPOT)
 
     const tx = await honeyPot.sendReward()
     await provider.waitForTransaction(tx.hash)
@@ -154,19 +155,20 @@ export async function sendRewardToTopCollective(): Promise<string> {
 
 // Distribute rewards in pool
 export async function distributeRewards(poolAddress: string): Promise<string> {
-  try {
-    const provider = getProvider()
-    const signer = getSigner(provider)
-    const pool = await getPool(signer, poolAddress)
-
-    const tx = await pool.distributeReward()
-    await provider.waitForTransaction(tx.hash)
-    console.log('Rewards distributed successfully! ', tx.hash)
-
-    return tx.hash
-  } catch (error) {
-    throw new Error('Error distributing rewards: ' + error)
-  }
+  /*   try {
+      const provider = getProvider()
+      const signer = getSigner(provider)
+      const pool = await getPool(signer, poolAddress)
+  
+      const tx = await pool.distributeReward()
+      await provider.waitForTransaction(tx.hash)
+      console.log('Rewards distributed successfully! ', tx.hash)
+  
+      return tx.hash
+    } catch (error) {
+      throw new Error('Error distributing rewards: ' + error)
+    } */
+  return ""
 }
 
 // withdraw rewards
@@ -175,32 +177,33 @@ export async function batchWithdrawRewards(
   poolAddress: string,
   participants: QueryResultRow[]
 ): Promise<string> {
-  try {
-    const provider = getProvider()
-    const signer = getSigner(provider)
-
-    const cWallet = getCWallet(signer, cWalletAddress)
-    let data: string[] = []
-    let value: number[] = []
-    let dest: string[] = []
-
-    for (const participant of participants) {
-      const callData = getPoolWithdrawCallData(participant.address)
-      data.push(callData)
-      value.push(0)
-      dest.push(poolAddress)
-    }
-
-    const tx = await cWallet.executeBatch(dest, value, data, {
-      gasLimit: 400000,
-    })
-    await provider.waitForTransaction(tx.hash)
-    console.log('withdrawal successfully!', tx.hash)
-
-    return tx.hash
-  } catch (error) {
-    throw new Error('Error batch withdrawing rewards: ' + error)
-  }
+  /*   try {
+      const provider = getProvider()
+      const signer = getSigner(provider)
+  
+      const cWallet = getCWallet(signer, cWalletAddress)
+      let data: string[] = []
+      let value: number[] = []
+      let dest: string[] = []
+  
+      for (const participant of participants) {
+        const callData = getPoolWithdrawCallData(participant.address)
+        data.push(callData)
+        value.push(0)
+        dest.push(poolAddress)
+      }
+  
+      const tx = await cWallet.executeBatch(dest, value, data, {
+        gasLimit: 400000,
+      })
+      await provider.waitForTransaction(tx.hash)
+      console.log('withdrawal successfully!', tx.hash)
+  
+      return tx.hash
+    } catch (error) {
+      throw new Error('Error batch withdrawing rewards: ' + error)
+    } */
+  return ""
 }
 
 // withdraw rewards
@@ -208,19 +211,20 @@ export async function withdrawRewards(
   poolAddress: string,
   participant: string
 ): Promise<string> {
-  try {
-    const provider = getProvider()
-    const signer = getSigner(provider)
-    const pool = await getPool(signer, poolAddress)
-
-    const tx = await pool.withdrawReward(participant)
-    await provider.waitForTransaction(tx.hash)
-    console.log('Rewards withdrawn successfully! ', tx.hash)
-
-    return tx.hash
-  } catch (error) {
-    throw new Error('Error withdrawing rewards: ' + error)
-  }
+  /*   try {
+      const provider = getProvider()
+      const signer = getSigner(provider)
+      const pool = await getPool(signer, poolAddress)
+  
+      const tx = await pool.withdrawReward(participant)
+      await provider.waitForTransaction(tx.hash)
+      console.log('Rewards withdrawn successfully! ', tx.hash)
+  
+      return tx.hash
+    } catch (error) {
+      throw new Error('Error withdrawing rewards: ' + error)
+    } */
+  return ""
 }
 
 async function getPool(signer: ethers.Wallet, poolAddress: string) {
