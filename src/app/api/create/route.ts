@@ -2,7 +2,7 @@ import { put } from "@vercel/blob";
 import { NextRequest, NextResponse } from "next/server";
 import { create1155Contract, pinFileToIPFS, toTokenNativeAmount } from "@/utils";
 import { db, frame, user } from "@/db";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { findUserByFid } from "@/utils/user";
 import { v4 as uuidv4 } from 'uuid';
 import { COOKIE_USER_FID } from "@/utils/cookie-auth";
@@ -13,6 +13,7 @@ import { ETH_CURRENCY_ADDRESS, HONEYPOT } from "@/utils/constants";
 export async function POST(request: NextRequest) {
   try {
     const form = await request.formData();
+    
     const user = await findUserByFid(Number(form.get("createdBy")))
     const collective = await getCollectiveById(Number(form.get("collectiveId")))
     if (user && collective) {
@@ -107,7 +108,10 @@ export async function GET(request: NextRequest, response: NextResponse) {
     const users = await db.select().from(user).where(eq(user.fid, Number(fid))).limit(1);
     if (users && users.length > 0) {
 
-      const res = await db.select().from(frame).where(eq(frame.createdBy, users[0].id));
+      const res = await db.select().from(frame).where(and(
+        eq(frame.createdBy, users[0].id),
+        eq(frame.createdBy, users[0].id)
+      ));
 
       return Response.json(res || []);
     }

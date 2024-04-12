@@ -20,14 +20,18 @@ export default function Dashboard() {
     });
   }, []);
   return (
-    <div className="w-full items-center flex-col">
+    <div className="w-full">
       {loading ? (
         <div className="flex text-center justify-center text-lg">
           Loading...
         </div>
       ) : (
-        <>
-          <div className="flex items-center">
+        <div className="flex flex-col items-center">
+          <div
+            style={{ width: "80%" }}
+            className="flex rounded-2xl bg-white bg-opacity-70 p-4 text-black"
+          >
+            <div className="flex mt-12 mb-12">
             {frames.map((frame) => (
               <div
                 onClick={() => router.push(`/share/${frame.id}`)}
@@ -37,16 +41,17 @@ export default function Dashboard() {
                 frame name: {frame.name} ID: {frame.id}
               </div>
             ))}
+            </div>
           </div>
           <div className="flex justify-center">
             <a
               href="/create-frame"
               className="rounded-full px-4 py-2 bg-purple-500 disabled:opacity-75 text-white focus:outline-none focus:ring-0"
             >
-              Create New Frame
+              Create another Meme NFT
             </a>
           </div>
-        </>
+        </div>
       )}
     </div>
   );
