@@ -16,13 +16,17 @@ const CopyFrameModal: React.FC<ModalProps> = (props) => {
 
   const handleWriteCastClick = () => {
     const text = encodeURIComponent(castText);
-    const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL || (`${window.location.protocol}//${window.location.host}`);
-    const frameUrl =  `${baseUrl}/frames/${frameData?.frame?.slug}`;
-    window.open(`https://warpcast.com/~/compose?text=${text}&embeds[]=${frameUrl}`)
-    setCastText('')
+    const baseUrl =
+      process.env.NEXT_PUBLIC_SERVER_URL ||
+      `${window.location.protocol}//${window.location.host}`;
+    const frameUrl = `${baseUrl}frames-transaction/${frameData?.frame?.slug}`;
+    window.open(
+      `https://warpcast.com/~/compose?text=${text}&embeds[]=${frameUrl}`
+    );
+    setCastText("");
     onClose();
   };
-  console.log({ frameData })
+  console.log({ frameData });
 
   const handleCastTextChange = (e: FormEvent<HTMLTextAreaElement>) => {
     setCastText(e.currentTarget.value || "");
