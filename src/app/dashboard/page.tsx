@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 
 export default function Dashboard() {
-  const route = useRouter();
+  const router = useRouter();
   const [frames, setFrames] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
@@ -15,7 +15,7 @@ export default function Dashboard() {
         setFrames(data);
         setLoading(false);
       } else {
-        route.push("/create-frame");
+        router.push("/create-frame");
       }
     });
   }, []);
@@ -29,8 +29,12 @@ export default function Dashboard() {
         <>
           <div className="flex items-center">
             {frames.map((frame) => (
-              <div className="" key={frame.id}>
-                frame name: {frame.name}
+              <div
+                onClick={() => router.push(`/share/${frame.id}`)}
+                className=""
+                key={frame.id}
+              >
+                frame name: {frame.name} ID: {frame.id}
               </div>
             ))}
           </div>

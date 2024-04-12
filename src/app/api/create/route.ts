@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
         description: (form.get("description") as string) || "",
         imageFile: form.get("imageFile"),
         collectiveId: (form.get("collectiveId") as string) || "",
-        createdBy: user?.id
+        createdBy: user.id
       };
       console.log({ data })
       const { name, description, collectiveId } = data;

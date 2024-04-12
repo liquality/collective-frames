@@ -19,3 +19,15 @@ export const findFrameById = async (frameId: number) => {
     }
 
 }
+
+
+export const findFrameBySlug = async (slug: string) => {
+    const existingFrame = await db.select().from(frame).where(sql`${frame.slug} = ${slug}`)
+    if (existingFrame[0]) {
+        return existingFrame[0]
+    }
+    else {
+        return null
+    }
+
+}
