@@ -16,6 +16,7 @@ CREATE TABLE IF NOT EXISTS "frame" (
 	"slug" varchar(256) NOT NULL,
 	"image_url" varchar(256) NOT NULL,
 	"metadata_url" varchar(256) NOT NULL,
+	"price_in_eth" varchar(256) NOT NULL,
 	"payment_currency" varchar(256) NOT NULL,
 	"token_id" integer NOT NULL,
 	"nft_token_address" varchar(256) NOT NULL,
