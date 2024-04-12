@@ -5,6 +5,7 @@ import { findFrameBySlug } from "@/utils/frame";
 import { getCollectiveById } from "@/utils/collective";
 import Image from "next/image";
 import { ETH_CURRENCY_ADDRESS } from "@/utils/constants";
+import { collective } from "@/db";
 
 const handleRequest = frames(async (ctx) => {
   const parts = ctx.url.pathname.split("/");
@@ -16,6 +17,12 @@ const handleRequest = frames(async (ctx) => {
   const existingFrame = await findFrameBySlug(slug);
   if (!existingFrame) {
     throw new Error("Frame with slug not found" + slug);
+  }
+  const collective = await getCollectiveById(
+    existingFrame.collectiveId as number
+  );
+  if (!collective) {
+    throw new Error("No frame message");
   }
 
   console.log(existingFrame, "existing frame?");
@@ -82,9 +89,11 @@ const handleRequest = frames(async (ctx) => {
     imageOptions: {
       aspectRatio: "1:1",
     },
+
     buttons: [
+      // @ts-ignore
       <Button action="tx" target={`/txdata/${slug}/${route}`}>
-        Mint!
+        Mint for community: {collective.name}
       </Button>,
     ],
   };
