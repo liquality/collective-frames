@@ -1,5 +1,4 @@
-import { ERC20_ABI } from "@/utils/constants";
-import { zeroAddress } from "viem";
+import { ERC20_ABI, ETH_CURRENCY_ADDRESS } from "@/utils/constants";
 
 export const erc20TokenData =
     [
@@ -15,7 +14,7 @@ export const erc20TokenData =
         },
         {
             ticker: "ETH",
-            contractAddress: zeroAddress,
+            contractAddress: ETH_CURRENCY_ADDRESS,
             decimal: 18,
         }
     ]

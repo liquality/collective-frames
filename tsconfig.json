@@ -26,7 +26,8 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "node"
+    "node",
+    "src/app/frames-transaction/txdata/[slug]/premint"
   ],
   "exclude": ["node_modules"]
 }

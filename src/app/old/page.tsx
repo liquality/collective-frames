@@ -47,8 +47,10 @@ export default async function Home({ searchParams, params }: Props) {
   const previousFrame = getPreviousFrame<State>(searchParams);
   const [state] = useFramesReducer<State>(reducer, initialState, previousFrame);
   const frameMessage = await getFrameMessage(previousFrame.postBody, {
-    hubHttpUrl: "",
+    hubHttpUrl: "https://nemes.farcaster.xyz:2281",
   });
+
+  console.log(params, "paramos?");
   if (!params.slug) {
     throw new Error("Frame id not found");
   }

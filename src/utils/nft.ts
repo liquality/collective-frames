@@ -182,8 +182,9 @@ export async function erc20PreMint(c_wallet: `0x${string}`, mintParam: MintParam
 
 }
 
-export async function mint(c_wallet: `0x${string}`, c_address: `0x${string}`, poolAddress: `0x${string}`, mintParam: MintParam): Promise<Transaction[]> {
+export async function mint(c_wallet: `0x${string}`, c_address: `0x${string}`, poolAddress: `0x${string}`, mintParam: MintParam): Promise<Transaction> {
 
+    console.log(mintParam.currency == ETH_CURRENCY_ADDRESS, 'is eth??')
     if (mintParam.currency == ETH_CURRENCY_ADDRESS) {
         // ETH Mint
         return await ethMint(c_wallet, c_address, poolAddress, mintParam)
@@ -193,7 +194,7 @@ export async function mint(c_wallet: `0x${string}`, c_address: `0x${string}`, po
 
 }
 
-async function ethMint(c_wallet: `0x${string}`, c_address: `0x${string}`, poolAddress: `0x${string}`, mintParam: MintParam): Promise<Transaction[]> {
+async function ethMint(c_wallet: `0x${string}`, c_address: `0x${string}`, poolAddress: `0x${string}`, mintParam: MintParam): Promise<Transaction> {
     // data for minting NFT on ERC20Minter by collective
     const mintData = await getETHMintData(c_wallet, mintParam)
     const totalValue = toTokenNativeAmount(mintParam.totalValue, 18)
@@ -228,9 +229,8 @@ async function ethMint(c_wallet: `0x${string}`, c_address: `0x${string}`, poolAd
         value: totalValue
     }
 
-    return [
-        batchTransactionData
-    ]
+    return batchTransactionData
+
 }
 
 async function erc20Mint(c_wallet: `0x${string}`, c_address: `0x${string}`, poolAddress: `0x${string}`, mintParam: MintParam): Promise<Transaction> {
@@ -352,7 +352,7 @@ async function getETHMintData(c_wallet: `0x${string}`, mintParam: MintParam) {
             mintReferral: mintParam.mintReferral,
         },
     });
-    console.log(prepared.abi, 'prepared mint data', prepared.functionName, "function name", prepared.args, ' << args')
+    console.log('prepared mint data', prepared.functionName, "function name", prepared.args, ' << args')
     const mintData = encodeFunctionData({
         abi: prepared.abi,
         functionName: prepared.functionName,
