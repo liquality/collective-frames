@@ -8,9 +8,10 @@ import {
   getContract,
   http,
 } from "viem";
-import { optimism } from "viem/chains";
+import { base, optimism } from "viem/chains";
 import { storageRegistryABI } from "../../contract-abi";
 import { findFrameById, findFrameBySlug } from "@/utils/frame";
+import { getCollectiveById } from "@/utils/collective";
 
 export async function POST(
   req: NextRequest
@@ -19,6 +20,12 @@ export async function POST(
   const slug = parts[parts.length - 1];
   //use existing frame data to get token params & mint
   const existingFrame = await findFrameBySlug(slug);
+  if (!existingFrame) {
+    throw new Error("Frame with slug not found" + slug);
+  }
+  const collective = await getCollectiveById(
+    existingFrame.collectiveId as number
+  );
 
   const json = await req.json();
   const frameMessage = await getFrameMessage(json);
@@ -36,7 +43,7 @@ export async function POST(
   });
 
   const publicClient = createPublicClient({
-    chain: optimism,
+    chain: base,
     transport: http(),
   });
 
@@ -63,6 +70,37 @@ export async function POST(
     },
     "DATA"
   );
+
+  /*   const erc20TransferData = new ethers.Contract(mintParam.currency, ERC20_ABI).interface.encodeFunctionData(
+    'transfer',
+    [c_wallet, totalValue] // TODO: Update to use Per value or unbounded
+)
+const transferData = {
+    to: mintParam.currency,
+    data: erc20TransferData,
+    value: BigInt(0)
+}
+
+
+let batchData = collectiveBatchExecuteData(value, data, dest, c_wallet)
+let batchTransactionData = {
+    to: c_wallet,
+    data: batchData,
+    value: BigInt(0)
+}
+
+return [
+     transferData: {
+    to: `0x${string}`;
+    data: string;
+    value: bigint;
+}, 
+    batchTransactionData: {
+    to: `0x${string}`;
+    data: string;
+    value: bigint;
+}
+] */
 
   return NextResponse.json({
     chainId: "eip155:10", // OP Mainnet 10

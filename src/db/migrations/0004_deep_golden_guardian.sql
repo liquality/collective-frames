@@ -4,6 +4,7 @@ CREATE TABLE IF NOT EXISTS "collective" (
 	"c_address" varchar(256) NOT NULL,
 	"c_wallet" varchar(256) NOT NULL,
 	"c_pool" varchar(256) NOT NULL,
+	"honey_pot" varchar(256) NOT NULL,
 	"created_at" timestamp DEFAULT now(),
 	"expiresAt" timestamp,
 	CONSTRAINT "collective_name_unique" UNIQUE("name")

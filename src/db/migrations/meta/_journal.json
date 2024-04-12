@@ -22,6 +22,20 @@
       "when": 1712913521350,
       "tag": "0002_unknown_paper_doll",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1712919874018,
+      "tag": "0003_clammy_drax",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1712920100320,
+      "tag": "0004_deep_golden_guardian",
+      "breakpoints": true
     }
   ]
 }
