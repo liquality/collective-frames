@@ -10,16 +10,18 @@ import {
 } from "viem";
 import { optimism } from "viem/chains";
 import { storageRegistryABI } from "../../contract-abi";
+import { findFrameById, findFrameBySlug } from "@/utils/frame";
 
 export async function POST(
   req: NextRequest
 ): Promise<NextResponse<TransactionTargetResponse>> {
-  console.log("Coming here /frames-transaction/txdata/slug");
+  const parts = req.url.split("/");
+  const slug = parts[parts.length - 1];
+  //use existing frame data to get token params & mint
+  const existingFrame = await findFrameBySlug(slug);
 
   const json = await req.json();
-
   const frameMessage = await getFrameMessage(json);
-
   if (!frameMessage) {
     throw new Error("No frame message");
   }

@@ -1,3 +1,4 @@
+import { findFrameBySlug } from "@/utils/frame";
 import {
   FrameButton,
   FrameContainer,
@@ -9,6 +10,7 @@ import {
   useFramesReducer,
 } from "frames.js/next/server";
 import { headers } from "next/headers";
+import { useParams } from "next/navigation";
 
 export function currentURL(pathname: string): URL {
   const headersList = headers();
@@ -34,23 +36,28 @@ const reducer: FrameReducer<State> = (state, action) => {
   };
 };
 
+type Props = {
+  searchParams: any; // Adjust the type as per your requirement
+  params: { slug: string };
+};
+
 // This is a react server component only
-export default async function Home({ searchParams }: NextServerPageProps) {
+export default async function Home({ searchParams, params }: Props) {
   const url = currentURL("/frames-transaction");
   const previousFrame = getPreviousFrame<State>(searchParams);
-  console.log(searchParams, "searchparams?");
-  /*  const parts = ctx.url.pathname.split("/");
-  console.log({ parts })
-  if (parts.length <= 2 || !parts[2]) {
-    throw new Error("Frame id not found");
-  }
-  const slug = parts[2] || ""; */
-
   const [state] = useFramesReducer<State>(reducer, initialState, previousFrame);
-
   const frameMessage = await getFrameMessage(previousFrame.postBody, {
     hubHttpUrl: "",
   });
+  if (!params.slug) {
+    throw new Error("Frame id not found");
+  }
+
+  //get frame from db
+  const existingFrame = await findFrameBySlug(params.slug);
+  if (!existingFrame) {
+    throw new Error("Frame with slug not found" + params.slug);
+  }
 
   console.log(frameMessage, "wats framemsg? 222");
 
@@ -87,16 +94,12 @@ export default async function Home({ searchParams }: NextServerPageProps) {
         state={state}
         previousFrame={previousFrame}
       >
-        <FrameImage aspectRatio="1:1">
-          <div tw="bg-purple-800 text-white w-full h-full justify-center items-center">
-            Rent farcaster storage!!
-          </div>
-        </FrameImage>
+        <FrameImage src={existingFrame.imageUrl} aspectRatio="1:1"></FrameImage>
         <FrameButton
           action="tx"
-          target="/frames-transaction/txdata/46ef6fb4-be57-421a-b5bd-f2835c3fe15f"
+          target={`/frames-transaction/txdata/${params.slug}`}
         >
-          Buy a unit
+          Mint ✨ for collective XXX
         </FrameButton>
       </FrameContainer>
     </div>
