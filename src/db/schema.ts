@@ -20,6 +20,7 @@ export const collective = pgTable("collective", {
   cAddress: varchar("c_address", { length: 256 }).notNull(),
   cWallet: varchar("c_wallet", { length: 256 }).notNull(),
   cPool: varchar("c_pool", { length: 256 }).notNull(),
+  honeyPot: varchar("honey_pot", { length: 256 }).notNull(),
   createdAt: timestamp("created_at").defaultNow(),
   expiresAt: timestamp("expiresAt")
 });

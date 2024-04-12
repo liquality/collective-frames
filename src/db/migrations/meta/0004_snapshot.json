@@ -1,5 +1,5 @@
 {
-  "id": "071a4370-c4cf-4597-a564-d59c1dc63bb8",
+  "id": "9b93a95f-ccb6-4a3d-9c45-c605fed2aabd",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "5",
   "dialect": "pg",
@@ -34,6 +34,12 @@
         },
         "c_pool": {
           "name": "c_pool",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "honey_pot": {
+          "name": "honey_pot",
           "type": "varchar(256)",
           "primaryKey": false,
           "notNull": true
