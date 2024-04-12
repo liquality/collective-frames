@@ -12,40 +12,40 @@ export async function GET() {
 
   return Response.json(res);
 
-  /*  const SUPPORTED_COMMUNITIES = ["DEGEN", "HPOS10", "MFERS"]
-   try {
-     for (const community of SUPPORTED_COMMUNITIES) {
-       // Deploy a new collective and pool for each channel
-       const cMetadata = await createCollective()
-       const cPool = await createPool(cMetadata.address, ERC20_MINTER_ADDRESS, HONEYPOT)
+  // /*  const SUPPORTED_COMMUNITIES = ["DEGEN", "HPOS10", "MFERS"]
+  //  try {
+  //    for (const community of SUPPORTED_COMMUNITIES) {
+  //      // Deploy a new collective and pool for each channel
+  //      const cMetadata = await createCollective()
+  //      const cPool = await createPool(cMetadata.address, ERC20_MINTER_ADDRESS, HONEYPOT)
  
  
-       console.log(cMetadata, 'cMetadata')
-       console.log(cPool, 'cPool')
+  //      console.log(cMetadata, 'cMetadata')
+  //      console.log(cPool, 'cPool')
  
-       //expires in 5 weeks time
-       const expiresAt = new Date(new Date().getTime() + (5 * 7 * 24 * 60 * 60 * 1000));
+  //      //expires in 5 weeks time
+  //      const expiresAt = new Date(new Date().getTime() + (5 * 7 * 24 * 60 * 60 * 1000));
  
-       const newCollective = await db
-         .insert(collective)
-         .values({
-           name: community,
-           cAddress: cMetadata.address,
-           cWallet: cMetadata.wallet,
-           cPool: cPool,
-           expiresAt,
-         })
-         .returning();
+  //      const newCollective = await db
+  //        .insert(collective)
+  //        .values({
+  //          name: community,
+  //          cAddress: cMetadata.address,
+  //          cWallet: cMetadata.wallet,
+  //          cPool: cPool,
+  //          expiresAt,
+  //        })
+  //        .returning();
  
-       console.log(newCollective, 'NEW COLLECTIVE!')
-     }
+  //      console.log(newCollective, 'NEW COLLECTIVE!')
+  //    }
  
  
  
-     return Response.json({ status: "OK", message: 'Collectives created successfully' })
+  //    return Response.json({ status: "OK", message: 'Collectives created successfully' })
  
-   } catch (error) {
-     console.error('Error creating collectives:', error)
-     return Response.json({ error })
-   } */
+  //  } catch (error) {
+  //    console.error('Error creating collectives:', error)
+  //    return Response.json({ error })
+  //  } */
 }
