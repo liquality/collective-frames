@@ -1,5 +1,3 @@
-//This route is for minting ETH, which doesnt require 2 step approval or premint
-
 import { TransactionTargetResponse } from "frames.js";
 import { getFrameMessage } from "frames.js/next/server";
 import { NextRequest, NextResponse } from "next/server";
@@ -13,13 +11,13 @@ export async function POST(
   req: NextRequest
 ): Promise<NextResponse<TransactionTargetResponse>> {
   const url = req.url;
-  const parts = url.split("?");
+  console.log("COMES HERE!!", url);
+
+  const parts = url.split("/p");
   const slug = parts[0].split("/").pop();
   if (!slug) {
     throw new Error("No slug in url" + url);
   }
-  console.log("COMES HERE!!");
-  //use existing frame data to get token params & mint
   //use existing frame data to get token params & mint
   const existingFrame = await findFrameBySlug(slug);
   if (!existingFrame) {
@@ -45,34 +43,30 @@ export async function POST(
     throw new Error("No frame message");
   }
 
-  const mintTx = await mint(
-    collective.cWallet as `0x${string}`,
-    collective.cAddress as `0x${string}`,
-    collective.cPool as `0x${string}`,
-    {
-      tokenAddress: existingFrame.nftTokenAddress as `0x${string}`,
-      currency: existingFrame.paymentCurrency as `0x${string}`, // "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",//`0x${"833589fCD6eDb6E08f4c7C32D4f71b54bdA02913"}`//,
-      recipient: creatorOfFrame.walletAddress as `0x${string}`,
-      mintReferral: collective.honeyPot as `0x${string}`,
-      creator: creatorOfFrame.walletAddress as `0x${string}`,
-      quantity: BigInt(1),
-      tokenID: BigInt(1),
-      totalValue: existingFrame.priceInEth, //ethers.formatEther(await getETHMintPrice(`0x${"48Fc3c982a022070cbC64d250Db398b82D123E68"}`)),
-      comment: "Minted via MyCollective",
-      tokenDecimal: existingFrame.decimal,
-    }
-  );
+  //TODO: Only call the premint if erc20mint
+  const premintTx = await erc20PreMint(collective.cWallet as `0x${string}`, {
+    tokenAddress: existingFrame.nftTokenAddress as `0x${string}`,
+    currency: existingFrame.paymentCurrency as `0x${string}`, // "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",//`0x${"833589fCD6eDb6E08f4c7C32D4f71b54bdA02913"}`//,
+    recipient: creatorOfFrame.walletAddress as `0x${string}`,
+    mintReferral: collective.honeyPot as `0x${string}`,
+    creator: creatorOfFrame.walletAddress as `0x${string}`,
+    quantity: BigInt(1),
+    tokenID: BigInt(1),
+    totalValue: existingFrame.priceInEth, //ethers.formatEther(await getETHMintPrice(`0x${"48Fc3c982a022070cbC64d250Db398b82D123E68"}`)),
+    comment: "Minted via MyCollective",
+    tokenDecimal: existingFrame.decimal,
+  });
 
-  console.log(mintTx, "MINT TX");
+  console.log(premintTx, "MINT TX");
 
   return NextResponse.json({
     chainId: "eip155:8453", // base mainnet
     method: "eth_sendTransaction",
     params: {
-      abi: mintTx.abi,
-      to: mintTx.to,
-      data: mintTx.data as `0x${string}`,
-      value: mintTx.value.toString(),
+      abi: premintTx.abi,
+      to: premintTx.to,
+      data: premintTx.data as `0x${string}`,
+      value: premintTx.value.toString(),
     },
   });
 }

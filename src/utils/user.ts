@@ -13,9 +13,19 @@ export const findUserByFid = async (userFid: number) => {
 
 }
 
+export const findUserById = async (userId: number) => {
+    const existingUser = await db.select().from(user).where(sql`${user.id} = ${userId}`)
+    console.log(existingUser, 'existing user in Db call')
+    if (existingUser[0]) { return existingUser[0] }
+    else {
+        return null
+    }
+
+}
+
 
 export async function getAddrByFid(fid: number): Promise<string | null> {
-    
+
     try {
 
         const data = await neynarClient.fetchBulkUsers([fid]);

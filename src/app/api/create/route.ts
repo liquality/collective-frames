@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
       const { name, description, collectiveId, price, paymentCurrency, decimal } = data;
       let pricePerMintToken
       //TODO how to convert to token amount? We should use a 3rd party api?
-      paymentCurrency !== ETH_CURRENCY_ADDRESS ? pricePerMintToken = toTokenNativeAmount(price, Number(decimal)).toString() : null
+      paymentCurrency !== ETH_CURRENCY_ADDRESS ? pricePerMintToken = "0.001" : null
 
       // Generate unique id for frame to not use the integer 
       const slug = uuidv4();
@@ -80,6 +80,7 @@ export async function POST(request: NextRequest) {
               tokenId: 1, //always 1 after creating new erc1155 contract with zora
               nftTokenAddress: nft.nftContractAddress,
               paymentCurrency: paymentCurrency,
+              decimal: Number(decimal),
               priceInEth: price,
               createdBy: user?.id,
             })

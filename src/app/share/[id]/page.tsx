@@ -12,7 +12,7 @@ export default function Share() {
 
   console.log("GOT HERE");
 
-  const frameUrl = process.env.NEXT_PUBLIC_SERVER_URL + "frames/";
+  const frameUrl = process.env.NEXT_PUBLIC_SERVER_URL + "frames-transaction/";
 
   console.log(frame, "wats frame?");
 
