@@ -8,7 +8,7 @@ const OurVision = () => {
   const [isMobileState, setIsMobileState] = useState(false);
   useEffect(() => {
     setIsMobileState(isMobile);
-  }, [isMobile]);
+  }, []);
 
   return (
     <div className="flex items-center justify-center flex-col mb-3">

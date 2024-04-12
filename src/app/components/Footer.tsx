@@ -6,7 +6,7 @@ const Footer = () => {
   const [isMobileState, setIsMobileState] = useState(false);
   useEffect(() => {
     setIsMobileState(isMobile);
-  }, [isMobile]);
+  }, []);
   return (
     <div
       style={{ bottom: -1100 }}
