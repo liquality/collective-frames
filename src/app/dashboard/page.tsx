@@ -43,7 +43,7 @@ export default function Dashboard() {
             ))}
             </div>
           </div>
-          <div className="flex justify-center">
+          <div className="flex justify-center mt-12">
             <a
               href="/create-frame"
               className="rounded-full px-4 py-2 bg-purple-500 disabled:opacity-75 text-white focus:outline-none focus:ring-0"

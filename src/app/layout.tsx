@@ -18,12 +18,9 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <AuthKitProvider>
-          <main className="flex flex-col relative">
-            <div className="px-5 py-2 ">
+          <main className="flex flex-col px-12 py-2">
               <Navbar />
-
               <div className="mt-12">
-                {" "}
                 <h2
                   className="text-center font-bold text-7xl leading-normal tracking-tight uppercase mb-3"
                   style={{ fontSize: 30, lineHeight: 1 }}
@@ -41,13 +38,11 @@ export default function RootLayout({
               <div className="flex mt-8 justify-center items-center">
                 {children}
               </div>
-              <OurVision />
-            </div>
+            <OurVision />
           </main>
-
+          <Footer></Footer>
           <ToastContainer />
         </AuthKitProvider>
-        <Footer />
       </body>
     </html>
   );
