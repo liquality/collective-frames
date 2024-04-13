@@ -7,7 +7,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { findFrameById, findFrameBySlug } from "@/utils/frame";
 import { getCollectiveById } from "@/utils/collective";
 import { erc20PreMint, mint } from "@/utils";
-import { findUserById } from "@/utils/user";
+import { findUserById, getAddrByFid } from "@/utils/user";
 
 export async function POST(
   req: NextRequest
@@ -51,13 +51,13 @@ export async function POST(
     collective.cPool as `0x${string}`,
     {
       tokenAddress: existingFrame.nftTokenAddress as `0x${string}`,
-      currency: existingFrame.paymentCurrency as `0x${string}`, // "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",//`0x${"833589fCD6eDb6E08f4c7C32D4f71b54bdA02913"}`//,
-      recipient: creatorOfFrame.walletAddress as `0x${string}`,
+      currency: existingFrame.paymentCurrency as `0x${string}`,
+      recipient: frameMessage.connectedAddress as `0x${string}`,
       mintReferral: collective.honeyPot as `0x${string}`,
       creator: creatorOfFrame.walletAddress as `0x${string}`,
       quantity: BigInt(1),
       tokenID: BigInt(1),
-      totalValue: existingFrame.priceInEth, //ethers.formatEther(await getETHMintPrice(`0x${"48Fc3c982a022070cbC64d250Db398b82D123E68"}`)),
+      totalValue: existingFrame.priceInEth,
       comment: "Minted via MyCollective",
       tokenDecimal: existingFrame.decimal,
     }

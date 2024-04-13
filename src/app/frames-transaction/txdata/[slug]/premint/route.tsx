@@ -47,7 +47,7 @@ export async function POST(
   const premintTx = await erc20PreMint(collective.cWallet as `0x${string}`, {
     tokenAddress: existingFrame.nftTokenAddress as `0x${string}`,
     currency: existingFrame.paymentCurrency as `0x${string}`, // "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",//`0x${"833589fCD6eDb6E08f4c7C32D4f71b54bdA02913"}`//,
-    recipient: creatorOfFrame.walletAddress as `0x${string}`,
+    recipient: frameMessage.connectedAddress as `0x${string}`,
     mintReferral: collective.honeyPot as `0x${string}`,
     creator: creatorOfFrame.walletAddress as `0x${string}`,
     quantity: BigInt(1),
