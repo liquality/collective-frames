@@ -20,16 +20,15 @@ export default function Dashboard() {
     });
   }, []);
   return (
-    <div className="w-full">
+    <div className="flex flex-col w-full md:w-4/5">
       {loading ? (
         <div className="flex text-center justify-center text-lg">
-          Loading...
+          Loading your Memes ...
         </div>
       ) : (
-        <div className="flex flex-col items-center">
+        <div className="flex flex-col mt-8 p-8 bg-white bg-opacity-70 rounded-[10px] text-black">
           <div
-            style={{ width: "80%" }}
-            className="flex rounded-2xl bg-white bg-opacity-70 p-4 text-black"
+            className="flex p-4 text-black"
           >
             <div className="flex mt-12 mb-12">
             {frames.map((frame) => (

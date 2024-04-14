@@ -131,7 +131,7 @@ export default function CreateFrame() {
   }, [imageFile, collective, name, erc20Token, price]);
 
   return (
-    <div className="flex flex-col mt-8 px-8 bg-violet-50 p-3 rounded-[10px] text-black">
+    <div className="flex flex-col mt-8 px-8 bg-white bg-opacity-70 p-3 rounded-[10px] text-black">
       <div className="flex flex-col md:flex-row">
         <div className="flex flex-1 items-center">
           <div className="text-slate-900 text-3xl font-bold leading-loose mr-4">

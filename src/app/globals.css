@@ -57,3 +57,10 @@ body {
   width: 100%;
   height: auto;
 }
+
+.main-banner {
+  background-image: url('/main-bg.svg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}

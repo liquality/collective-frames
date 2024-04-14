@@ -27,8 +27,8 @@ export default function Share() {
       });
   };
   return (
-    <div className="flex  flex-col mt-8  bg-violet-50 p-3 rounded-[10px] text-black">
-      <div className="flex w-full  flex-col">
+    <div className="flex flex-col w-full md:w-4/5 mt-8 px-8 bg-white bg-opacity-70 p-3 rounded-[10px] text-black">
+      <div className="flex w-full flex-col">
         <div className="flex flex-col md:flex-row">
           <div className="flex flex-1 items-center hidden md:flex text-gray-400">
             <div className="text-3xl text-3xl font-bold leading-loose mr-4">
@@ -46,14 +46,16 @@ export default function Share() {
           mints = more hype and profits for you and your community
         </div>
 
-        <div className="flex flex-col mt-4 ">
+        <div className="flex flex-col mt-4 items-center">
           <p>{frame?.frame.name || ""}</p>
-          <img
-            src={frame?.frame.imageUrl || ""}
-            alt="Uploaded meme"
-            style={{ width: "60%" }}
-            className="object-cover mt-3"
-          />
+          {frame?.frame?.imageUrl && (
+            <img
+              src={frame?.frame.imageUrl || ""}
+              alt="Uploaded meme"
+              style={{ width: "60%" }}
+              className="object-cover mt-3"
+            />
+          )}
         </div>
         <div className="flex mt-12 justify-center">
           <button

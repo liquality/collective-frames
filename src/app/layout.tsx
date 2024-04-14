@@ -16,6 +16,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <title>Liquality Meme NFT Generator</title>
+        <link
+          href="/favicon-32x32.png"
+          rel="shortcut icon"
+          type="image/x-icon"
+        ></link>
+      </head>
       <body className={inter.className}>
         <AuthKitProvider>
           <main className="flex flex-col px-12 py-2">
