@@ -27,27 +27,35 @@ export default function Share() {
       });
   };
   return (
-    <div className="flex  flex-col mt-8  bg-violet-50 p-3 rounded-[10px] text-black">
-      <div className="flex w-full  flex-col">
-        <div className="flex flex-1 items-center">
-          <div className="text-slate-900 text-3xl font-bold leading-loose mr-4">
-            2
+    <div className="flex flex-col w-full md:w-4/5 mt-8 px-8 bg-white bg-opacity-70 p-3 rounded-[10px] text-black">
+      <div className="flex w-full flex-col">
+        <div className="flex flex-col md:flex-row">
+          <div className="flex flex-1 items-center hidden md:flex text-gray-400">
+            <div className="text-3xl text-3xl font-bold leading-loose mr-4">
+              1
+            </div>
+            Choose your meme
           </div>
-          Get link to share
+          <div className="flex flex-1 text-slate-900 items-center">
+            <div className="text-3xl font-bold leading-loose mr-4">2</div>
+            Get link to share
+          </div>
         </div>
         <div className="mt-1">
           Share this frame link and encourage others to mint your meme. More
           mints = more hype and profits for you and your community
         </div>
 
-        <div className="flex flex-col mt-4 ">
+        <div className="flex flex-col mt-4 items-center">
           <p>{frame?.frame.name || ""}</p>
-          <img
-            src={frame?.frame.imageUrl || ""}
-            alt="Uploaded meme"
-            style={{ width: "60%" }}
-            className="object-cover mt-3"
-          />
+          {frame?.frame?.imageUrl && (
+            <img
+              src={frame?.frame.imageUrl || ""}
+              alt="Uploaded meme"
+              style={{ width: "60%" }}
+              className="object-cover mt-3"
+            />
+          )}
         </div>
         <div className="flex mt-12 justify-center">
           <button

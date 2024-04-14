@@ -11,7 +11,7 @@ const Navbar = () => {
   const handleSignout = () => {
     signOut();
     Auth.removeUser();
-    window.location.reload();
+    window.location.href = "/";
   };
 
   useEffect(() => {

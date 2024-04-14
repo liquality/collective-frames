@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 import sdkImage from "@/assets/img/graphic_placeholder.svg";
 import Image from "next/image";
@@ -8,13 +9,12 @@ export default function Home() {
     console.log("onSuccess", data);
   };
   return (
-    <div className="flex flex-col w-full items-center justify-center">
-      <div
-        style={{ width: "80%" }}
-        className=" flex items-center flex-col justify-center rounded-2xl bg-white bg-opacity-70 p-4"
-      >
+    <div className="relative flex flex-col w-full md:w-4/5 items-center justify-center">
+      <img src="/main-bg.png" alt="" className="object-fill hidden md:block" />
+      <img src="/main-bg-mobile.png" alt="" className="object-fill block md:hidden" />
+      <div className="absolute flex flex-col items-center justify-center w-75 md:w-2/4 rounded-2xl bg-white bg-opacity-80 p-6">
         <Login />
-        <p className="text-black flex text-xs mt-3">
+        <p className="text-black flex text-xl mt-3 flex-col items-center md:flex-row">
           Not on Warpcast yet?{" "}
           <a
             href="https://warpcast.com/~/signup"
@@ -25,17 +25,6 @@ export default function Home() {
           </a>{" "}
           and return with your ID
         </p>
-      </div>
-
-      <div className="flex items-center justify-center mt-24">
-        <a
-          href="https://warpcast.com/liquality"
-          target="_blank"
-          style={{ minWidth: 320 }}
-          className="rounded-full text-center border border-white-500 px-4 py-2 bg-transparent disabled:opacity-75 text-white-500 focus:outline-none focus:ring-0"
-        >
-          Follow Liquality on Farcaster
-        </a>
       </div>
     </div>
   );
