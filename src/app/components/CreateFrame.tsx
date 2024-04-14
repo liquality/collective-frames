@@ -131,20 +131,22 @@ export default function CreateFrame() {
   }, [imageFile, collective, name, erc20Token, price]);
 
   return (
-    <div className="flex flex-col mt-8 bg-violet-50 p-3 rounded-[10px] text-black">
-      <div className="flex flex-1 items-center">
-        <div className="text-slate-900 text-3xl font-bold leading-loose mr-4">
-          1
+    <div className="flex flex-col mt-8 px-8 bg-violet-50 p-3 rounded-[10px] text-black">
+      <div className="flex flex-col md:flex-row">
+        <div className="flex flex-1 items-center">
+          <div className="text-slate-900 text-3xl font-bold leading-loose mr-4">
+            1
+          </div>
+          Choose your meme
         </div>
-        Choose your meme
+        <div className="flex flex-1 text-gray-400 items-center hidden md:flex">
+          <div className="text-3xl font-bold leading-loose mr-4">2</div>
+          Get link to share
+        </div>
       </div>
-      <div className="mt-1">
-        Share this frame link and encourage others to mint your meme. More mints
-        = more hype and profits for you and your community
-      </div>
-      <>
-        <div className="flex w-full mt-5">
-          <div className="flex flex-col flex-1">
+      <div className="flex flex-col">
+        <div className="flex flex-col md:flex-row">
+          <div className="flex flex-col md:flex-1">
             <div className="flex flex-col">
               <div className="flex mb-2 text-black">Your meme</div>
               <DragNdropFile
@@ -172,81 +174,81 @@ export default function CreateFrame() {
                 placeholder="Name your Meme*"
               />
             </div>
-            {
-              <div className="flex flex-row mt-6">
-                <label className="flex mt-2 mr-3 text-black">
-                  Mint Price in ETH
-                </label>
+          </div>
+          <div className="flex flex-col mt-8 md:flex-1 md:ml-12">
+            <textarea
+              onInput={handleDescriptionChange}
+              value={description}
+              disabled={description.length > 255}
+              placeholder="Enter description..."
+              className="description mb-3 p-2 text-xs h-50 border border-purple-500 focus:outline-none focus:ring-0"
+            ></textarea>
+            <div className="text-gray-400 flex justify-end">
+              <b>{description.length}</b>/255
+            </div>
+          </div>
+        </div>
 
-                <input
-                  type="text"
-                  onChange={handlePriceChange}
-                  value={price}
-                  className="p-2 h-50 border border-purple-500 focus:outline-none focus:ring-0"
-                  placeholder="Mint Price*"
-                />
-              </div>
-            }
-            <div className="flex mt-6">
-              <div className="flex flex-col w-full">
-                <select
-                  className="w-full p-2 border border-purple-500 focus:outline-none focus:ring-0"
-                  id="tokens"
-                  onChange={handleChange}
-                >
-                  <option value="">{"Select ERC20 or ETH payment"}</option>
-                  {erc20TokenData.map((token, index) => (
-                    <option key={index} value={JSON.stringify(token)}>
-                      {token.ticker}
-                    </option>
-                  ))}
-                </select>
-                <div className="flex mb-2 text-black">
-                  Who shares your mint profits?
-                </div>
-                <select
-                  value={collective}
-                  onChange={handleCollectiveChange}
-                  className="w-full p-2 border border-purple-500 focus:outline-none focus:ring-0"
-                >
-                  <option value="">
-                    {loadingCollectives ? "Loading..." : "Select community..."}
-                  </option>
-                  {collectives.map((collective: CollectiveItem) => (
-                    <option key={collective.id} value={collective.id}>
-                      {collective.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
+        <div className="flex flex-col md:flex-row">
+          <div className="flex flex-col mt-6 md:flex-1">
+            <label className="flex flex-1 my-2 text-black">
+              Mint Price in ETH
+            </label>
+
+            <input
+              type="text"
+              onChange={handlePriceChange}
+              value={price}
+              className="p-2 h-50 border border-purple-500 focus:outline-none focus:ring-0"
+              placeholder="Mint Price*"
+            />
           </div>
-          <div className="flex flex-1">
-            <div className="flex flex-col mt-8 ml-12 w-full">
-              <textarea
-                onInput={handleDescriptionChange}
-                value={description}
-                disabled={description.length > 255}
-                placeholder="Enter description..."
-                className="description mb-3 p-2 text-xs h-50 border border-purple-500 focus:outline-none focus:ring-0"
-              ></textarea>
-              <div className="text-gray-400 flex justify-end">
-                <b>{description.length}</b>/255
-              </div>
+
+          <div className="flex flex-col mt-6 md:flex-1 md:ml-12">
+            <div className="flex mb-2 text-black">
+              Who shares your mint profits?
             </div>
+            <select
+              value={collective}
+              onChange={handleCollectiveChange}
+              className="p-2 border border-purple-500 focus:outline-none focus:ring-0"
+            >
+              <option value="">
+                {loadingCollectives ? "Loading..." : "Select community..."}
+              </option>
+              {collectives.map((collective: CollectiveItem) => (
+                <option key={collective.id} value={collective.id}>
+                  {collective.name}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
-        <div className="flex flex-col items-center justify-center mt-12">
-          <button
-            onClick={handleSave}
-            style={{ width: 300 }}
-            disabled={!formIsValid}
-            className="rounded-full px-4 py-2 bg-purple-500 disabled:opacity-75 text-white focus:outline-none focus:ring-0"
+        <div className="flex flex-col mt-6 md:w-1/2 md:pr-6">
+          <select
+            className="p-2 border border-purple-500 focus:outline-none focus:ring-0"
+            id="tokens"
+            onChange={handleChange}
           >
-            {isSaving ? "Saving..." : "Save my Meme"}
-          </button>
+            <option value="">Select ERC20 or ETH payment</option>
+            {erc20TokenData.map((token, index) => (
+              <option key={index} value={JSON.stringify(token)}>
+                {token.ticker}
+              </option>
+            ))}
+          </select>
         </div>
-      </>
+      </div>
+      <div className="flex flex-col items-center justify-center mt-12 mb-6">
+        <button
+          onClick={handleSave}
+          style={{ width: 300 }}
+          disabled={!formIsValid}
+          className="rounded-full px-4 py-2 bg-purple-500 disabled:opacity-75 text-white focus:outline-none focus:ring-0"
+        >
+          {isSaving ? "Saving..." : "Save my Meme"}
+        </button>
+      </div>
     </div>
   );
 }
