@@ -22,9 +22,7 @@ export default function Dashboard() {
     });
   }, []);
 
-  const frameUrl =
-    (process.env.NEXT_PUBLIC_SERVER_URL ||
-      `${location.protocol}//${location.host}/`) + "frames-transaction/";
+  const frameUrl = process.env.NEXT_PUBLIC_SERVER_URL + "frames-transaction/";
 
   const handleCopyClick = (text: string) => {
     navigator.clipboard
