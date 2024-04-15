@@ -32,7 +32,7 @@ export const frame = pgTable("frame", {
   slug: varchar("slug", { length: 256 }).notNull(),
   imageUrl: varchar("image_url", { length: 256 }).notNull(),
   metaDataUrl: varchar("metadata_url", { length: 256 }).notNull(),
-  priceInEth: varchar("price_in_eth", { length: 256 }).notNull(),
+  priceInToken: varchar("price_in_token", { length: 256 }).notNull(),
   decimal: integer("decimal").notNull(),
   paymentCurrency: varchar("payment_currency", { length: 256 }).notNull(),
   tokenId: integer("token_id").notNull(),

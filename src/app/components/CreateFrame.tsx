@@ -26,10 +26,9 @@ export default function CreateFrame() {
   const [collective, setCollective] = useState<number>(0);
   const [erc20Token, setErc20Token] = useState<TokenInfo | null>(null);
   const [price, setPrice] = useState<string>("0.000");
-  const { priceInCurrency, loading: loadingPriceCurrency } =
-    useGetExchangePrice(erc20Token?.coinGeckoId);
+  const { exchangeRateInEth } = useGetExchangePrice(erc20Token?.coinGeckoId);
 
-  console.log(priceInCurrency, "wats price?");
+  console.log(exchangeRateInEth, "wats price?");
   const [frameData, setFrameData] = useState<FrameWithZoraUrl | null>(null);
   const router = useRouter();
 
@@ -72,18 +71,20 @@ export default function CreateFrame() {
   };
 
   const handleSave = async () => {
-    if (formIsValid) {
+    if (formIsValid && erc20Token && exchangeRateInEth) {
       setIsSaving(true);
       try {
         const formData = new FormData();
         formData.set("name", name);
         formData.set("description", description);
-        formData.set("imageFile", imageFile!);
         formData.set("createdBy", Auth.fid);
         formData.set("collectiveId", collective.toString());
         formData.set("price", price);
         formData.set("paymentCurrency", erc20Token.contractAddress);
         formData.set("decimal", erc20Token.decimal);
+        formData.set("exchangeRateInEth", exchangeRateInEth);
+
+        formData.set("imageFile", imageFile!);
 
         const response = await fetch("/api/create", {
           method: "POST",

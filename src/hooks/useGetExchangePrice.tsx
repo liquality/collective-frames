@@ -5,15 +5,13 @@ import { useParams } from "next/navigation";
 import { useState, useEffect } from "react";
 
 export function useGetExchangePrice(currencyId: string | undefined) {
-  const [priceInCurrency, setPriceInCurrency] =
-    useState<FrameWithZoraUrl | null>(null);
+  const [exchangeRateInEth, setPriceInCurrency] = useState<number | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    console.log(currencyId, "currencyId");
     const fetchData = async () => {
       try {
-        if (!priceInCurrency && currencyId) {
+        if (currencyId) {
           setLoading(true);
 
           const response = await fetch(
@@ -21,7 +19,6 @@ export function useGetExchangePrice(currencyId: string | undefined) {
           );
           const data = await response.json();
 
-          console.log(data, "DATAAA");
           const usdtToEthExchangeRate = data[currencyId].eth;
           setPriceInCurrency(usdtToEthExchangeRate);
           setLoading(false);
@@ -31,9 +28,9 @@ export function useGetExchangePrice(currencyId: string | undefined) {
       }
     };
     fetchData();
-  }, [priceInCurrency, currencyId]);
+  }, [exchangeRateInEth, currencyId]);
 
-  return { priceInCurrency, loading, setPriceInCurrency };
+  return { exchangeRateInEth, loading, setPriceInCurrency };
 }
 
 export default useGetExchangePrice;

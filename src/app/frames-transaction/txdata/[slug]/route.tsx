@@ -57,7 +57,7 @@ export async function POST(
       creator: creatorOfFrame.walletAddress as `0x${string}`,
       quantity: BigInt(1),
       tokenID: BigInt(1),
-      totalValue: "0.1", //TODO this should be total value in currency, for example 0.1 USDT or 0.0001 ETH
+      totalValue: existingFrame.priceInToken, //this should be total value in currency, for example 0.1 USDT or 0.0001 ETH
       comment: "Minted via MyCollective",
       tokenDecimal: existingFrame.decimal,
     }
