@@ -1,13 +1,14 @@
-//This route is for minting ETH, which doesnt require 2 step approval or premint
+//This route is for calling the mint() function, which is either the
+//second transaction for erc20 mints, or the first and only transaction for ETH mints
 
 import { TransactionTargetResponse } from "frames.js";
 import { getFrameMessage } from "frames.js/next/server";
 import { NextRequest, NextResponse } from "next/server";
-
-import { findFrameById, findFrameBySlug } from "@/utils/frame";
+import { findFrameBySlug } from "@/utils/frame";
 import { getCollectiveById } from "@/utils/collective";
-import { erc20PreMint, mint } from "@/utils";
-import { findUserById, getAddrByFid } from "@/utils/user";
+import { mint } from "@/utils";
+import { findUserById } from "@/utils/user";
+import { parseQueryUrl } from "@/utils/helpers";
 
 export async function POST(
   req: NextRequest
@@ -18,7 +19,12 @@ export async function POST(
   if (!slug) {
     throw new Error("No slug in url" + url);
   }
-  console.log("COMES HERE!!");
+
+  console.log(req, "what is req???");
+
+  const queryParams = parseQueryUrl(req.url);
+
+  console.log(queryParams, "query params EXIST?");
   //use existing frame data to get token params & mint
   //use existing frame data to get token params & mint
   const existingFrame = await findFrameBySlug(slug);
@@ -44,6 +50,12 @@ export async function POST(
   if (!frameMessage) {
     throw new Error("No frame message");
   }
+
+  console.log(
+    frameMessage.connectedAddress,
+    "connected address?",
+    frameMessage
+  );
 
   const mintTx = await mint(
     collective.cWallet as `0x${string}`,

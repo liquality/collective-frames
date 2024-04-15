@@ -13,7 +13,13 @@ const handleRequest = frames(async (ctx) => {
     throw new Error("Frame id not found");
   }
   const slug = parts[2] || "";
-  console.log(ctx.url, "ctx url:", slug);
+  console.log(
+    ctx,
+    "ALL CTX THINGS",
+    ctx.url.searchParams,
+    "wats searchparams?"
+  );
+
   const existingFrame = await findFrameBySlug(slug);
   if (!existingFrame) {
     throw new Error("Frame with slug not found" + slug);
@@ -26,29 +32,19 @@ const handleRequest = frames(async (ctx) => {
   }
 
   console.log(existingFrame, "existing frame?");
-  /*  const collective = await getCollectiveById(
-    existingFrame.collectiveId as number
-  ); */
 
   let route = "";
   let secondRoute = "";
-
   const isErc20 = existingFrame.paymentCurrency !== ETH_CURRENCY_ADDRESS;
-
-  console.log(isErc20, "IS ERC20?");
   isErc20 ? (route = "premint") : null;
   isErc20 ? (secondRoute = "mint") : null;
 
-  console.log(existingFrame, ctx.message?.transactionId, "TRANSACTION ID AND");
-
-  console.log(ctx, "CTX SHOUKD BE DIFFERENTOR");
-
-  //if erc20  - > go to premint btn
-  // 1) if eth - > same btn but goes to mint
-  // 2) if eth - > goes to contragts u minted here is your txId
-  //if erc20
-
-  if (ctx.message?.transactionId && existingFrame && isErc20) {
+  if (
+    ctx.message?.transactionId &&
+    existingFrame &&
+    isErc20 &&
+    ctx.message.buttonIndex !== 2
+  ) {
     return {
       image: (
         <div tw="bg-purple-800 text-white w-full h-full justify-center items-center flex">
@@ -67,6 +63,30 @@ const handleRequest = frames(async (ctx) => {
         </Button>,
         <Button action="tx" target={`/txdata/${slug}`}>
           Initate second transaction for mint
+        </Button>,
+      ],
+    };
+  } else if (
+    ctx.message?.transactionId &&
+    existingFrame &&
+    isErc20 &&
+    ctx.message.buttonIndex === 2
+  ) {
+    return {
+      image: (
+        <div tw="bg-green-800 text-white w-full h-full justify-center items-center flex">
+          END!! You minted with ERC20 {ctx.message.transactionId}
+        </div>
+      ),
+      imageOptions: {
+        aspectRatio: "1:1",
+      },
+      buttons: [
+        <Button
+          action="link"
+          target={`https://www.onceupon.gg/tx/${ctx.message.transactionId}`}
+        >
+          View on block explorer
         </Button>,
       ],
     };
@@ -92,16 +112,9 @@ const handleRequest = frames(async (ctx) => {
   }
 
   return {
-    image: (
-      <img
-        width="300px"
-        height="200px"
-        src={existingFrame.imageUrl}
-        alt="mint_img"
-      />
-    ),
+    image: existingFrame?.imageUrl,
     imageOptions: {
-      aspectRatio: "1:1",
+      aspectRatio: "1.91:1",
     },
 
     buttons: [
