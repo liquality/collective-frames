@@ -10,6 +10,9 @@ import { getCollectiveById, } from "@/utils/collective";
 import { NFTData } from "@/types";
 import { ETH_CURRENCY_ADDRESS, HONEYPOT } from "@/utils/constants";
 
+export const maxDuration = 40; // 40 seconds
+export const dynamic = 'force-dynamic';
+
 export async function POST(request: NextRequest) {
   try {
     const form = await request.formData();
