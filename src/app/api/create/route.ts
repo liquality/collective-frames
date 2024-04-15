@@ -13,7 +13,7 @@ import { ETH_CURRENCY_ADDRESS, HONEYPOT } from "@/utils/constants";
 export async function POST(request: NextRequest) {
   try {
     const form = await request.formData();
-    
+
     const user = await findUserByFid(Number(form.get("createdBy")))
     const collective = await getCollectiveById(Number(form.get("collectiveId")))
     if (user && collective) {
@@ -26,13 +26,12 @@ export async function POST(request: NextRequest) {
         price: (form.get("price") as string) || "",
         paymentCurrency: (form.get("paymentCurrency") as string) || "",
         decimal: (form.get("decimal") as string) || "",
+        exchangeRateInEth: form.get("exchangeRateInEth"),
         createdBy: user.id
       };
-      const { name, description, collectiveId, price, paymentCurrency, decimal } = data;
-      let pricePerMintToken
-      //TODO how to convert to token amount? We should use a 3rd party api?
-      paymentCurrency !== ETH_CURRENCY_ADDRESS ? pricePerMintToken = "0.001" : null
+      const { name, description, collectiveId, price, paymentCurrency, decimal, exchangeRateInEth } = data;
 
+      let isErc20 = paymentCurrency !== ETH_CURRENCY_ADDRESS
       // Generate unique id for frame to not use the integer 
       const slug = uuidv4();
 
@@ -54,10 +53,12 @@ export async function POST(request: NextRequest) {
         );
 
 
+        const exchangeRate = Number(price) * Number(exchangeRateInEth)
+        console.log(exchangeRate, 'what is exchange rate?', paymentCurrency, exchangeRateInEth,)
         const nftData: NFTData = {
           name,
-          pricePerMintETH: price,
-          pricePerMintToken,
+          pricePerMintETH: isErc20 ? exchangeRate.toString() : price,
+          pricePerMintToken: isErc20 ? price : undefined,
           tokenMetaDataUri: metaDataUri,
           creator: user.walletAddress as `0x${string}`,
           paymentCurrency: paymentCurrency as `0x${string}`,
@@ -82,7 +83,7 @@ export async function POST(request: NextRequest) {
               nftTokenAddress: nft.nftContractAddress,
               paymentCurrency: paymentCurrency,
               decimal: Number(decimal),
-              priceInEth: price,
+              priceInToken: price,
               createdBy: user?.id,
             })
             .returning();

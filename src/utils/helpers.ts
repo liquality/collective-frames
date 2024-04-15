@@ -23,3 +23,18 @@ export const getMessage = (messagesList: string[]) => {
 export const removeSearchParams = () => {
   window.history.replaceState({}, document.title, window.location.pathname);
 };
+
+export const parseQueryUrl = (urlString: string) => {
+  const parsedUrl = new URL(urlString);
+  const queryString = parsedUrl.search;
+
+  const queryParameters = new URLSearchParams(queryString);
+
+  // convert the query parameters object to a plain JavaScript object
+  const queryParamsObject = {};
+  for (const [key, value] of queryParameters.entries()) {
+    // @ts-ignore
+    queryParamsObject[key] = value;
+  }
+  return queryParamsObject
+}

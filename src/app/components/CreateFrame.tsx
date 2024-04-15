@@ -8,11 +8,12 @@ import React, {
   useState,
 } from "react";
 import "./CreateFrame.css";
-import { CollectiveItem, FrameWithZoraUrl } from "@/types";
+import { CollectiveItem, FrameWithZoraUrl, TokenInfo } from "@/types";
 import DragNdropFile from "./DragNdropFile";
 import { Auth } from "@/utils/cookie-auth";
 import { useRouter } from "next/navigation";
 import { erc20TokenData } from "@/constants/erc20-token-data";
+import useGetExchangePrice from "@/hooks/useGetExchangePrice";
 
 export default function CreateFrame() {
   const [isSaving, setIsSaving] = useState<boolean>(false);
@@ -23,9 +24,11 @@ export default function CreateFrame() {
   const [name, setName] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [collective, setCollective] = useState<number>(0);
-  const [erc20Token, setErc20Token] = useState<any | null>(null);
+  const [erc20Token, setErc20Token] = useState<TokenInfo | null>(null);
   const [price, setPrice] = useState<string>("0.000");
+  const { exchangeRateInEth } = useGetExchangePrice(erc20Token?.coinGeckoId);
 
+  console.log(exchangeRateInEth, "wats price?");
   const [frameData, setFrameData] = useState<FrameWithZoraUrl | null>(null);
   const router = useRouter();
 
@@ -68,18 +71,20 @@ export default function CreateFrame() {
   };
 
   const handleSave = async () => {
-    if (formIsValid) {
+    if (formIsValid && erc20Token && exchangeRateInEth) {
       setIsSaving(true);
       try {
         const formData = new FormData();
         formData.set("name", name);
         formData.set("description", description);
-        formData.set("imageFile", imageFile!);
         formData.set("createdBy", Auth.fid);
         formData.set("collectiveId", collective.toString());
         formData.set("price", price);
         formData.set("paymentCurrency", erc20Token.contractAddress);
         formData.set("decimal", erc20Token.decimal);
+        formData.set("exchangeRateInEth", exchangeRateInEth);
+
+        formData.set("imageFile", imageFile!);
 
         const response = await fetch("/api/create", {
           method: "POST",
@@ -192,7 +197,8 @@ export default function CreateFrame() {
         <div className="flex flex-col md:flex-row">
           <div className="flex flex-col mt-6 md:flex-1">
             <label className="flex flex-1 my-2 text-black">
-              Mint Price in ETH
+              Mint Price in{" "}
+              {erc20Token ? erc20Token?.coinGeckoId.toUpperCase() : "ETH"}
             </label>
 
             <input

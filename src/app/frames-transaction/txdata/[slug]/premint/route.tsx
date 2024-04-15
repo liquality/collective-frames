@@ -52,7 +52,7 @@ export async function POST(
     creator: creatorOfFrame.walletAddress as `0x${string}`,
     quantity: BigInt(1),
     tokenID: BigInt(1),
-    totalValue: existingFrame.priceInEth, //ethers.formatEther(await getETHMintPrice(`0x${"48Fc3c982a022070cbC64d250Db398b82D123E68"}`)),
+    totalValue: existingFrame.priceInToken, //ethers.formatEther(await getETHMintPrice(`0x${"48Fc3c982a022070cbC64d250Db398b82D123E68"}`)),
     comment: "Minted via MyCollective",
     tokenDecimal: existingFrame.decimal,
   });

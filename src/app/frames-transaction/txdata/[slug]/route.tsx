@@ -1,13 +1,18 @@
-//This route is for minting ETH, which doesnt require 2 step approval or premint
+//This route is for calling the mint() function, which is either the
+//second transaction for erc20 mints, or the first and only transaction for ETH mints
 
 import { TransactionTargetResponse } from "frames.js";
 import { getFrameMessage } from "frames.js/next/server";
 import { NextRequest, NextResponse } from "next/server";
-
-import { findFrameById, findFrameBySlug } from "@/utils/frame";
+import { findFrameBySlug } from "@/utils/frame";
 import { getCollectiveById } from "@/utils/collective";
-import { erc20PreMint, mint } from "@/utils";
-import { findUserById, getAddrByFid } from "@/utils/user";
+import { getETHMintPrice, mint } from "@/utils";
+import { findUserById } from "@/utils/user";
+import { ethers } from "ethers";
+import {
+  ETH_CURRENCY_ADDRESS,
+  FIXED_PRICE_MINTER_ADDRESS,
+} from "@/utils/constants";
 
 export async function POST(
   req: NextRequest
@@ -18,8 +23,9 @@ export async function POST(
   if (!slug) {
     throw new Error("No slug in url" + url);
   }
-  console.log("COMES HERE!!");
-  //use existing frame data to get token params & mint
+
+  console.log(req, "what is req???");
+
   //use existing frame data to get token params & mint
   const existingFrame = await findFrameBySlug(slug);
   if (!existingFrame) {
@@ -45,6 +51,20 @@ export async function POST(
     throw new Error("No frame message");
   }
 
+  console.log(
+    frameMessage.connectedAddress,
+    "connected address?",
+    frameMessage
+  );
+
+  const isErc20 = existingFrame.paymentCurrency !== ETH_CURRENCY_ADDRESS;
+
+  const mintPriceWei = await getETHMintPrice(FIXED_PRICE_MINTER_ADDRESS);
+  const additionalEther = ethers.parseEther(existingFrame.priceInToken); // Convert 0.00001 ether to wei
+  const totalValueWei = mintPriceWei + additionalEther; // Add in wei for precision
+  const totalValueEther = ethers.formatEther(totalValueWei); // Convert back to ether string if needed
+  console.log(totalValueEther, " << totalValueEther");
+
   const mintTx = await mint(
     collective.cWallet as `0x${string}`,
     collective.cAddress as `0x${string}`,
@@ -57,7 +77,7 @@ export async function POST(
       creator: creatorOfFrame.walletAddress as `0x${string}`,
       quantity: BigInt(1),
       tokenID: BigInt(1),
-      totalValue: existingFrame.priceInEth,
+      totalValue: isErc20 ? existingFrame.priceInToken : totalValueEther, //this should be total value in currency, for example 0.1 USDT or 0.0001 ETH
       comment: "Minted via MyCollective",
       tokenDecimal: existingFrame.decimal,
     }
