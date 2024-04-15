@@ -46,7 +46,7 @@ export default function Dashboard() {
             <div className="flex">
               Active Frames ({frames?.length || 0})
             </div>
-            <div className="flex mt-4 mb-12">
+            <div className="flex mt-4 mb-12 md:flex-col">
               {frames.map((frame) => (
                 <div className="flex flex-col" key={frame.id}>
                   <div
