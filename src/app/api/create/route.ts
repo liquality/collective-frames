@@ -57,7 +57,7 @@ export async function POST(request: NextRequest) {
         console.log(exchangeRate, 'what is exchange rate?', paymentCurrency, exchangeRateInEth,)
         const nftData: NFTData = {
           name,
-          pricePerMintETH: isErc20 ? exchangeRate.toString() : price,
+          pricePerMintETH: isErc20 ? exchangeRate.toFixed(2) : price,
           pricePerMintToken: isErc20 ? price : undefined,
           tokenMetaDataUri: metaDataUri,
           creator: user.walletAddress as `0x${string}`,
