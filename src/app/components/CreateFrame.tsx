@@ -8,11 +8,12 @@ import React, {
   useState,
 } from "react";
 import "./CreateFrame.css";
-import { CollectiveItem, FrameWithZoraUrl } from "@/types";
+import { CollectiveItem, FrameWithZoraUrl, TokenInfo } from "@/types";
 import DragNdropFile from "./DragNdropFile";
 import { Auth } from "@/utils/cookie-auth";
 import { useRouter } from "next/navigation";
 import { erc20TokenData } from "@/constants/erc20-token-data";
+import useGetExchangePrice from "@/hooks/useGetExchangePrice";
 
 export default function CreateFrame() {
   const [isSaving, setIsSaving] = useState<boolean>(false);
@@ -23,9 +24,12 @@ export default function CreateFrame() {
   const [name, setName] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [collective, setCollective] = useState<number>(0);
-  const [erc20Token, setErc20Token] = useState<any | null>(null);
+  const [erc20Token, setErc20Token] = useState<TokenInfo | null>(null);
   const [price, setPrice] = useState<string>("0.000");
+  const { priceInCurrency, loading: loadingPriceCurrency } =
+    useGetExchangePrice(erc20Token?.coinGeckoId);
 
+  console.log(priceInCurrency, "wats price?");
   const [frameData, setFrameData] = useState<FrameWithZoraUrl | null>(null);
   const router = useRouter();
 
@@ -192,7 +196,8 @@ export default function CreateFrame() {
         <div className="flex flex-col md:flex-row">
           <div className="flex flex-col mt-6 md:flex-1">
             <label className="flex flex-1 my-2 text-black">
-              Mint Price in ETH
+              Mint Price in{" "}
+              {erc20Token ? erc20Token?.coinGeckoId.toUpperCase() : "ETH"}
             </label>
 
             <input

@@ -45,15 +45,15 @@ export type MintParam = {
 }
 
 export type NFTData = {
-    name: string, 
-    pricePerMintETH: string, 
+    name: string,
+    pricePerMintETH: string,
     pricePerMintToken?: string,
-    tokenMetaDataUri: string, 
+    tokenMetaDataUri: string,
     creator: `0x${string}`
     paymentCurrency: `0x${string}` // Token contract address for ERC20 payment, else 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE
 }
 
-export type Transaction = { 
+export type Transaction = {
     abi: Array<any>,
     to: `0x${string}`,
     value: bigint,
@@ -64,4 +64,11 @@ export type CMetadata = {
     address: string;
     wallet: string;
     nonceKey: bigint;
-  }
+}
+
+export type TokenInfo = {
+    ticker: string;
+    contractAddress: string;
+    decimal: number;
+    coinGeckoId: string;
+};
