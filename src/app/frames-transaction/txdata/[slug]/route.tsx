@@ -6,9 +6,13 @@ import { getFrameMessage } from "frames.js/next/server";
 import { NextRequest, NextResponse } from "next/server";
 import { findFrameBySlug } from "@/utils/frame";
 import { getCollectiveById } from "@/utils/collective";
-import { mint } from "@/utils";
+import { getETHMintPrice, mint } from "@/utils";
 import { findUserById } from "@/utils/user";
-import { parseQueryUrl } from "@/utils/helpers";
+import { ethers } from "ethers";
+import {
+  ETH_CURRENCY_ADDRESS,
+  FIXED_PRICE_MINTER_ADDRESS,
+} from "@/utils/constants";
 
 export async function POST(
   req: NextRequest
@@ -22,10 +26,6 @@ export async function POST(
 
   console.log(req, "what is req???");
 
-  const queryParams = parseQueryUrl(req.url);
-
-  console.log(queryParams, "query params EXIST?");
-  //use existing frame data to get token params & mint
   //use existing frame data to get token params & mint
   const existingFrame = await findFrameBySlug(slug);
   if (!existingFrame) {
@@ -57,6 +57,14 @@ export async function POST(
     frameMessage
   );
 
+  const isErc20 = existingFrame.paymentCurrency !== ETH_CURRENCY_ADDRESS;
+
+  const mintPriceWei = await getETHMintPrice(FIXED_PRICE_MINTER_ADDRESS);
+  const additionalEther = ethers.parseEther(existingFrame.priceInToken); // Convert 0.00001 ether to wei
+  const totalValueWei = mintPriceWei + additionalEther; // Add in wei for precision
+  const totalValueEther = ethers.formatEther(totalValueWei); // Convert back to ether string if needed
+  console.log(totalValueEther, " << totalValueEther");
+
   const mintTx = await mint(
     collective.cWallet as `0x${string}`,
     collective.cAddress as `0x${string}`,
@@ -69,7 +77,7 @@ export async function POST(
       creator: creatorOfFrame.walletAddress as `0x${string}`,
       quantity: BigInt(1),
       tokenID: BigInt(1),
-      totalValue: existingFrame.priceInToken, //this should be total value in currency, for example 0.1 USDT or 0.0001 ETH
+      totalValue: isErc20 ? existingFrame.priceInToken : totalValueEther, //this should be total value in currency, for example 0.1 USDT or 0.0001 ETH
       comment: "Minted via MyCollective",
       tokenDecimal: existingFrame.decimal,
     }

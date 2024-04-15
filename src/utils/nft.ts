@@ -196,6 +196,8 @@ export async function mint(c_wallet: `0x${string}`, c_address: `0x${string}`, po
 
 async function ethMint(c_wallet: `0x${string}`, c_address: `0x${string}`, poolAddress: `0x${string}`, mintParam: MintParam): Promise<Transaction> {
     // data for minting NFT on ERC20Minter by collective
+
+    console.log(mintParam, 'mint param')
     const mintData = await getETHMintData(c_wallet, mintParam)
     const totalValue = toTokenNativeAmount(mintParam.totalValue, 18)
 

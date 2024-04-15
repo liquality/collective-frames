@@ -1,7 +1,3 @@
-import { FrameWithZoraUrl } from "@/types";
-import ApiService from "@/utils/api-service";
-
-import { useParams } from "next/navigation";
 import { useState, useEffect } from "react";
 
 export function useGetExchangePrice(currencyId: string | undefined) {
@@ -19,7 +15,11 @@ export function useGetExchangePrice(currencyId: string | undefined) {
           );
           const data = await response.json();
 
-          const usdtToEthExchangeRate = data[currencyId].eth;
+          let usdtToEthExchangeRate;
+          currencyId = "eth"
+            ? (usdtToEthExchangeRate = 1)
+            : (usdtToEthExchangeRate = data[currencyId].eth);
+
           setPriceInCurrency(usdtToEthExchangeRate);
           setLoading(false);
         }
