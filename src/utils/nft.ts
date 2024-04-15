@@ -364,9 +364,9 @@ async function getETHMintData(c_wallet: `0x${string}`, mintParam: MintParam) {
     return mintData;
 }
 
-export async function getETHMintPrice(tokenAddress: `0x${string}`) {
+export async function getETHMintPrice(tokenAddress: `0x${string}`) : Promise<bigint>{
     const mintFee = new ethers.Contract(tokenAddress, ERC1155ABI, getProvider())
-    const mintFeeAmount = await mintFee.mintFee()
+    const mintFeeAmount: bigint = await mintFee.mintFee()
     console.log(mintFeeAmount, 'mintFeeAmount')
     return mintFeeAmount;
 }
