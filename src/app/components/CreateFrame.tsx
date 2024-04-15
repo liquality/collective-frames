@@ -81,8 +81,8 @@ export default function CreateFrame() {
         formData.set("collectiveId", collective.toString());
         formData.set("price", price);
         formData.set("paymentCurrency", erc20Token.contractAddress);
-        formData.set("decimal", erc20Token.decimal);
-        formData.set("exchangeRateInEth", exchangeRateInEth);
+        formData.set("decimal", erc20Token.decimal.toString());
+        formData.set("exchangeRateInEth", exchangeRateInEth.toString());
 
         formData.set("imageFile", imageFile!);
 

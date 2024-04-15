@@ -1,6 +1,9 @@
 import { toast } from "react-toastify";
 import axios, { AxiosError } from "axios";
 import { ErrorRes } from "@neynar/nodejs-sdk/build/neynar-api/v2";
+import { getETHMintPrice } from ".";
+import { FIXED_PRICE_MINTER_ADDRESS } from "./constants";
+import { ethers } from "ethers";
 
 export const welcomeMessages = [
   "Wowow Farcaster",
@@ -23,6 +26,16 @@ export const getMessage = (messagesList: string[]) => {
 export const removeSearchParams = () => {
   window.history.replaceState({}, document.title, window.location.pathname);
 };
+
+export const convertToEthPrice = async (priceInToken: string) => {
+  const mintPriceWei = await getETHMintPrice(FIXED_PRICE_MINTER_ADDRESS);
+  const additionalEther = ethers.parseEther(priceInToken); // Convert 0.00001 ether to wei
+  const totalValueWei = mintPriceWei + additionalEther; // Add in wei for precision
+  const totalValueEther = ethers.formatEther(totalValueWei); // Convert back to ether string if needed
+  console.log(totalValueEther, " << totalValueEther");
+  return totalValueEther
+};
+
 
 export const parseQueryUrl = (urlString: string) => {
   const parsedUrl = new URL(urlString);
