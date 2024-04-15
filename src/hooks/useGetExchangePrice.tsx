@@ -15,12 +15,11 @@ export function useGetExchangePrice(currencyId: string | undefined) {
           );
           const data = await response.json();
 
-          let usdtToEthExchangeRate;
-          currencyId = "eth"
-            ? (usdtToEthExchangeRate = 1)
-            : (usdtToEthExchangeRate = data[currencyId].eth);
-
-          setPriceInCurrency(usdtToEthExchangeRate);
+          if (data[currencyId]) {
+            setPriceInCurrency(data[currencyId].eth);
+          } else {
+            setPriceInCurrency(1);
+          }
           setLoading(false);
         }
       } catch (error) {
