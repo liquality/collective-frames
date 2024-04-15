@@ -1,3 +1,6 @@
+export const maxDuration = 40; // 40 seconds
+export const dynamic = 'force-dynamic';
+
 import { put } from "@vercel/blob";
 import { NextRequest, NextResponse } from "next/server";
 import { create1155Contract, pinFileToIPFS, toTokenNativeAmount } from "@/utils";
@@ -10,8 +13,7 @@ import { getCollectiveById, } from "@/utils/collective";
 import { NFTData } from "@/types";
 import { ETH_CURRENCY_ADDRESS, HONEYPOT } from "@/utils/constants";
 
-export const maxDuration = 40; // 40 seconds
-export const dynamic = 'force-dynamic';
+
 
 export async function POST(request: NextRequest) {
   try {
