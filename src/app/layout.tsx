@@ -35,7 +35,7 @@ export default function RootLayout({
               >
                 Meme NFT generator is here
               </h2>
-              <h4 className="text-center font-bold text-xl leading-normal tracking-tight">
+              <h4 className="text-center font-bold text-xl leading-normal tracking-tight uppercase">
                 share to mint & earn
               </h4>
               <p className="mt-3 text-center mb-5">
