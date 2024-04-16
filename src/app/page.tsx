@@ -18,11 +18,11 @@ export default function Home() {
       />
       <div className="absolute flex flex-col items-center justify-center w-75 md:w-2/4 rounded-2xl bg-white bg-opacity-80 p-6">
         <Login />
-        <p className="text-black flex text-xl mt-3 flex-col items-center md:flex-row">
+        <p className="text-black text-xl mt-3 text-center">
           Not on Warpcast yet?{" "}
           <a
             href="https://warpcast.com/~/signup"
-            className="text-purple-400 mx-2"
+            className="text-purple-500 mx-2"
             target="_blank"
           >
             <b>Sign up now</b>

@@ -91,7 +91,7 @@ export default function SignInButton({ ...signInArgs }: SignInButtonProps) {
         <>
           <button
             onClick={onClick}
-            className="rounded-full px-4 py-2 bg-purple-500 disabled:opacity-75 text-white focus:outline-none focus:ring-0"
+            className="text-xl rounded-full px-4 py-2 bg-purple-500 hover:bg-purple-700 disabled:opacity-75 text-white focus:outline-none focus:ring-0"
           >
             Log in with Warpcast ID
           </button>

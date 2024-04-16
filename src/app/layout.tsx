@@ -35,7 +35,7 @@ export default function RootLayout({
               >
                 Meme NFT generator is here
               </h2>
-              <h4 className="text-center font-bold text-xl leading-normal tracking-tight">
+              <h4 className="text-center font-bold text-xl leading-normal tracking-tight uppercase">
                 share to mint & earn
               </h4>
               <p className="mt-3 text-center mb-5">
@@ -45,16 +45,6 @@ export default function RootLayout({
             </div>
             <div className="flex mt-8 justify-center items-center">
               {children}
-            </div>
-            <div className="flex items-center justify-center mt-24">
-              <a
-                href="https://warpcast.com/liquality"
-                target="_blank"
-                style={{ minWidth: 320 }}
-                className="rounded-full text-center border border-white-500 px-4 py-2 bg-transparent disabled:opacity-75 text-white-500 focus:outline-none focus:ring-0"
-              >
-                Follow Liquality on Farcaster
-              </a>
             </div>
             <OurVision />
           </main>
