@@ -31,7 +31,9 @@ export default function Dashboard() {
         toast("Frame URL copied to clipboard, paste it in a cast!");
       })
       .catch((error) => {
+
         console.error("Failed to copy text: ", error);
+        toast("Failed to copy text");
       });
   };
   return (

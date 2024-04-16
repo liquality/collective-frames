@@ -25,19 +25,21 @@ const FarcasterLogin = () => {
       }
     } catch (error) {
       console.log(error, "what is error?");
-      /*       toast("Something went wrong. Contact support: " + error);
-       */
+      toast("Something went wrong. Contact support: " + error);
     }
   };
 
   const onError = (error?: AuthClientError) => {
-    toast("Something went wrong. Contact support: " + error);
+    console.log(error, "what is error?");
+    if(error) {
+      toast("Something went wrong. Contact support: " + error.message);
+    }
   };
 
   return (
     <div className="flex justify-center">
       <FarcasterSigninButton
-        onSuccess={onSignInSuccess} /* onError={onError} */
+        onSuccess={onSignInSuccess} onError={onError} 
       />
     </div>
   );
