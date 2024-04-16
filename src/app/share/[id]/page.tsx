@@ -48,9 +48,9 @@ export default function Share() {
 
         <div className="flex flex-col mt-4 items-center">
           <p>{frame?.frame.name || ""}</p>
-          {frame?.frame?.imageUrl && (
+          {frame?.frame?.nftImgUrl && (
             <img
-              src={frame?.frame.imageUrl || ""}
+              src={frame?.frame.nftImgUrl || ""}
               alt="Uploaded meme"
               style={{ width: "60%" }}
               className="object-cover mt-3"

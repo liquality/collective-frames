@@ -3,7 +3,8 @@ export const dynamic = 'force-dynamic';
 
 import { put } from "@vercel/blob";
 import { NextRequest, NextResponse } from "next/server";
-import { create1155Contract, pinFileToIPFS, toTokenNativeAmount } from "@/utils";
+import { compressAndUploadToBlob, create1155Contract, pinFileToIPFS, toTokenNativeAmount } from "@/utils";
+
 import { db, frame, user } from "@/db";
 import { and, eq } from "drizzle-orm";
 import { findUserByFid } from "@/utils/user";
@@ -72,6 +73,13 @@ export async function POST(request: NextRequest) {
         const nft = await create1155Contract(
           collective.cAddress as `0x${string}`, HONEYPOT, nftData
         );
+
+        //TODO: take nftImgUrl 'imageUrl' and resize it to 256kb
+        //and add that smaller version to new row frameImgUrl in db
+
+
+        const compressedImage = await compressAndUploadToBlob(imageFile)
+
 
         if (nft) {
           //4) add new created nft mint frame to db so we can track

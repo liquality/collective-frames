@@ -17,7 +17,9 @@ export type Frame = {
     name: string;
     description: string;
     slug: string;
-    imageUrl: string;
+    nftImgUrl: string;
+    frameImgUrl: string;
+
     metaDataUrl: string;
     tokenId: number;
     tokenAddress: string;

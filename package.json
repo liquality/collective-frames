@@ -28,6 +28,7 @@
     "form-data": "^4.0.0",
     "frames.js": "^0.9.6",
     "fs": "^0.0.1-security",
+    "image-conversion": "^2.1.1",
     "next": "14.1.4",
     "pg": "^8.11.3",
     "qrcode": "^1.5.3",

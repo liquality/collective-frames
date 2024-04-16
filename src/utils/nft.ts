@@ -8,6 +8,9 @@ import axios from "axios";
 import { COLLECTIVE_ABI, C_WALLET_ABI, ERC1155ABI, ERC20MINTER_ABI, ERC20_ABI, ERC20_MINTER_ADDRESS, ETH_CURRENCY_ADDRESS, OPERATOR_ADDRESS } from "./constants";
 import { MintParam, NFTData, Transaction } from "@/types";
 import { collectiveBatchExecuteData, getProvider, getRecordPoolMintCallData } from "./collective";
+import { put } from "@vercel/blob";
+import { v4 as uuid } from "uuid";
+import * as imageConversion from 'image-conversion';
 
 export async function create1155Contract(c_address: `0x${string}`, honeyPot: `0x${string}`, nftData: NFTData) {
 
@@ -411,4 +414,21 @@ async function directMint(tokenAddress: `0x${string}`, tokenId: number, mintPara
     const receipt = await publicClient.waitForTransactionReceipt({ hash });
     console.log(receipt, 'mint receipt')
     return receipt;
+}
+
+export async function compressAndUploadToBlob(file: File) {
+    //1) resize image to max 256kb
+    const compressedFile = await imageConversion.compressAccurately(file, 255)
+    console.log(compressedFile, 'resulting compressed file blob')
+
+    //upload resized img to vercel blob
+    const fileName = uuid();
+    const blob = await put(fileName, compressedFile, {
+        access: "public",
+    });
+
+    return blob.url
+
+
+
 }
