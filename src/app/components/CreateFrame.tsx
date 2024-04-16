@@ -14,6 +14,8 @@ import { Auth } from "@/utils/cookie-auth";
 import { useRouter } from "next/navigation";
 import { erc20TokenData } from "@/constants/erc20-token-data";
 import useGetExchangePrice from "@/hooks/useGetExchangePrice";
+import { put } from "@vercel/blob";
+import * as imageConversion from "image-conversion";
 
 export default function CreateFrame() {
   const [isSaving, setIsSaving] = useState<boolean>(false);
@@ -70,11 +72,31 @@ export default function CreateFrame() {
     setErc20Token(JSON.parse(e.target.value));
   };
 
+  const compressAndUploadToBlob = async (file: any) => {
+    //1) resize image to max 256kb
+    const compressedFile = await imageConversion.compressAccurately(file, 255);
+    console.log(compressedFile, "resulting compressed file blob");
+
+    //upload resized img to vercel blob
+    const blob = await put("name1", compressedFile, {
+      access: "public",
+      token: process.env.NEXT_PUBLIC_BLOB_READ_WRITE_TOKEN,
+    });
+
+    console.log(blob, "WHAT IS BLOB BEFORE RETUNR?");
+
+    return blob.url;
+  };
+
   const handleSave = async () => {
     if (formIsValid && erc20Token && exchangeRateInEth) {
       setIsSaving(true);
       try {
         const formData = new FormData();
+
+        const compressedImage = await compressAndUploadToBlob(imageFile);
+        console.log(compressedImage, "compressedImg");
+
         formData.set("name", name);
         formData.set("description", description);
         formData.set("createdBy", Auth.fid);
@@ -83,6 +105,7 @@ export default function CreateFrame() {
         formData.set("paymentCurrency", erc20Token.contractAddress);
         formData.set("decimal", erc20Token.decimal.toString());
         formData.set("exchangeRateInEth", exchangeRateInEth.toString());
+        formData.set("compressedImage", compressedImage);
 
         formData.set("imageFile", imageFile!);
 
@@ -159,7 +182,9 @@ export default function CreateFrame() {
                 file={imageFile}
               />
               <div className="flex justify-between">
-                <div className="text-gray-400">Max 5MB (JPG, JPEG, PNG)</div>
+                <div className="text-gray-400">
+                  Max 4MB (JPG, JPEG, PNG, GIF)
+                </div>
                 {imageFile && (
                   <div
                     className="text-purple-500 cursor-pointer"

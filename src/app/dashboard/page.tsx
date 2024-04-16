@@ -43,9 +43,7 @@ export default function Dashboard() {
       ) : (
         <div className="flex flex-col mt-8 p-8 bg-white bg-opacity-70 rounded-[10px] text-black">
           <div className="flex flex-col">
-            <div className="flex">
-              Active Frames ({frames?.length || 0})
-            </div>
+            <div className="flex">Active Frames ({frames?.length || 0})</div>
             <div className="flex mt-4 mb-12 md:flex-col">
               {frames.map((frame) => (
                 <div className="flex flex-col" key={frame.id}>
@@ -53,9 +51,9 @@ export default function Dashboard() {
                     className="flex cursor-pointer"
                     onClick={() => router.push(`/share/${frame.id}`)}
                   >
-                    {frame?.imageUrl && (
+                    {frame?.nftImgUrl && (
                       <img
-                        src={frame?.imageUrl || ""}
+                        src={frame?.nftImgUrl || ""}
                         alt="Uploaded meme"
                         className="object-cover h-full md:h-32"
                       />

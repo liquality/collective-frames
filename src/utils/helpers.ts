@@ -4,6 +4,10 @@ import { ErrorRes } from "@neynar/nodejs-sdk/build/neynar-api/v2";
 import { getETHMintPrice } from ".";
 import { FIXED_PRICE_MINTER_ADDRESS } from "./constants";
 import { ethers } from "ethers";
+import { put } from "@vercel/blob";
+import { v4 as uuid } from "uuid";
+import * as imageConversion from 'image-conversion';
+
 
 export const welcomeMessages = [
   "Wowow Farcaster",
@@ -35,6 +39,22 @@ export const convertToEthPrice = async (priceInToken: string) => {
   console.log(totalValueEther, " << totalValueEther");
   return totalValueEther
 };
+
+
+
+export function generateSalt(length: number = 16): number {
+  const characters = '0123456789'
+  const charactersLength = 4
+  let salt = ''
+
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * charactersLength)
+    salt += characters.charAt(randomIndex)
+  }
+
+  // Assuming you want to convert the string salt to a BigNumberish
+  return Number(salt)
+}
 
 
 export const parseQueryUrl = (urlString: string) => {
