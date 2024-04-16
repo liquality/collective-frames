@@ -18,7 +18,7 @@ export default function Home() {
           Not on Warpcast yet?{" "}
           <a
             href="https://warpcast.com/~/signup"
-            className="text-purple-400 mx-2"
+            className="text-purple-500 mx-2"
             target="_blank"
           >
             <b>Sign up now</b>
