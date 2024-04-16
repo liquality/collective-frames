@@ -14,7 +14,7 @@ export default function Home() {
       <img src="/main-bg-mobile.png" alt="" className="object-fill block md:hidden" />
       <div className="absolute flex flex-col items-center justify-center w-75 md:w-2/4 rounded-2xl bg-white bg-opacity-80 p-6">
         <Login />
-        <p className="text-black flex text-xl mt-3 flex-col items-center md:flex-row">
+        <p className="text-black text-xl mt-3 text-center">
           Not on Warpcast yet?{" "}
           <a
             href="https://warpcast.com/~/signup"
