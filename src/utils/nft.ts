@@ -416,7 +416,7 @@ async function directMint(tokenAddress: `0x${string}`, tokenId: number, mintPara
     return receipt;
 }
 
-export async function compressAndUploadToBlob(file: File) {
+export async function compressAndUploadToBlob(file: any) {
     //1) resize image to max 256kb
     const compressedFile = await imageConversion.compressAccurately(file, 255)
     console.log(compressedFile, 'resulting compressed file blob')

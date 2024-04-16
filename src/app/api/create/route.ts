@@ -35,16 +35,16 @@ export async function POST(request: NextRequest) {
         exchangeRateInEth: form.get("exchangeRateInEth"),
         createdBy: user.id
       };
-      const { name, description, collectiveId, price, paymentCurrency, decimal, exchangeRateInEth } = data;
+      const { name, description, collectiveId, price, paymentCurrency, decimal, exchangeRateInEth, imageFile } = data;
 
       let isErc20 = paymentCurrency !== ETH_CURRENCY_ADDRESS
       // Generate unique id for frame to not use the integer 
       const slug = uuidv4();
 
       //1 upload the nft metadata to vercel
-      const ipfs = await pinFileToIPFS(data.imageFile, name, description);
+      const ipfs = await pinFileToIPFS(imageFile, name, description);
 
-      if (ipfs) {
+      if (ipfs && imageFile) {
         const tokenMetaData = {
           name,
           description,
@@ -76,8 +76,6 @@ export async function POST(request: NextRequest) {
 
         //TODO: take nftImgUrl 'imageUrl' and resize it to 256kb
         //and add that smaller version to new row frameImgUrl in db
-
-
         const compressedImage = await compressAndUploadToBlob(imageFile)
 
 
@@ -88,7 +86,8 @@ export async function POST(request: NextRequest) {
             .values({
               name,
               slug,
-              imageUrl: ipfs.ipfsGatewayUrl,
+              nftImgUrl: ipfs.ipfsGatewayUrl,
+              frameImgUrl: compressedImage,
               description,
               collectiveId: Number(collectiveId),
               metaDataUrl: metaDataUri,

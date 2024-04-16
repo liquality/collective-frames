@@ -3,6 +3,7 @@ import React, { ChangeEvent, DragEvent, useEffect, useState } from "react";
 import "./DragNdropFile.css";
 import { MdAdd } from "react-icons/md";
 import Resizer from "react-image-file-resizer";
+import { toast } from "react-toastify";
 
 export interface DragNdropFileProps {
   onFileSelected: (file?: File) => void;
@@ -14,47 +15,20 @@ const DragNdropFile = ({ onFileSelected, file }: DragNdropFileProps) => {
   const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const _file = e.target.files?.[0];
     console.log(_file, "_file what is??");
-
     if (_file) {
-      //Resize the image before sending to server
-      let sendThisFile;
-      const maxSize = 256 * 1024; //max 256kb
-      if (_file.size >= maxSize) {
-        console.log(_file.size >= maxSize, "max size exceeded");
-        sendThisFile = await resizeFile(_file);
-      } else {
-        sendThisFile = _file;
-      }
+      const maxSizeInBytes = 4 * 1024 * 1024; // 4MB in bytes
+      const fileSizeInBytes = _file.size;
 
-      if (sendThisFile) {
-        console.log(sendThisFile, "file sent");
-        onFileSelected(sendThisFile as File);
+      if (fileSizeInBytes > maxSizeInBytes) {
+        toast("File size exceeds the maximum limit of 4MB");
       } else {
-        if (file) {
-          onFileSelected();
-        }
-        console.error("not allowed file size", file?.size);
+        onFileSelected(_file);
       }
     }
   };
 
-  /*  const resizeFile = (file: File) =>
-    new Promise((resolve) => {
-      Resizer.imageFileResizer(
-        file,
-        300,
-        300,
-        "PNG",
-        100,
-        0,
-        (uri) => {
-          resolve(uri);
-        },
-        "file"
-      );
-    }); */
-
-  const resizeFile = (file: File) =>
+  //TODO not sure if we need this anymore
+  /*   const resizeFile = (file: File) =>
     new Promise<File | null>((resolve) => {
       const maxFileSizeKB = 256;
       const qualityStep = 5;
@@ -87,7 +61,7 @@ const DragNdropFile = ({ onFileSelected, file }: DragNdropFileProps) => {
 
       // Start the recursive resizing process
       resizeWithQuality();
-    });
+    }); */
 
   const handleDrop = (event: DragEvent<HTMLLabelElement>) => {
     event.preventDefault();
