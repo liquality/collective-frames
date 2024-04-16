@@ -6,12 +6,16 @@ import Login from "./components/FarcasterLogin";
 
 export default function Home() {
   const onSuccess = (data: any) => {
-    console.log("onSuccess", data);
+    console.log("onSuccess!", data);
   };
   return (
     <div className="relative flex flex-col w-full md:w-4/5 items-center justify-center">
       <img src="/main-bg.png" alt="" className="object-fill hidden md:block" />
-      <img src="/main-bg-mobile.png" alt="" className="object-fill block md:hidden" />
+      <img
+        src="/main-bg-mobile.png"
+        alt=""
+        className="object-fill block md:hidden"
+      />
       <div className="absolute flex flex-col items-center justify-center w-75 md:w-2/4 rounded-2xl bg-white bg-opacity-80 p-6">
         <Login />
         <p className="text-black flex text-xl mt-3 flex-col items-center md:flex-row">
