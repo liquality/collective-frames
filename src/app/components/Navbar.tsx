@@ -2,12 +2,12 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { Auth } from "@/utils/cookie-auth";
-import { useSignIn } from "@farcaster/auth-kit";
+import { useSignIn, useProfile } from "@farcaster/auth-kit";
 
 const Navbar = () => {
-  const { signOut } = useSignIn({});
+  const { signOut} = useSignIn({});
   const [userSession, setUserSession] = useState(false);
-
+  const { isAuthenticated, profile } = useProfile();
   const handleSignout = () => {
     signOut();
     Auth.removeUser();
@@ -15,10 +15,10 @@ const Navbar = () => {
   };
 
   useEffect(() => {
-    if (Auth.fid && !userSession) {
+    if (isAuthenticated && !userSession) {
       setUserSession(true);
     }
-  }, [userSession]);
+  }, [userSession, isAuthenticated]);
 
   return (
     <nav className="flex justify-between">
@@ -31,7 +31,7 @@ const Navbar = () => {
       </div>
       {userSession ? (
         <div className="flex items-center">
-          <button onClick={handleSignout}>Sign Out FID: #{Auth.fid}</button>
+          <button onClick={handleSignout}>Sign Out FID: #{profile.fid}</button>
         </div>
       ) : null}
     </nav>
