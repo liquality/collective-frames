@@ -25,14 +25,14 @@ const FarcasterLogin = () => {
       }
     } catch (error) {
       console.log(error, "what is error?");
-      toast("Something went wrong. Contact support: " + error);
+      toast("Login failed. Refresh the page and try again. Or contact support@liquality.io for manual set-up.");
     }
   };
 
   const onError = (error?: AuthClientError) => {
     console.log(error, "what is error?");
     if(error) {
-      toast("Something went wrong. Contact support: " + error.message);
+      toast("Login failed. Refresh the page and try again. Or contact support@liquality.io for manual set-up.");
     }
   };
 

@@ -20,7 +20,7 @@ const DragNdropFile = ({ onFileSelected, file }: DragNdropFileProps) => {
       const fileSizeInBytes = _file.size;
 
       if (fileSizeInBytes > maxSizeInBytes) {
-        toast("File size exceeds the maximum limit of 4MB");
+        toast("Image is too big. Reduce size below 4MB.");
       } else {
         onFileSelected(_file);
       }

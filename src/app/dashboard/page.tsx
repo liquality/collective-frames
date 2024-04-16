@@ -28,12 +28,12 @@ export default function Dashboard() {
     navigator.clipboard
       .writeText(frameUrl + text)
       .then(() => {
-        toast("Frame URL copied to clipboard, paste it in a cast!");
+        toast("Success! Link was copied.");
       })
       .catch((error) => {
 
         console.error("Failed to copy text: ", error);
-        toast("Failed to copy text");
+        toast("Copying the link failed. Try again.");
       });
   };
   return (
