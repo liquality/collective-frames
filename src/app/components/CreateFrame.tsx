@@ -182,7 +182,9 @@ export default function CreateFrame() {
                 file={imageFile}
               />
               <div className="flex justify-between">
-                <div className="text-gray-400">Max 5MB (JPG, JPEG, PNG)</div>
+                <div className="text-gray-400">
+                  Max 4MB (JPG, JPEG, PNG, GIF)
+                </div>
                 {imageFile && (
                   <div
                     className="text-purple-500 cursor-pointer"
