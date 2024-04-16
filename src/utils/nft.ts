@@ -412,3 +412,5 @@ async function directMint(tokenAddress: `0x${string}`, tokenId: number, mintPara
     console.log(receipt, 'mint receipt')
     return receipt;
 }
+
+

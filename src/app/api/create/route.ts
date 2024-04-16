@@ -4,6 +4,7 @@ export const dynamic = 'force-dynamic';
 import { put } from "@vercel/blob";
 import { NextRequest, NextResponse } from "next/server";
 import { create1155Contract, pinFileToIPFS, toTokenNativeAmount } from "@/utils";
+
 import { db, frame, user } from "@/db";
 import { and, eq } from "drizzle-orm";
 import { findUserByFid } from "@/utils/user";
@@ -32,18 +33,20 @@ export async function POST(request: NextRequest) {
         paymentCurrency: (form.get("paymentCurrency") as string) || "",
         decimal: (form.get("decimal") as string) || "",
         exchangeRateInEth: form.get("exchangeRateInEth"),
+        compressedImage: form.get("compressedImage") as string || "",
         createdBy: user.id
       };
-      const { name, description, collectiveId, price, paymentCurrency, decimal, exchangeRateInEth } = data;
+      const { name, description, collectiveId, price, paymentCurrency, decimal, exchangeRateInEth, imageFile, compressedImage } = data;
+
 
       let isErc20 = paymentCurrency !== ETH_CURRENCY_ADDRESS
       // Generate unique id for frame to not use the integer 
       const slug = uuidv4();
 
       //1 upload the nft metadata to vercel
-      const ipfs = await pinFileToIPFS(data.imageFile, name, description);
+      const ipfs = await pinFileToIPFS(imageFile, name, description);
 
-      if (ipfs) {
+      if (ipfs && imageFile && compressedImage) {
         const tokenMetaData = {
           name,
           description,
@@ -72,7 +75,6 @@ export async function POST(request: NextRequest) {
         const nft = await create1155Contract(
           collective.cAddress as `0x${string}`, HONEYPOT, nftData
         );
-
         if (nft) {
           //4) add new created nft mint frame to db so we can track
           const newFrame = await db
@@ -80,7 +82,8 @@ export async function POST(request: NextRequest) {
             .values({
               name,
               slug,
-              imageUrl: ipfs.ipfsGatewayUrl,
+              nftImgUrl: ipfs.ipfsGatewayUrl,
+              frameImgUrl: compressedImage,
               description,
               collectiveId: Number(collectiveId),
               metaDataUrl: metaDataUri,
@@ -99,7 +102,6 @@ export async function POST(request: NextRequest) {
         } else { throw Error("NFT failed to be created using Zora SDK") }
 
       } else { throw Error("Failed to upload NFT to IPFS") }
-
     } else { throw Error("Failed to find user by fid: " + form.get("createdBy")) }
 
   } catch (error) {
