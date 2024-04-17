@@ -40,4 +40,16 @@ export const erc20TokenData: TokenInfo[] =
 • Benji: 0xBC45647eA894030a4E9801Ec03479739FA2485F0 
 • Higher: 0x0578d8A44db98B23BF096A382e016e29a5Ce0ffe
 
+
+• Mochi
+• Toshi
+• TYBG or Thank You Base God 
+• Brett
+• Normie
+• mfer
+• DEGEN
+• doginme 
+• Bloo 
+• Higher
+
 */
