@@ -257,7 +257,7 @@ function getCFactory(signer: ethers.ContractRunner) {
   return cFactory
 }
 
-function getCWallet(signer: ethers.Wallet, cWalletAddress: string) {
+function getCWallet(signer: ethers.ContractRunner, cWalletAddress: string) {
   const cWallet = new ethers.Contract(cWalletAddress, C_WALLET_ABI, signer)
   return cWallet
 }
