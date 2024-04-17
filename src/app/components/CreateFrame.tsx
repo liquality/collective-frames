@@ -14,8 +14,8 @@ import { Auth } from "@/utils/cookie-auth";
 import { useRouter } from "next/navigation";
 import { erc20TokenData } from "@/constants/erc20-token-data";
 import useGetExchangePrice from "@/hooks/useGetExchangePrice";
-import { put } from "@vercel/blob";
 import * as imageConversion from "image-conversion";
+import { uploadImageToImgBB } from "@/utils/3rd-party-apis";
 
 export default function CreateFrame() {
   const [isSaving, setIsSaving] = useState<boolean>(false);
@@ -75,17 +75,9 @@ export default function CreateFrame() {
   const compressAndUploadToBlob = async (file: any) => {
     //1) resize image to max 256kb
     const compressedFile = await imageConversion.compressAccurately(file, 255);
-    console.log(compressedFile, "resulting compressed file blob");
+    const hostedCompressedImg = await uploadImageToImgBB(compressedFile);
 
-    //upload resized img to vercel blob
-    const blob = await put("name1", compressedFile, {
-      access: "public",
-      token: process.env.NEXT_PUBLIC_BLOB_READ_WRITE_TOKEN,
-    });
-
-    console.log(blob, "WHAT IS BLOB BEFORE RETUNR?");
-
-    return blob.url;
+    return hostedCompressedImg;
   };
 
   const handleSave = async () => {
