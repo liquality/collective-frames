@@ -21,6 +21,7 @@ export const collective = pgTable("collective", {
   cWallet: varchar("c_wallet", { length: 256 }).notNull(),
   cPool: varchar("c_pool", { length: 256 }).notNull(),
   honeyPot: varchar("honey_pot", { length: 256 }).notNull(),
+  memeTokenContract: varchar("meme_token_contract", { length: 256 }).notNull(),
   createdAt: timestamp("created_at").defaultNow(),
   expiresAt: timestamp("expiresAt")
 });

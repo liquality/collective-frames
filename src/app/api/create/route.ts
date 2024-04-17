@@ -12,7 +12,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { COOKIE_USER_FID } from "@/utils/cookie-auth";
 import { getCollectiveById, } from "@/utils/collective";
 import { NFTData } from "@/types";
-import { ETH_CURRENCY_ADDRESS, HONEYPOT } from "@/utils/constants";
+import { ETH_CURRENCY_ADDRESS, } from "@/utils/constants";
 
 
 
@@ -72,7 +72,7 @@ export async function POST(request: NextRequest) {
         }
         //3) create the erc1155 using Liq Operator account as sponsor + Zora SDK
         const nft = await create1155Contract(
-          collective.cAddress as `0x${string}`, HONEYPOT, nftData
+          collective.cAddress as `0x${string}`, collective.honeyPot as `0x${string}`, nftData
         );
         if (nft) {
           //4) add new created nft mint frame to db so we can track
