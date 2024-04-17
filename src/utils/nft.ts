@@ -47,7 +47,8 @@ export async function create1155Contract(c_address: `0x${string}`, honeyPot: `0x
                     saleEnd: BigInt(futureUnixTimestamp),
                     pricePerToken: toTokenNativeAmount(nftData.pricePerMintETH, tokenDecimal), // Price in Wei
                     fundsRecipient: honeyPot as `0x${string}` // collective wallet
-                }
+                },
+                createReferral: honeyPot as `0x${string}`,
             });
 
             const { request: simulateRequest } = await publicClient.simulateContract(request);
@@ -364,9 +365,9 @@ async function getETHMintData(c_wallet: `0x${string}`, mintParam: MintParam) {
     return mintData;
 }
 
-export async function getETHMintPrice(tokenAddress: `0x${string}`) {
+export async function getETHMintPrice(tokenAddress: `0x${string}`) : Promise<bigint>{
     const mintFee = new ethers.Contract(tokenAddress, ERC1155ABI, getProvider())
-    const mintFeeAmount = await mintFee.mintFee()
+    const mintFeeAmount: bigint = await mintFee.mintFee()
     console.log(mintFeeAmount, 'mintFeeAmount')
     return mintFeeAmount;
 }
