@@ -19,25 +19,27 @@ const FarcasterLogin = () => {
       console.log(data, "wat is data");
       if (data) {
         Auth.setUser(res.fid);
-        route.push("/create-frame");
+        route.push("/dashboard");
       } else {
         throw Error("Could not get or create user in server");
       }
     } catch (error) {
       console.log(error, "what is error?");
-      /*       toast("Something went wrong. Contact support: " + error);
-       */
+      toast("Login failed. Refresh the page and try again. Or contact support@liquality.io for manual set-up.");
     }
   };
 
   const onError = (error?: AuthClientError) => {
-    toast("Something went wrong. Contact support: " + error);
+    console.log(error, "what is error?");
+    if(error) {
+      toast("Login failed. Refresh the page and try again. Or contact support@liquality.io for manual set-up.");
+    }
   };
 
   return (
     <div className="flex justify-center">
       <FarcasterSigninButton
-        onSuccess={onSignInSuccess} /* onError={onError} */
+        onSuccess={onSignInSuccess} onError={onError} 
       />
     </div>
   );

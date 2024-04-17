@@ -26,6 +26,17 @@ const OurVision = () => {
           </a>
         </div>
       </div>
+
+      <div className="flex items-center justify-center mt-12 mb-6">
+        <a
+          href="https://warpcast.com/liquality"
+          target="_blank"
+          style={{ minWidth: 320 }}
+          className="rounded-full text-center border border-white-500 px-4 py-2 bg-transparent disabled:opacity-75 text-white-500 focus:outline-none focus:ring-0"
+        >
+          Follow Liquality on Warpcast
+        </a>
+      </div>
       <div className="line mb-5 mt-6"></div>
       {/* bg-violet-50 bg-opacity-30 rounded-[40px] border-2 border-violet-50 */}
       <div className="flex flex-col md:flex-row items-center mt-6  border-2 border-white justify-center rounded-2xl bg-white bg-opacity-30 p-4">

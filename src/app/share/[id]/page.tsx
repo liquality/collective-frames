@@ -20,7 +20,7 @@ export default function Share() {
     navigator.clipboard
       .writeText(text)
       .then(() => {
-        toast("Frame URL copied to clipboard, paste it in a cast!");
+        toast("Success! Link was copied.");
       })
       .catch((error) => {
         console.error("Failed to copy text: ", error);
@@ -73,7 +73,7 @@ export default function Share() {
             style={{ width: 300 }}
             className="rounded-full text-center px-4 py-2 bg-purple-500 text-white focus:outline-none focus:ring-0"
           >
-            Check out on Zora.co
+            View on Zora.co
           </a>
         </div>
         <div className="flex mt-4 justify-center">
