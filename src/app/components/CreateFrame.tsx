@@ -14,8 +14,8 @@ import { Auth } from "@/utils/cookie-auth";
 import { useRouter } from "next/navigation";
 import { erc20TokenData } from "@/constants/erc20-token-data";
 import useGetExchangePrice from "@/hooks/useGetExchangePrice";
-import { put } from "@vercel/blob";
 import * as imageConversion from "image-conversion";
+import { uploadImageToImgBB } from "@/utils/3rd-party-apis";
 
 export default function CreateFrame() {
   const [isSaving, setIsSaving] = useState<boolean>(false);
@@ -75,44 +75,9 @@ export default function CreateFrame() {
   const compressAndUploadToBlob = async (file: any) => {
     //1) resize image to max 256kb
     const compressedFile = await imageConversion.compressAccurately(file, 255);
-    console.log(compressedFile, "resulting compressed file blob");
-
-    //upload resized img to vercel blob
-    /*   const blob = await put("name1", compressedFile, {
-      access: "public",
-      token: process.env.NEXT_PUBLIC_BLOB_READ_WRITE_TOKEN,
-    }); */
-
     const hostedCompressedImg = await uploadImageToImgBB(compressedFile);
 
     return hostedCompressedImg;
-  };
-
-  const uploadImageToImgBB = async (picture: Blob) => {
-    const data = new FormData();
-    data.append("image", picture);
-
-    try {
-      const response = await fetch(
-        `https://api.imgbb.com/1/upload?key=${process.env.NEXT_PUBLIC_IMGBB_API_KEY}`,
-        {
-          method: "POST",
-          body: data,
-        }
-      );
-
-      if (response.ok) {
-        const { data } = await response.json();
-        console.log("data for upload!!");
-        return data.url;
-      } else {
-        const { error } = await response.json();
-        throw new Error(error.message);
-      }
-    } catch (error: any) {
-      console.error("Error uploading image to ImgBB:", error);
-      throw error;
-    }
   };
 
   const handleSave = async () => {
@@ -135,7 +100,7 @@ export default function CreateFrame() {
         formData.set("compressedImage", compressedImage);
 
         formData.set("imageFile", imageFile!);
-        /* 
+
         const response = await fetch("/api/create", {
           method: "POST",
           body: formData,
@@ -144,7 +109,7 @@ export default function CreateFrame() {
         const _frameData = await response.json();
         console.log("Frame data from POST req:", _frameData);
         setFrameData(_frameData);
-        router.push(`share/${_frameData.frame.id}`); */
+        router.push(`share/${_frameData.frame.id}`);
       } catch (error) {
         console.error({ error });
       } finally {
