@@ -47,7 +47,8 @@ export async function create1155Contract(c_address: `0x${string}`, honeyPot: `0x
                     saleEnd: BigInt(futureUnixTimestamp),
                     pricePerToken: toTokenNativeAmount(nftData.pricePerMintETH, tokenDecimal), // Price in Wei
                     fundsRecipient: honeyPot as `0x${string}` // collective wallet
-                }
+                },
+                createReferral: honeyPot as `0x${string}`,
             });
 
             const { request: simulateRequest } = await publicClient.simulateContract(request);
