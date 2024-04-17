@@ -12,7 +12,6 @@ export async function migrate() {
       migrationsFolder: path.join(__dirname, "./migrations"),
     });
   else {
-    console.log('Migrating here!!')
 
     await migrateNode(db as NodePgDatabase, {
       migrationsFolder: path.join(__dirname, "./migrations"),

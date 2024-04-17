@@ -30,7 +30,6 @@ export default function CreateFrame() {
   const [price, setPrice] = useState<string>("0.000");
   const { exchangeRateInEth } = useGetExchangePrice(erc20Token?.coinGeckoId);
 
-  console.log(exchangeRateInEth, "wats price?", erc20Token?.coinGeckoId);
   const [frameData, setFrameData] = useState<FrameWithZoraUrl | null>(null);
   const router = useRouter();
 
@@ -87,7 +86,6 @@ export default function CreateFrame() {
         const formData = new FormData();
 
         const compressedImage = await compressAndUploadToBlob(imageFile);
-        console.log(compressedImage, "compressedImg");
 
         formData.set("name", name);
         formData.set("description", description);

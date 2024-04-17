@@ -11,7 +11,6 @@ export async function POST(
   req: NextRequest
 ): Promise<NextResponse<TransactionTargetResponse>> {
   const url = req.url;
-  console.log("COMES HERE!!", url);
 
   const parts = url.split("/p");
   const slug = parts[0].split("/").pop();

@@ -5,7 +5,6 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(request: NextRequest) {
   try {
     const req = await request.json();
-    console.log(req.fid, 'reqFID')
     const existingUser = await findUserByFid(req.fid)
     if (existingUser) {
       return NextResponse.json(existingUser);
@@ -21,7 +20,6 @@ export async function POST(request: NextRequest) {
             walletAddress: walletAddress,
           })
           .returning();
-        console.log(newUser[0], 'new user of row')
         return NextResponse.json(newUser[0]);
       } else {
         throw Error("Could not find walletaddress for fid: " + req.fid)

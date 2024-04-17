@@ -5,9 +5,7 @@ import { sql } from "drizzle-orm"
 
 
 export const findFrameById = async (frameId: number) => {
-    console.log(frameId, 'what is FRAME fid in db?')
     const existingFrame = await db.select().from(frame).where(sql`${frame.id} = ${frameId}`)
-    console.log(existingFrame, 'existing frame in Db call')
     if (existingFrame[0]) {
         return {
             frame: existingFrame[0],

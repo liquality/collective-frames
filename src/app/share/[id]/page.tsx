@@ -8,13 +8,9 @@ import { toast } from "react-toastify";
 
 export default function Share() {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const { frame, loading } = useGetFrameById();
-
-  console.log("GOT HERE");
+  const { frame } = useGetFrameById();
 
   const frameUrl = process.env.NEXT_PUBLIC_SERVER_URL + "frames-transaction/";
-
-  console.log(frame, "wats frame?");
 
   const handleCopyClick = (text: string) => {
     navigator.clipboard
@@ -30,10 +26,8 @@ export default function Share() {
     <div className="flex flex-col w-full md:w-4/5 mt-8 px-8 bg-white bg-opacity-70 p-3 rounded-[10px] text-black">
       <div className="flex w-full flex-col">
         <div className="flex flex-col md:flex-row">
-          <div className="flex flex-1 items-center hidden md:flex text-gray-400">
-            <div className="text-3xl text-3xl font-bold leading-loose mr-4">
-              1
-            </div>
+          <div className="flex-1 items-center hidden md:flex text-gray-400">
+            <div className="text-3xl  font-bold leading-loose mr-4">1</div>
             Choose your meme
           </div>
           <div className="flex flex-1 text-slate-900 items-center">

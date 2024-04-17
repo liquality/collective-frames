@@ -13,12 +13,6 @@ const handleRequest = frames(async (ctx) => {
     throw new Error("Frame id not found");
   }
   const slug = parts[2] || "";
-  console.log(
-    ctx,
-    "ALL CTX THINGS",
-    ctx.url.searchParams,
-    "wats searchparams?"
-  );
 
   const existingFrame = await findFrameBySlug(slug);
   if (!existingFrame) {
@@ -30,8 +24,6 @@ const handleRequest = frames(async (ctx) => {
   if (!collective) {
     throw new Error("No frame message");
   }
-
-  console.log(existingFrame, "existing frame?");
 
   let route = "";
   let secondRoute = "";

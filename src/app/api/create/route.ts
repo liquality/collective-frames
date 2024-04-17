@@ -62,7 +62,6 @@ export async function POST(request: NextRequest) {
 
 
         const exchangeRate = Number(price) * Number(exchangeRateInEth)
-        console.log(exchangeRate, 'what is exchange rate?', paymentCurrency, exchangeRateInEth,)
         const nftData: NFTData = {
           name,
           pricePerMintETH: isErc20 ? exchangeRate.toFixed(2) : price,

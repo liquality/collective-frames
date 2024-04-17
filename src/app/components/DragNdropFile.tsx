@@ -14,7 +14,6 @@ const DragNdropFile = ({ onFileSelected, file }: DragNdropFileProps) => {
 
   const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const _file = e.target.files?.[0];
-    console.log(_file, "_file what is??");
     if (_file) {
       const maxSizeInBytes = 4 * 1024 * 1024; // 4MB in bytes
       const fileSizeInBytes = _file.size;

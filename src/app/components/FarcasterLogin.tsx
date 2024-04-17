@@ -16,7 +16,6 @@ const FarcasterLogin = () => {
       //This route gets the user by fid and returns user: if it doesnt exist
       //it creates a new user with that fid and returns it
       const data = await ApiService.authenticateUser(res);
-      console.log(data, "wat is data");
       if (data) {
         Auth.setUser(res.fid);
         route.push("/dashboard");
@@ -25,22 +24,24 @@ const FarcasterLogin = () => {
       }
     } catch (error) {
       console.log(error, "what is error?");
-      toast("Login failed. Refresh the page and try again. Or contact support@liquality.io for manual set-up.");
+      toast(
+        "Login failed. Refresh the page and try again. Or contact support@liquality.io for manual set-up."
+      );
     }
   };
 
   const onError = (error?: AuthClientError) => {
     console.log(error, "what is error?");
-    if(error) {
-      toast("Login failed. Refresh the page and try again. Or contact support@liquality.io for manual set-up.");
+    if (error) {
+      toast(
+        "Login failed. Refresh the page and try again. Or contact support@liquality.io for manual set-up."
+      );
     }
   };
 
   return (
     <div className="flex justify-center">
-      <FarcasterSigninButton
-        onSuccess={onSignInSuccess} onError={onError} 
-      />
+      <FarcasterSigninButton onSuccess={onSignInSuccess} onError={onError} />
     </div>
   );
 };

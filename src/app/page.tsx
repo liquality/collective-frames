@@ -1,7 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
-import sdkImage from "@/assets/img/graphic_placeholder.svg";
-import Image from "next/image";
+
 import Login from "./components/FarcasterLogin";
 
 export default function Home() {

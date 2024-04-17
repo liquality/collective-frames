@@ -13,7 +13,6 @@ export const uploadImageToImgBB = async (picture: Blob) => {
 
         if (response.ok) {
             const { data } = await response.json();
-            console.log("data for upload!!");
             return data.url;
         } else {
             const { error } = await response.json();

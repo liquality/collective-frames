@@ -29,7 +29,6 @@ export async function createCollective(): Promise<CMetadata> {
 
     const cFactory = getCFactory(signer)
     const salt = generateSalt()
-    console.log(salt, 'wats salt?')
 
     const cAddress = await cFactory.getCollective(
       signer.address,

@@ -25,8 +25,6 @@ export async function POST(
     throw new Error("No slug in url" + url);
   }
 
-  console.log(req, "what is req???");
-
   //use existing frame data to get token params & mint
   const existingFrame = await findFrameBySlug(slug);
   if (!existingFrame) {

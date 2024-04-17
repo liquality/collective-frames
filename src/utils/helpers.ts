@@ -36,7 +36,6 @@ export const convertToEthPrice = async (priceInToken: string) => {
   const additionalEther = ethers.parseEther(priceInToken); // Convert 0.00001 ether to wei
   const totalValueWei = mintPriceWei + additionalEther; // Add in wei for precision
   const totalValueEther = ethers.formatEther(totalValueWei); // Convert back to ether string if needed
-  console.log(totalValueEther, " << totalValueEther");
   return totalValueEther
 };
 
