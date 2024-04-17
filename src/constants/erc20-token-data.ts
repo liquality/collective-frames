@@ -3,17 +3,38 @@ import { ERC20_ABI, ETH_CURRENCY_ADDRESS } from "@/utils/constants";
 
 export const erc20TokenData: TokenInfo[] =
     [
+        /*    {
+               ticker: "DEGEN",
+               contractAddress: "0x4ed4E862860beD51a9570b96d89aF5E1B0Efefed",
+               decimal: 18,
+               coinGeckoId: "degen"
+           }, */
         {
-            ticker: "DEGEN",
-            contractAddress: "0x4ed4E862860beD51a9570b96d89aF5E1B0Efefed",
+            ticker: "Mochi",
+            contractAddress: "0xF6e932Ca12afa26665dC4dDE7e27be02A7c02e50",
             decimal: 18,
-            coinGeckoId: "degen"
+            coinGeckoId: "mochi"
+
         },
         {
-            ticker: "USDC",
-            contractAddress: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
-            decimal: 6,
-            coinGeckoId: "usd-coin"
+            ticker: "Toshi",
+            contractAddress: "0xAC1Bd2486aAf3B5C0fc3Fd868558b082a531B2B4",
+            decimal: 18,
+            coinGeckoId: "toshi"
+
+        },
+        {
+            ticker: "TYBG or Base God",
+            contractAddress: "0x0d97F261b1e88845184f678e2d1e7a98D9FD38dE",
+            decimal: 18,
+            coinGeckoId: "base-god"
+
+        },
+        {
+            ticker: "Brett",
+            contractAddress: "0x532f27101965dd16442E59d40670FaF5eBB142E4",
+            decimal: 18,
+            coinGeckoId: "brett"
 
         },
         {
@@ -53,3 +74,5 @@ export const erc20TokenData: TokenInfo[] =
 • Higher
 
 */
+
+

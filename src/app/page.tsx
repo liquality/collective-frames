@@ -1,6 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
-
 import Login from "./components/FarcasterLogin";
 
 export default function Home() {

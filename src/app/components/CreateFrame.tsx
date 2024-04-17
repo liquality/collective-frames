@@ -51,6 +51,25 @@ export default function CreateFrame() {
     }
   };
 
+  const filteredPaymentList = useMemo(() => {
+    if (collective && collectives && erc20TokenData) {
+      const foundCollective = collectives.find((c) => collective === c.id);
+      if (foundCollective) {
+        const matchedToken = erc20TokenData.find(
+          (token) => token.contractAddress === foundCollective.memeTokenContract
+        );
+        console.log(erc20TokenData[4], "which one??");
+
+        const filteredList = [matchedToken, erc20TokenData[4]].filter(Boolean);
+
+        return filteredList;
+      }
+    }
+    return [];
+  }, [collective, collectives, erc20TokenData]);
+
+  console.log(filteredPaymentList, "filtered paymentlist");
+
   const handleNameChange = (e: FormEvent<HTMLInputElement>) => {
     setName(e.currentTarget.value || "");
   };
@@ -67,7 +86,7 @@ export default function CreateFrame() {
     setDescription(e.currentTarget.value || "");
   };
 
-  const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
+  const handleSetErc20 = (e: ChangeEvent<HTMLSelectElement>) => {
     setErc20Token(JSON.parse(e.target.value));
   };
 
@@ -249,10 +268,10 @@ export default function CreateFrame() {
           <select
             className="p-2 border border-purple-500 focus:outline-none focus:ring-0"
             id="tokens"
-            onChange={handleChange}
+            onChange={handleSetErc20}
           >
-            <option value="">Select ERC20 or ETH payment</option>
-            {erc20TokenData.map((token, index) => (
+            <option value="">Payment token</option>
+            {filteredPaymentList.map((token, index) => (
               <option key={index} value={JSON.stringify(token)}>
                 {token.ticker}
               </option>
