@@ -78,14 +78,41 @@ export default function CreateFrame() {
     console.log(compressedFile, "resulting compressed file blob");
 
     //upload resized img to vercel blob
-    const blob = await put("name1", compressedFile, {
+    /*   const blob = await put("name1", compressedFile, {
       access: "public",
       token: process.env.NEXT_PUBLIC_BLOB_READ_WRITE_TOKEN,
-    });
+    }); */
 
-    console.log(blob, "WHAT IS BLOB BEFORE RETUNR?");
+    const hostedCompressedImg = await uploadImageToImgBB(compressedFile);
 
-    return blob.url;
+    return hostedCompressedImg;
+  };
+
+  const uploadImageToImgBB = async (picture: Blob) => {
+    const data = new FormData();
+    data.append("image", picture);
+
+    try {
+      const response = await fetch(
+        `https://api.imgbb.com/1/upload?key=${process.env.NEXT_PUBLIC_IMGBB_API_KEY}`,
+        {
+          method: "POST",
+          body: data,
+        }
+      );
+
+      if (response.ok) {
+        const { data } = await response.json();
+        console.log("data for upload!!");
+        return data.url;
+      } else {
+        const { error } = await response.json();
+        throw new Error(error.message);
+      }
+    } catch (error: any) {
+      console.error("Error uploading image to ImgBB:", error);
+      throw error;
+    }
   };
 
   const handleSave = async () => {
@@ -108,7 +135,7 @@ export default function CreateFrame() {
         formData.set("compressedImage", compressedImage);
 
         formData.set("imageFile", imageFile!);
-
+        /* 
         const response = await fetch("/api/create", {
           method: "POST",
           body: formData,
@@ -117,7 +144,7 @@ export default function CreateFrame() {
         const _frameData = await response.json();
         console.log("Frame data from POST req:", _frameData);
         setFrameData(_frameData);
-        router.push(`share/${_frameData.frame.id}`);
+        router.push(`share/${_frameData.frame.id}`); */
       } catch (error) {
         console.error({ error });
       } finally {
