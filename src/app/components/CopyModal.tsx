@@ -21,7 +21,7 @@ const CopyFrameModal: React.FC<ModalProps> = (props) => {
       `${window.location.protocol}//${window.location.host}`;
     const frameUrl = `${baseUrl}frames-transaction/${frameData?.frame?.slug}`;
     window.open(
-      `https://warpcast.com/~/compose?text=${text}&embeds[]=${frameUrl}`
+      `https://warpcast.com/~/compose?text=${text}&embeds[]=${frameData.frame.frameImgUrl}&embeds[]=${frameUrl}`
     );
     setCastText("");
     onClose();
@@ -40,7 +40,10 @@ const CopyFrameModal: React.FC<ModalProps> = (props) => {
         </h2>
         {/* QUESTION: Should the link refrence the frame.id or frame.slug?  */}
         <div className="flex flex-col flex-1">
-          <div className="flex flex-col mt-8 ">Make sure you are logged into Warpcast before sharing your meme via a cast.</div>
+          <div className="flex flex-col mt-8 ">
+            Make sure you are logged into Warpcast before sharing your meme via
+            a cast.
+          </div>
           <div className="flex flex-col mt-8 w-full">
             <textarea
               onInput={handleCastTextChange}
