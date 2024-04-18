@@ -1,4 +1,4 @@
-import { createPublicClient, createWalletClient, http, encodeFunctionData } from "viem";
+import { createPublicClient, createWalletClient, http, encodeFunctionData, HDAccount } from "viem";
 import { create1155CreatorClient, createMintClient } from "@zoralabs/protocol-sdk";
 import { base } from "viem/chains";
 import { mnemonicToAccount } from 'viem/accounts'
@@ -6,8 +6,9 @@ import { ethers } from "ethers";
 import { ERC20Minter__factory } from "../../contracts/typechain-types/factories/contracts/minters/erc20/ERC20Minter__factory"
 import axios from "axios";
 import { COLLECTIVE_ABI, C_WALLET_ABI, ERC1155ABI, ERC20MINTER_ABI, ERC20_ABI, ERC20_MINTER_ADDRESS, ETH_CURRENCY_ADDRESS, OPERATOR_ADDRESS } from "./constants";
-import { MintParam, NFTData, Transaction } from "@/types";
+import { MintParam, NFTData, Transaction, WriteContractParam } from "@/types";
 import { collectiveBatchExecuteData, getProvider, getRecordPoolMintCallData } from "./collective";
+import { get } from "http";
 
 export async function create1155Contract(c_address: `0x${string}`, honeyPot: `0x${string}`, nftData: NFTData) {
 
@@ -52,15 +53,9 @@ export async function create1155Contract(c_address: `0x${string}`, honeyPot: `0x
             });
 
             const { request: simulateRequest } = await publicClient.simulateContract(request);
-            const { abi, address, functionName, args } = simulateRequest
-            console.log("functionName >> ", functionName, args, ' << args')
-            const hash = await walletClient.writeContract({
-                account: walletAccount,
-                abi,
-                address,
-                functionName,
-                args
-            });
+            const { abi, address, functionName, args } = simulateRequest;
+            let writeContract = await getWriteContractParam(walletAccount, abi, address, functionName, args)
+            const hash = await walletClient.writeContract(writeContract);
             const receipt = await publicClient.waitForTransactionReceipt({ hash });
             let nftContractAddress = receipt.logs[0].address;
             console.log(receipt, ' deployed NFT receipt')
@@ -69,87 +64,51 @@ export async function create1155Contract(c_address: `0x${string}`, honeyPot: `0x
             if (nftData.paymentCurrency != ETH_CURRENCY_ADDRESS) {
 
                 // Set the ERC20Minter in ERC1155 CONTRACT to permissiont_bit_minter using addPermission
-                const erc20MinterPermissionHash = await walletClient.writeContract({
-                    account: walletAccount,
-                    abi: ERC1155ABI,
-                    address: nftContractAddress as `0x${string}`,
-                    functionName: 'addPermission',
-                    args:
-                        [
-                            0, // permission bit
-                            ERC20_MINTER_ADDRESS as `0x${string}`, // minter address
-                            2 ** 1
-                        ]
-                });
+                writeContract = await getWriteContractParam(walletAccount, ERC1155ABI, nftContractAddress, 'addPermission', [
+                    0, ERC20_MINTER_ADDRESS as `0x${string}`, 2 ** 1
+                ])
+                const erc20MinterPermissionHash = await walletClient.writeContract(writeContract);
                 const addERC20MinterPermissionReceipt = await publicClient.waitForTransactionReceipt({ hash: erc20MinterPermissionHash });
                 console.log(addERC20MinterPermissionReceipt, ' added permission to mint ERC20 tokens receipt')
 
                 // Get currency decimal
-                tokenDecimal = Number(await publicClient.readContract({
-                    abi: ERC20_ABI,
-                    address: nftData.paymentCurrency,
-                    functionName: 'decimals',
-                    args: []
-                }));
-
+                tokenDecimal = await getCurrencyDecimal(nftData.paymentCurrency);
                 // setSale data from ERC20Minter contract
                 let setSalesData = getSetSalesData(futureUnixTimestamp, nftData.pricePerMintToken!, honeyPot, nftData.paymentCurrency, tokenDecimal);
 
-                // set sales on ERC20Minter 
-                const salesHash = await walletClient.writeContract({
-                    account: walletAccount,
-                    abi: ERC1155ABI,
-                    address: nftContractAddress as `0x${string}`,
-                    functionName: 'callSale',
-                    args: [
-                        1,
-                        ERC20_MINTER_ADDRESS as `0x${string}`,
-                        setSalesData
-                    ]
-                });
+                // set sales on ERC20Minter                 
+                writeContract = await getWriteContractParam(walletAccount, ERC1155ABI, nftContractAddress, 'callSale', [
+                    1, ERC20_MINTER_ADDRESS, setSalesData
+                ])
+                const salesHash = await walletClient.writeContract(writeContract);
                 console.log(salesHash, ' set sales on ERC20 Minter')
                 const setSalesReceipt = await publicClient.waitForTransactionReceipt({ hash: salesHash });
                 console.log(setSalesReceipt, ' set sales on ERC20 Minter receipt')
             }
 
             // Whitelist nft & currency contract on collective wallet
-            const whitelistHash = await walletClient.writeContract({
-                account: walletAccount,
-                abi: COLLECTIVE_ABI,
-                address: c_address,
-                functionName: 'whitelistTargets',
-                args: [[nftData.paymentCurrency, nftContractAddress as `0x${string}`]]
-            });
+            writeContract = await getWriteContractParam(walletAccount, COLLECTIVE_ABI, c_address, 'whitelistTargets', [
+                [nftData.paymentCurrency, nftContractAddress as `0x${string}`]
+            ])
+            const whitelistHash = await walletClient.writeContract(writeContract);
             const whitelistReceipt = await publicClient.waitForTransactionReceipt({ hash: whitelistHash });
             console.log(whitelistReceipt, ' whitelisted currency receipt')
 
             // Add permission to creator on nft contract
-            const addPermissionCreatorHash = await walletClient.writeContract({
-                account: walletAccount,
-                abi: ERC1155ABI,
-                address: nftContractAddress as `0x${string}`,
-                functionName: 'addPermission',
-                args:
-                    [
-                        0, // Token id
-                        nftData.creator, // creator address
-                        2 ** 1 // Permission bit
-                    ]
-            });
+            writeContract = await getWriteContractParam(walletAccount, ERC1155ABI, nftContractAddress as `0x${string}`, 'addPermission', [
+                0, // Token id
+                nftData.creator, // creator address
+                2 ** 1 // Permission bit
+            ])
+            const addPermissionCreatorHash = await walletClient.writeContract(writeContract);
             const addPermissionCreatorReceipt = await publicClient.waitForTransactionReceipt({ hash: addPermissionCreatorHash });
             console.log(addPermissionCreatorReceipt, ' added permission to creator receipt')
 
-            // Set the creator as the owner of the contract
-            const setCreatorToOwnerHash = await walletClient.writeContract({
-                account: walletAccount,
-                abi: ERC1155ABI,
-                address: nftContractAddress as `0x${string}`,
-                functionName: 'setOwner',
-                args:
-                    [
-                        nftData.creator
-                    ]
-            });
+            // Set the creator as the owner of the contract            
+            writeContract = await getWriteContractParam(walletAccount, ERC1155ABI, nftContractAddress as `0x${string}`, 'setOwner', [
+                nftData.creator
+            ])
+            const setCreatorToOwnerHash = await walletClient.writeContract(writeContract);
             const setOwnerReceipt = await publicClient.waitForTransactionReceipt({ hash: setCreatorToOwnerHash });
             console.log(setOwnerReceipt, ' set creator as owner receipt')
 
@@ -372,46 +331,29 @@ export async function getETHMintPrice(tokenAddress: `0x${string}`) : Promise<big
     return mintFeeAmount;
 }
 
-function getChain(chains: any, chainId: any) {
-    for (const chain in chains) {
-        if (chains[chain].id === chainId) {
-            return chains[chain];
-        }
+async function getWriteContractParam(walletAccount: HDAccount, abi: readonly any[], address: `0x${string}`, functionName: string, args: unknown,): Promise<WriteContractParam> {
+    const maxFessPerGas = (await getProvider().getFeeData()).maxFeePerGas
+    let writeContract: WriteContractParam = {
+        account: walletAccount,
+        abi,
+        address,
+        functionName,
+        args: args as Array<any>,
+        nonce: await getProvider().getTransactionCount(walletAccount.address, 'latest')
     }
+    if (maxFessPerGas) {
+        writeContract.maxFeePerGas = (await getProvider().getFeeData()).maxFeePerGas as bigint | undefined
+    }
+
+    // const runner = new ethers.Wallet(walletAccount.getHdKey().privateKey?.toString()!, getProvider())
+    // const contract = new ethers.Contract(address, abi, runner)
+    // contract[functionName](...args)
+
+    return writeContract
 }
 
-async function directMint(tokenAddress: `0x${string}`, tokenId: number, mintParam: MintParam) {
-    const walletAccount = mnemonicToAccount(process.env.OPERATOR_MNEMONIC!)
-    const walletClient = createWalletClient({
-        account: walletAccount,
-        chain: base,
-        transport: http(process.env.RPC_URL!)
-    });
-
-    const publicClient = createPublicClient({
-        chain: base,
-        transport: http(process.env.RPC_URL!)
-    });
-
-    const hash = await walletClient.writeContract({
-        account: walletAccount,
-        abi: ERC20MINTER_ABI,
-        address: ERC20_MINTER_ADDRESS as `0x${string}`,
-        functionName: 'mint',
-        args: [
-            mintParam.recipient,
-            mintParam.quantity,
-            tokenAddress,
-            tokenId,
-            toTokenNativeAmount(mintParam.totalValue, mintParam.tokenDecimal),
-            mintParam.currency,
-            mintParam.mintReferral,
-            mintParam.comment]
-    });
-    console.log(hash, ' mint hash')
-    const receipt = await publicClient.waitForTransactionReceipt({ hash });
-    console.log(receipt, 'mint receipt')
-    return receipt;
+async function getCurrencyDecimal(currency: `0x${string}`) : Promise<number> {
+    const erc20Contract = new ethers.Contract(currency, ERC20_ABI, getProvider())
+    const decimal = Number(await erc20Contract.decimals())
+    return decimal;
 }
-
-
