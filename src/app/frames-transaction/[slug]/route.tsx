@@ -6,6 +6,7 @@ import { getCollectiveById } from "@/utils/collective";
 import Image from "next/image";
 import { ETH_CURRENCY_ADDRESS } from "@/utils/constants";
 import { collective } from "@/db";
+import { shortenAddress } from "@/utils";
 
 const handleRequest = frames(async (ctx) => {
   const parts = ctx.url.pathname.split("/");
@@ -39,8 +40,18 @@ const handleRequest = frames(async (ctx) => {
   ) {
     return {
       image: (
-        <div tw="bg-purple-800 text-white w-full h-full justify-center items-center flex">
-          Transaction submitted! {ctx.message.transactionId} Now go mint!
+        <div tw="relative bg-purple-500 text-white w-full h-full flex flex-col justify-center items-center mb-3">
+          Approval transaction submitted for ERC20{" "}
+          {shortenAddress(collective.memeTokenContract)} 😊
+          <p>Hash: {shortenAddress(ctx.message?.transactionId)}</p>
+          <img tw="rounded-lg" src={existingFrame?.frameImgUrl} width="50%" />
+          <p tw="absolute bottom-15 right-0 mb-4 mr-4">Powered By</p>
+          <img
+            src="https://docs.liquality.io/img/logo_dark.svg"
+            width="310"
+            height="50"
+            tw="absolute bottom-0 right-0 mb-4 mr-4"
+          />
         </div>
       ),
       imageOptions: {
@@ -66,8 +77,18 @@ const handleRequest = frames(async (ctx) => {
   ) {
     return {
       image: (
-        <div tw="bg-green-800 text-white w-full h-full justify-center items-center flex">
-          END!! You minted with ERC20 {ctx.message.transactionId}
+        <div tw="relative bg-purple-500 text-white w-full h-full flex flex-col justify-center items-center mb-3">
+          You minted with ERC20 {shortenAddress(collective.memeTokenContract)}{" "}
+          😊
+          <p>{shortenAddress(ctx.message?.transactionId)}</p>
+          <img tw="rounded-lg" src={existingFrame?.frameImgUrl} width="50%" />
+          <p tw="absolute bottom-15 right-0 mb-4 mr-4">Powered By</p>
+          <img
+            src="https://docs.liquality.io/img/logo_dark.svg"
+            width="310"
+            height="50"
+            tw="absolute bottom-0 right-0 mb-4 mr-4"
+          />
         </div>
       ),
       imageOptions: {
@@ -85,8 +106,17 @@ const handleRequest = frames(async (ctx) => {
   } else if (ctx.message?.transactionId && existingFrame && !isErc20) {
     return {
       image: (
-        <div tw="bg-purple-800 text-white w-full h-full justify-center items-center flex">
-          You minted with ETH {ctx.message.transactionId}
+        <div tw="relative bg-purple-500 text-white w-full h-full flex flex-col justify-center items-center mb-3">
+          You minted with Base ETH 😊
+          <p>{shortenAddress(ctx.message?.transactionId)}</p>
+          <img tw="rounded-lg" src={existingFrame?.frameImgUrl} width="50%" />
+          <p tw="absolute bottom-15 right-0 mb-4 mr-4">Powered By</p>
+          <img
+            src="https://docs.liquality.io/img/logo_dark.svg"
+            width="310"
+            height="50"
+            tw="absolute bottom-0 right-0 mb-4 mr-4"
+          />
         </div>
       ),
       imageOptions: {
@@ -105,6 +135,7 @@ const handleRequest = frames(async (ctx) => {
 
   return {
     image: existingFrame?.frameImgUrl,
+
     imageOptions: {
       aspectRatio: "1:1",
     },
@@ -112,7 +143,7 @@ const handleRequest = frames(async (ctx) => {
     buttons: [
       // @ts-ignore
       <Button action="tx" target={`/txdata/${slug}/${route}`}>
-        Mint for community: {collective.name}
+        Mint for community {collective.name}
       </Button>,
     ],
   };
