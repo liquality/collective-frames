@@ -43,7 +43,13 @@ const OurVision = () => {
         <img className="w-4/6 md:p-24" src="/sdk_logo.svg" alt="SDK Logo" />
         <div className="flex flex-col">
           <div className="mt-6 text-white text-[1.8rem] md:text-[3.8rem] font-bold leading-9 md:leading-[5rem] tracking-wide mb-3">
-            Built with the Liquality Collective SDK{" "}
+            <a
+              href="https://github.com/liquality/my-collectives-sdk"
+              target="_blank"
+            >
+              {" "}
+              Built with the Liquality Collective SDK{" "}
+            </a>
           </div>
           <div className="text-white text-xl md:pr-24 font-medium leading-[30px] mt-4">
             Liquality provides open-source infrastructure legos that make web3
