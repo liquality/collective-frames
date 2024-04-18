@@ -15,16 +15,9 @@ export function useConvertEthToUsd(ethPrice: number | undefined) {
           );
           const data = await response.json();
 
-          console.log(
-            "erc20 token EthPrice:",
-            ethPrice,
-            "Tether exchange in eth",
-            data.tether.eth
-          );
           if (data.tether) {
             let price = ethPrice / Number(data.tether.eth);
 
-            console.log(price, "price???");
             setUsdtPrice(price);
           }
           setLoading(false);
