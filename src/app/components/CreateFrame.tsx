@@ -31,6 +31,8 @@ export default function CreateFrame() {
   const { exchangeRateInEth } = useGetExchangePrice(erc20Token?.coinGeckoId);
 
   console.log(exchangeRateInEth, "exchange price");
+
+  let amountInEth = Number(price) * Number(exchangeRateInEth);
   const [frameData, setFrameData] = useState<FrameWithZoraUrl | null>(null);
   const router = useRouter();
 
@@ -192,9 +194,6 @@ export default function CreateFrame() {
                 file={imageFile}
               />
               <div className="flex justify-between">
-                <div className="text-gray-400">
-                  Max 4MB (JPG, JPEG, PNG, GIF)
-                </div>
                 {imageFile && (
                   <div
                     className="text-purple-500 cursor-pointer"
@@ -234,6 +233,9 @@ export default function CreateFrame() {
             <label className="flex flex-1 my-2 text-black">
               Mint Price in{" "}
               {erc20Token ? erc20Token?.coinGeckoId.toUpperCase() : "ETH"}
+              <div className="text-xs ml-4 mt-1">
+                {amountInEth?.toFixed(18)} ETH
+              </div>
             </label>
 
             <input
