@@ -5,6 +5,7 @@ import React, {
   FormEvent,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from "react";
 import "./CreateFrame.css";
@@ -29,6 +30,7 @@ export default function CreateFrame() {
   const [erc20Token, setErc20Token] = useState<TokenInfo | null>(null);
   const [price, setPrice] = useState<string>("0.00000");
   const { exchangeRateInEth } = useGetExchangePrice(erc20Token?.coinGeckoId);
+  const selectRef = useRef<HTMLSelectElement>(null);
 
   console.log(exchangeRateInEth, "exchange price");
 
@@ -61,7 +63,6 @@ export default function CreateFrame() {
         const matchedToken = erc20TokenData.find(
           (token) => token.contractAddress === foundCollective.memeTokenContract
         );
-        console.log(erc20TokenData[4], "which one??");
 
         const filteredList = [matchedToken, erc20TokenData[4]].filter(Boolean);
 
@@ -155,6 +156,14 @@ export default function CreateFrame() {
     };
     loadData();
   }, []);
+
+  useEffect(() => {
+    // Ensure selectRef has been initialized
+    if (selectRef.current) {
+      // Set the value of the select element to ''
+      selectRef.current.value = "";
+    }
+  }, [filteredPaymentList]); // Run this effect whenever filteredPaymentList changes
 
   const formIsValid = useMemo(() => {
     if (
@@ -269,6 +278,7 @@ export default function CreateFrame() {
         </div>
         <div className="flex flex-col mt-6 md:w-1/2 md:pr-6">
           <select
+            ref={selectRef}
             className="p-2 border border-purple-500 focus:outline-none focus:ring-0"
             id="tokens"
             onChange={handleSetErc20}
