@@ -1,3 +1,6 @@
+import { ethers } from "ethers";
+import { ERC1155ABI, FIXED_PRICE_MINTER_ADDRESS } from "./constants";
+
 export function slugify(str: string): string {
   return String(str)
     .normalize("NFKD") // split accented characters into their base characters and diacritical marks

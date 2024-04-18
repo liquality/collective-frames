@@ -17,6 +17,35 @@ import { erc20TokenData } from "@/constants/erc20-token-data";
 import useGetExchangePrice from "@/hooks/useGetExchangePrice";
 import * as imageConversion from "image-conversion";
 import { uploadImageToImgBB } from "@/utils/3rd-party-apis";
+import {
+  ERC1155ABI,
+  ETH_CURRENCY_ADDRESS,
+  FIXED_PRICE_MINTER_ADDRESS,
+} from "@/utils/constants";
+import { ethers } from "ethers";
+
+export function getProvider() {
+  const provider = new ethers.JsonRpcProvider(
+    "https://base-mainnet.g.alchemy.com/v2/47hMa2y_Ow1YLx3fAsb_VqRcbwrUd-Tx"
+  );
+  return provider;
+}
+export async function getETHMintPrice(
+  tokenAddress: `0x${string}`
+): Promise<bigint> {
+  const mintFee = new ethers.Contract(tokenAddress, ERC1155ABI, getProvider());
+  const mintFeeAmount: bigint = await mintFee.mintFee();
+  console.log(mintFeeAmount, "mintFeeAmount");
+  return mintFeeAmount;
+}
+
+export const convertToEthPrice = async (priceInToken: string) => {
+  const mintPriceWei = await getETHMintPrice(FIXED_PRICE_MINTER_ADDRESS);
+  const additionalEther = ethers.parseEther(priceInToken); // Convert 0.00001 ether to wei
+  const totalValueWei = mintPriceWei + additionalEther; // Add in wei for precision
+  const totalValueEther = ethers.formatEther(totalValueWei); // Convert back to ether string if needed
+  return totalValueEther;
+};
 
 export default function CreateFrame() {
   const [isSaving, setIsSaving] = useState<boolean>(false);
@@ -29,12 +58,16 @@ export default function CreateFrame() {
   const [collective, setCollective] = useState<number>(0);
   const [erc20Token, setErc20Token] = useState<TokenInfo | null>(null);
   const [price, setPrice] = useState<string>("0.00000");
+  const [valueInEth, setValueInEth] = useState<number>(0);
+
   const { exchangeRateInEth } = useGetExchangePrice(erc20Token?.coinGeckoId);
+
   const selectRef = useRef<HTMLSelectElement>(null);
 
   console.log(exchangeRateInEth, "exchange price");
+  let isErc20 = erc20Token?.contractAddress !== ETH_CURRENCY_ADDRESS;
 
-  let amountInEth = Number(price) * Number(exchangeRateInEth);
+  console.log(convertToEthPrice(price), "wats tdiiiis?");
   const [frameData, setFrameData] = useState<FrameWithZoraUrl | null>(null);
   const router = useRouter();
 
@@ -148,6 +181,12 @@ export default function CreateFrame() {
         const response = await fetch("/api/collectives");
         const data = await response.json();
         setCollectives(data);
+
+        if (isErc20) {
+          setValueInEth(Number(price) * Number(exchangeRateInEth));
+        } else {
+          setValueInEth(Number(await convertToEthPrice(price)));
+        }
       } catch (error) {
         console.error(error);
       } finally {
@@ -155,15 +194,13 @@ export default function CreateFrame() {
       }
     };
     loadData();
-  }, []);
+  }, [exchangeRateInEth, price]);
 
   useEffect(() => {
-    // Ensure selectRef has been initialized
     if (selectRef.current) {
-      // Set the value of the select element to ''
       selectRef.current.value = "";
     }
-  }, [filteredPaymentList]); // Run this effect whenever filteredPaymentList changes
+  }, [filteredPaymentList]);
 
   const formIsValid = useMemo(() => {
     if (
@@ -243,7 +280,8 @@ export default function CreateFrame() {
               Mint Price in{" "}
               {erc20Token ? erc20Token?.coinGeckoId.toUpperCase() : "ETH"}
               <div className="text-xs ml-4 mt-1">
-                {amountInEth?.toFixed(18)} ETH
+                {valueInEth?.toFixed(18)} ETH{" "}
+                {!isErc20 ? <p className="text-xxs">+ zora fee</p> : null}
               </div>
             </label>
 

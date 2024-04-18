@@ -1,8 +1,6 @@
 "use client";
-import Image from "next/image";
 import { isMobile } from "react-device-detect";
 import { useEffect, useState } from "react";
-import Footer from "./Footer";
 
 const OurVision = () => {
   const [isMobileState, setIsMobileState] = useState(false);
