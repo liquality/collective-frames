@@ -1,4 +1,5 @@
 import { frame, collective, user } from "@/db";
+import { HDAccount } from "viem";
 
 export type NewFrame = typeof frame.$inferInsert;
 export type CollectiveItem = typeof collective.$inferSelect;
@@ -74,3 +75,13 @@ export type TokenInfo = {
     decimal: number;
     coinGeckoId: string;
 };
+
+export type WriteContractParam = {
+    account: HDAccount;
+    abi: readonly any[];
+    address: `0x${string}`;
+    functionName: any;
+    args: any[];
+    nonce: number;
+    maxFeePerGas?: bigint | undefined;
+}
