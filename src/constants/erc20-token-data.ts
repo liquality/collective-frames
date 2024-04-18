@@ -13,7 +13,7 @@ export const erc20TokenData: TokenInfo[] =
             ticker: "Mochi",
             contractAddress: "0xF6e932Ca12afa26665dC4dDE7e27be02A7c02e50",
             decimal: 18,
-            coinGeckoId: "mochi"
+            coinGeckoId: "mochi-thecatcoin"
 
         },
         {
@@ -34,7 +34,7 @@ export const erc20TokenData: TokenInfo[] =
             ticker: "Brett",
             contractAddress: "0x532f27101965dd16442E59d40670FaF5eBB142E4",
             decimal: 18,
-            coinGeckoId: "brett"
+            coinGeckoId: "brett-2"
 
         },
         {

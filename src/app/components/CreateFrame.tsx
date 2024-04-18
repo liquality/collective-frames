@@ -24,6 +24,7 @@ import {
 } from "@/utils/constants";
 import { ethers } from "ethers";
 import { convertToEthPrice, getDisplayValue } from "../frontend-helpers";
+import useConvertEthToUsd from "@/hooks/useConvertEthToUsd";
 
 export default function CreateFrame() {
   const [isSaving, setIsSaving] = useState<boolean>(false);
@@ -37,6 +38,7 @@ export default function CreateFrame() {
   const [erc20Token, setErc20Token] = useState<TokenInfo | null>(null);
   const [price, setPrice] = useState<string>("0.00000");
   const [valueInEth, setValueInEth] = useState<number>(0);
+  const { usdtPrice } = useConvertEthToUsd(valueInEth);
 
   const { exchangeRateInEth } = useGetExchangePrice(erc20Token?.coinGeckoId);
 
@@ -237,7 +239,7 @@ export default function CreateFrame() {
               onInput={handleDescriptionChange}
               value={description}
               disabled={description.length > 255}
-              placeholder="Enter description..."
+              placeholder="Enter description... (optional)"
               className="description mb-3 p-2 text-xs h-50 border border-purple-500 focus:outline-none focus:ring-0"
             ></textarea>
             <div className="text-gray-400 flex justify-end">
@@ -248,16 +250,20 @@ export default function CreateFrame() {
 
         <div className="flex flex-col md:flex-row">
           <div className="flex flex-col mt-6 md:flex-1">
-            <label className="flex flex-1 my-2 text-black">
+            <label className="flex  my-2 text-black">
               Mint Price in{" "}
               {erc20Token ? erc20Token?.coinGeckoId.toUpperCase() : "ETH"}
-              <div className="text-xs ml-4 mt-1">
-                {getDisplayValue(valueInEth.toString())} ETH{" "}
-                {!isErc20 ? (
-                  <p className="text-xxs">(includes zora mint fee)</p>
-                ) : null}
-              </div>
             </label>
+            <div className="text-xs mb-2 flex flex-col">
+              {getDisplayValue(valueInEth.toString())} ETH{" "}
+              {!isErc20 ? (
+                <p className="text-xxs">(includes zora mint fee)</p>
+              ) : null}
+            </div>
+
+            <div className="text-xs mb-2 flex flex-col">
+              ~ ${getDisplayValue(usdtPrice.toString())}
+            </div>
 
             <input
               type="text"
@@ -309,7 +315,7 @@ export default function CreateFrame() {
           onClick={handleSave}
           style={{ width: 300 }}
           disabled={!formIsValid}
-          className="rounded-full px-4 py-2 bg-purple-500 disabled:opacity-75 text-white focus:outline-none focus:ring-0"
+          className="rounded-full px-1 py-2 bg-purple-500 disabled:opacity-75 text-white focus:outline-none focus:ring-0"
         >
           {isSaving ? "Saving..." : "Save my Meme"}
         </button>

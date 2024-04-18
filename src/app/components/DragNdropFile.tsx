@@ -109,8 +109,10 @@ const DragNdropFile = ({ onFileSelected, file }: DragNdropFileProps) => {
       ) : (
         <div className="flex flex-col items-center p-10">
           <MdAdd className="text-3xl text-purple-500" />
-          <div className="text-lg text-gray-500">Upload Picture</div>
-          <div className="text-gray-400 text-xs">
+          <div className="text-lg text-gray-500 font-semibold">
+            Upload Picture
+          </div>
+          <div className="text-gray-500 text-xs">
             Max 4MB (JPG, JPEG, PNG, GIF)
           </div>
         </div>
