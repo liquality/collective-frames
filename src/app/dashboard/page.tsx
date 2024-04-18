@@ -31,7 +31,6 @@ export default function Dashboard() {
         toast("Success! Link was copied.");
       })
       .catch((error) => {
-
         console.error("Failed to copy text: ", error);
         toast("Copying the link failed. Try again.");
       });
@@ -46,29 +45,28 @@ export default function Dashboard() {
         <div className="flex flex-col mt-8 p-8 bg-white bg-opacity-70 rounded-[10px] text-black">
           <div className="flex flex-col">
             <div className="flex">Active Frames ({frames?.length || 0})</div>
-            <div className="flex mt-4 mb-12 md:flex-col">
+            <div className="flex mt-4 mb-12 flex-col">
               {frames.map((frame) => (
-                <div className="flex flex-col" key={frame.id}>
+                <div className="flex flex-col items-center" key={frame.id}>
+                   <div
+                    className="flex text-purple-500 cursor-pointer hover:text-purple-900 hover:text-decoration-1"
+                    onClick={() => router.push(`/share/${frame.id}`)}
+                  >
+                    {frame.name}
+                  </div>
                   <div
-                    className="flex cursor-pointer"
+                    className="flex cursor-pointer mt-4 justify-center"
                     onClick={() => router.push(`/share/${frame.id}`)}
                   >
                     {frame?.nftImgUrl && (
                       <img
                         src={frame?.nftImgUrl || ""}
                         alt="Uploaded meme"
-                        className="object-cover h-full md:h-32"
+                        className="mt-1 w-10/12 sm:w-2/4 object-contain"
                       />
                     )}
                   </div>
-
-                  <div
-                    className="flex mt-4 cursor-pointer hover:text-purple-500"
-                    onClick={() => router.push(`/share/${frame.id}`)}
-                  >
-                    {frame.name}
-                  </div>
-                  <div className="flex mt-4">
+                  <div className="mt-4 hidden sm:flex">
                     <a
                       href="#"
                       className="text-purple-500"
@@ -77,6 +75,7 @@ export default function Dashboard() {
                       {frameUrl + frame?.slug}
                     </a>
                   </div>
+                  <div className="line mb-5 mt-6"></div>
                 </div>
               ))}
             </div>

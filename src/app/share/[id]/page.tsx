@@ -46,8 +46,7 @@ export default function Share() {
             <img
               src={frame?.frame.nftImgUrl || ""}
               alt="Uploaded meme"
-              style={{ width: "60%" }}
-              className="object-cover mt-3"
+              className="object-contain mt-3 w-10/12 sm:w-2/4"
             />
           )}
         </div>
