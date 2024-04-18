@@ -273,7 +273,7 @@ export default function CreateFrame() {
             <option value="">Payment token</option>
             {filteredPaymentList.map((token, index) => (
               <option key={index} value={JSON.stringify(token)}>
-                {token.ticker}
+                {token?.ticker}
               </option>
             ))}
           </select>
