@@ -1,10 +1,14 @@
 import { useState, useEffect } from "react";
 
 export function useGetExchangePrice(currencyId: string | undefined) {
-  const [exchangeRateInEth, setPriceInCurrency] = useState<number | null>(null);
+  const [exchangeRateInEth, setExchangePriceInCurrency] = useState<
+    number | null
+  >(null);
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
+    let debounceTimer: NodeJS.Timeout;
+
     const fetchData = async () => {
       try {
         if (currencyId) {
@@ -14,11 +18,12 @@ export function useGetExchangePrice(currencyId: string | undefined) {
             `https://api.coingecko.com/api/v3/simple/price?ids=${currencyId}&vs_currencies=eth`
           );
           const data = await response.json();
+          console.log("OOOO");
 
           if (data[currencyId]) {
-            setPriceInCurrency(data[currencyId].eth);
+            setExchangePriceInCurrency(data[currencyId].eth);
           } else {
-            setPriceInCurrency(1);
+            setExchangePriceInCurrency(1);
           }
           setLoading(false);
         }
@@ -26,10 +31,24 @@ export function useGetExchangePrice(currencyId: string | undefined) {
         console.log(error, "Error fetching the currency with id" + currencyId);
       }
     };
-    fetchData();
-  }, [exchangeRateInEth, currencyId]);
 
-  return { exchangeRateInEth, loading, setPriceInCurrency };
+    const debouncedFetchData = () => {
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(fetchData, 3000); // Adjust the debounce delay as needed (e.g., 500ms)
+    };
+
+    if (currencyId) {
+      debouncedFetchData();
+    }
+
+    return () => clearTimeout(debounceTimer); // Cleanup function to clear the debounce timer
+  }, [currencyId]);
+
+  return {
+    exchangeRateInEth,
+    loading,
+    setPriceInCurrency: setExchangePriceInCurrency,
+  };
 }
 
 export default useGetExchangePrice;

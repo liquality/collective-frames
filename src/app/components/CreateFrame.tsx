@@ -114,6 +114,7 @@ export default function CreateFrame() {
 
     return hostedCompressedImg;
   };
+  console.log(exchangeRateInEth, "ex proce");
 
   const handleSave = async () => {
     if (formIsValid && erc20Token && exchangeRateInEth) {
