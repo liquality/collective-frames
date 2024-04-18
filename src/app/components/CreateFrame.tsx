@@ -27,9 +27,10 @@ export default function CreateFrame() {
   const [description, setDescription] = useState<string>("");
   const [collective, setCollective] = useState<number>(0);
   const [erc20Token, setErc20Token] = useState<TokenInfo | null>(null);
-  const [price, setPrice] = useState<string>("0.000");
+  const [price, setPrice] = useState<string>("0.00000");
   const { exchangeRateInEth } = useGetExchangePrice(erc20Token?.coinGeckoId);
 
+  console.log(exchangeRateInEth, "exchange price");
   const [frameData, setFrameData] = useState<FrameWithZoraUrl | null>(null);
   const router = useRouter();
 
@@ -77,7 +78,7 @@ export default function CreateFrame() {
   const handlePriceChange = (e: FormEvent<HTMLInputElement>) => {
     let amount = e.currentTarget.value;
 
-    if (!amount || amount.match(/^\d{1,}(\.\d{0,4})?$/)) {
+    if (!amount || amount.match(/^\d{1,}(\.\d{0,10})?$/)) {
       setPrice(amount);
     }
   };
