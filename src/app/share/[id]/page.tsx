@@ -36,8 +36,7 @@ export default function Share() {
           </div>
         </div>
         <div className="mt-1">
-          Share this frame link and encourage others to mint your meme. More
-          mints = more hype and profits for you and your community
+          Cast the meme frame on Warpcast. More mints boost profits and awareness for your community and memecoin!
         </div>
 
         <div className="flex flex-col mt-4 items-center">

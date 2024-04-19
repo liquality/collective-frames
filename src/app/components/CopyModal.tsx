@@ -41,8 +41,7 @@ const CopyFrameModal: React.FC<ModalProps> = (props) => {
         {/* QUESTION: Should the link refrence the frame.id or frame.slug?  */}
         <div className="flex flex-col flex-1">
           <div className="flex flex-col mt-8 ">
-            Make sure you are logged into Warpcast before sharing your meme via
-            a cast.
+            To share your meme you have to be logged into Warpcast.
           </div>
           <div className="flex flex-col mt-8 w-full">
             <textarea

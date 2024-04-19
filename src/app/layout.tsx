@@ -33,14 +33,13 @@ export default function RootLayout({
                 className="text-center font-bold text-7xl leading-normal tracking-tight uppercase mb-3"
                 style={{ fontSize: 30, lineHeight: 1 }}
               >
-                Meme NFT generator is here
+                MEME AMPLIFIER MACHINE
               </h2>
               <h4 className="text-center font-bold text-xl leading-normal tracking-tight uppercase">
-                share to mint & earn
+              Meme. Share. Grow the meme, earn together. 
               </h4>
               <p className="mt-3 text-center mb-5">
-                Upload your meme to create a custom mint frame for sharing. Each
-                time your meme is minted, your chosen pool benefits.
+              Create and share a "meme mint frame" for your memecoin community. Every meme minted benefits your chosen community.
               </p>
             </div>
             <div className="flex mt-8 justify-center items-center">

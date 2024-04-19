@@ -198,7 +198,7 @@ export default function CreateFrame() {
           <div className="text-slate-900 text-3xl font-bold leading-loose mr-4">
             1
           </div>
-          Choose your meme
+          Build your meme frame
         </div>
         <div className="flex flex-1 text-gray-400 items-center hidden md:flex">
           <div className="text-3xl font-bold leading-loose mr-4">2</div>
@@ -277,7 +277,7 @@ export default function CreateFrame() {
 
           <div className="flex flex-col mt-6 md:flex-1 md:ml-12">
             <div className="flex mb-2 text-black">
-              Who shares your mint profits?
+            Which community are you playing for (revenue is split 50/50 with community)?
             </div>
             <select
               value={collective}
@@ -318,8 +318,11 @@ export default function CreateFrame() {
           disabled={!formIsValid}
           className="rounded-full px-1 py-2 bg-purple-500 disabled:opacity-75 text-white focus:outline-none focus:ring-0"
         >
-          {isSaving ? "Saving..." : "Save my Meme"}
+          {isSaving ? "Creating meme frame..." : "Create meme frame"}
         </button>
+      </div>
+      <div className="flex flex-col items-center justify-center mt-6 mb-6 text-sm">
+      This may take up to 10 seconds (add below “creating meme frame” button while creation is happening)
       </div>
     </div>
   );
