@@ -77,17 +77,18 @@ const handleRequest = frames(async (ctx) => {
         >
           View on block explorer
         </Button>,
-        <Button
-          action="link"
-          target={`https://zora.co/collect/base:${existingFrame.nftTokenAddress}/1`}
-        >
-          View on Zora
-        </Button>,
+
         <Button
           action="link"
           target={`https://collective-frames-generator.vercel.app/`}
         >
           Create your own meme
+        </Button>,
+        <Button
+          action="link"
+          target={`https://zora.co/collect/base:${existingFrame.nftTokenAddress}/1`}
+        >
+          View on Zora
         </Button>,
         <Button action="tx" target={`/txdata/${slug}`}>
           Initate second transaction for mint
