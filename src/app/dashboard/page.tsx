@@ -56,7 +56,7 @@ export default function Dashboard() {
             <div className="flex mt-4 mb-12 flex-col">
               {frames.map((frame) => (
                 <div className="flex flex-col items-center" key={frame.id}>
-                   <div
+                  <div
                     className="flex text-purple-500 cursor-pointer hover:text-purple-900 hover:text-decoration-1"
                     onClick={() => router.push(`/share/${frame.id}`)}
                   >
