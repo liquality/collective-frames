@@ -80,7 +80,7 @@ const handleRequest = frames(async (ctx) => {
 
         <Button
           action="link"
-          target={`https://collective-frames-generator.vercel.app/`}
+          target={`https://meme-amplifier-machine.liquality.io/`}
         >
           Create your own meme
         </Button>,
@@ -142,7 +142,7 @@ const handleRequest = frames(async (ctx) => {
         </Button>,
         <Button
           action="link"
-          target={`https://collective-frames-generator.vercel.app/`}
+          target={`https://meme-amplifier-machine.liquality.io/`}
         >
           Create your own meme
         </Button>,
@@ -190,7 +190,7 @@ const handleRequest = frames(async (ctx) => {
         </Button>,
         <Button
           action="link"
-          target={`https://collective-frames-generator.vercel.app/`}
+          target={`https://meme-amplifier-machine.liquality.io/`}
         >
           Create your own meme
         </Button>,
