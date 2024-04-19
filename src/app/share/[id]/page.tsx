@@ -36,8 +36,7 @@ export default function Share() {
           </div>
         </div>
         <div className="mt-1">
-          Share this frame link and encourage others to mint your meme. More
-          mints = more hype and profits for you and your community
+          Cast the meme frame on Warpcast. More mints boost profits and awareness for your community and memecoin!
         </div>
 
         <div className="flex flex-col mt-4 items-center">
@@ -60,23 +59,24 @@ export default function Share() {
           </button>
         </div>
         <div className="flex mt-4 justify-center">
+          <button
+            onClick={() => handleCopyClick(frameUrl + frame?.frame?.slug)}
+            style={{ width: 300 }}
+            className="rounded-full text-center px-4 py-2 bg-purple-500 text-white focus:outline-none focus:ring-0"
+          >
+            Copy Link to share
+          </button>
+        </div>
+
+        <div className="flex mt-4 justify-center">
           <a
             target="_blank"
             href={frame?.zoraUrl}
             style={{ width: 300 }}
-            className="rounded-full text-center px-4 py-2 bg-purple-500 text-white focus:outline-none focus:ring-0"
+            className="rounded-full text-center px-4 py-2 border border-purple-500 text-purple-500 focus:outline-none focus:ring-0 mb-3"
           >
             View on Zora.co
           </a>
-        </div>
-        <div className="flex mt-4 justify-center">
-          <button
-            onClick={() => handleCopyClick(frameUrl + frame?.frame?.slug)}
-            style={{ width: 300 }}
-            className="rounded-full px-4 py-2 border border-purple-500 text-purple-500 focus:outline-none focus:ring-0 mb-3"
-          >
-            Copy Link to share
-          </button>
         </div>
       </div>
       {frame ? (
