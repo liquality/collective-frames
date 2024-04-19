@@ -32,28 +32,24 @@ const handleRequest = frames(async (ctx) => {
   isErc20 ? (route = "premint") : null;
   isErc20 ? (secondRoute = "mint") : null;
 
+  console.log(ctx.message, "CTX message");
+
   //initate second transaction erc20 mint
   if (
     ctx.message?.transactionId &&
     existingFrame &&
     isErc20 &&
-    ctx.message.buttonIndex !== 4
+    ctx.message.buttonIndex === 1
   ) {
     return {
       image: (
         <div tw="relative bg-white text-black w-full h-full flex flex-col justify-center items-center mb-3">
-          <img
-            tw="rounded-lg"
-            src="https://cdn.discordapp.com/attachments/1013716252562296833/1230766843564916736/checkmark.png?ex=663483f2&is=66220ef2&hm=7dd7a7893f2b8ac2b342e53d9cde6c6851a0ef2122577b6cb4f40af870581624&checkmark.svg"
-            width="100"
-            height="100"
-          />
-          <h1 className="font-montserrat">Approved, now mint</h1>
+          <h1 className="font-montserrat">Ready to mint</h1>
           <img
             tw="rounded-lg"
             src={existingFrame?.frameImgUrl}
-            width="300"
-            height="300"
+            width="250"
+            height="250"
           />
           <h2>{existingFrame.name}</h2>
           <p tw="absolute text-s font-extralight bottom-0 left-5 mb-4 mr-4">
@@ -77,19 +73,6 @@ const handleRequest = frames(async (ctx) => {
         >
           View on block explorer
         </Button>,
-
-        <Button
-          action="link"
-          target={`https://meme-amplifier-machine.liquality.io/`}
-        >
-          Create your own meme
-        </Button>,
-        <Button
-          action="link"
-          target={`https://zora.co/collect/base:${existingFrame.nftTokenAddress}/1`}
-        >
-          View on Zora
-        </Button>,
         <Button action="tx" target={`/txdata/${slug}`}>
           Initate second transaction for mint
         </Button>,
@@ -100,7 +83,7 @@ const handleRequest = frames(async (ctx) => {
     ctx.message?.transactionId &&
     existingFrame &&
     isErc20 &&
-    ctx.message.buttonIndex === 4
+    ctx.message.buttonIndex === 2
   ) {
     return {
       image: (
@@ -146,6 +129,12 @@ const handleRequest = frames(async (ctx) => {
         >
           Create your own meme
         </Button>,
+        <Button
+          action="link"
+          target={`https://zora.co/collect/base:${existingFrame.nftTokenAddress}/1`}
+        >
+          View on Zora
+        </Button>,
       ],
     };
     //Success ETH mint
@@ -163,8 +152,8 @@ const handleRequest = frames(async (ctx) => {
           <img
             tw="rounded-lg"
             src={existingFrame?.frameImgUrl}
-            width="300"
-            height="300"
+            width="250"
+            height="250"
           />
           <h2>{existingFrame.name}</h2>
           <p tw="absolute text-s font-extralight bottom-0 left-5 mb-4 mr-4">
@@ -214,7 +203,7 @@ const handleRequest = frames(async (ctx) => {
     buttons: [
       // @ts-ignore
       <Button action="tx" target={`/txdata/${slug}/${route}`}>
-        {`Mint for community ${collective.name}`}
+        {`Pay to mint with ${isErc20 ? collective.name : "Base ETH"}`}
       </Button>,
     ],
   };
