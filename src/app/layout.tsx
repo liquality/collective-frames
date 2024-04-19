@@ -39,7 +39,7 @@ export default function RootLayout({
               Meme. Share. Grow the meme, earn together. 
               </h4>
               <p className="mt-3 text-center mb-5">
-              Create and share a "meme mint frame" for your memecoin community. Every meme minted benefits your chosen community.
+              Create and share a &quot;meme mint frame&quot; for your memecoin community. Every meme minted benefits your chosen community.
               </p>
             </div>
             <div className="flex mt-8 justify-center items-center">
