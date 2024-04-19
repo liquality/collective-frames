@@ -60,23 +60,24 @@ export default function Share() {
           </button>
         </div>
         <div className="flex mt-4 justify-center">
+          <button
+            onClick={() => handleCopyClick(frameUrl + frame?.frame?.slug)}
+            style={{ width: 300 }}
+            className="rounded-full text-center px-4 py-2 bg-purple-500 text-white focus:outline-none focus:ring-0"
+          >
+            Copy Link to share
+          </button>
+        </div>
+
+        <div className="flex mt-4 justify-center">
           <a
             target="_blank"
             href={frame?.zoraUrl}
             style={{ width: 300 }}
-            className="rounded-full text-center px-4 py-2 bg-purple-500 text-white focus:outline-none focus:ring-0"
+            className="rounded-full text-center px-4 py-2 border border-purple-500 text-purple-500 focus:outline-none focus:ring-0 mb-3"
           >
             View on Zora.co
           </a>
-        </div>
-        <div className="flex mt-4 justify-center">
-          <button
-            onClick={() => handleCopyClick(frameUrl + frame?.frame?.slug)}
-            style={{ width: 300 }}
-            className="rounded-full px-4 py-2 border border-purple-500 text-purple-500 focus:outline-none focus:ring-0 mb-3"
-          >
-            Copy Link to share
-          </button>
         </div>
       </div>
       {frame ? (
