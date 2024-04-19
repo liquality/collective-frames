@@ -32,14 +32,20 @@ const handleRequest = frames(async (ctx) => {
   isErc20 ? (route = "premint") : null;
   isErc20 ? (secondRoute = "mint") : null;
 
-  console.log(ctx.message, "CTX message");
+  console.log(
+    ctx.message,
+    "CTX message",
+    ctx.searchParams,
+    "ALL SEARCHPARAMS",
+    ctx
+  );
 
   //initate second transaction erc20 mint
   if (
     ctx.message?.transactionId &&
     existingFrame &&
     isErc20 &&
-    ctx.message.buttonIndex === 1
+    ctx.searchParams.action === "premint"
   ) {
     return {
       image: (
@@ -67,24 +73,13 @@ const handleRequest = frames(async (ctx) => {
         aspectRatio: "1:1",
       },
       buttons: [
-        <Button
-          action="link"
-          target={`https://www.onceupon.gg/tx/${ctx.message.transactionId}`}
-        >
-          View on block explorer
-        </Button>,
         <Button action="tx" target={`/txdata/${slug}`}>
-          Initate second transaction for mint
+          {`Mint with ${collective.name}`}
         </Button>,
       ],
     };
     //success ERC20 mint
-  } else if (
-    ctx.message?.transactionId &&
-    existingFrame &&
-    isErc20 &&
-    ctx.message.buttonIndex === 2
-  ) {
+  } else if (ctx.message?.transactionId && existingFrame && isErc20) {
     return {
       image: (
         <div tw="relative bg-white text-black w-full h-full flex flex-col justify-center items-center mb-3">
@@ -138,7 +133,12 @@ const handleRequest = frames(async (ctx) => {
       ],
     };
     //Success ETH mint
-  } else if (ctx.message?.transactionId && existingFrame && !isErc20) {
+  } else if (
+    ctx.message?.transactionId &&
+    existingFrame &&
+    !isErc20 &&
+    ctx.searchParams.action === "ethMint"
+  ) {
     return {
       image: (
         <div tw="relative bg-white text-black w-full h-full flex flex-col justify-center items-center mb-3">
@@ -195,15 +195,22 @@ const handleRequest = frames(async (ctx) => {
 
   return {
     image: existingFrame?.frameImgUrl,
-
     imageOptions: {
       aspectRatio: "1:1",
     },
-
     buttons: [
       // @ts-ignore
-      <Button action="tx" target={`/txdata/${slug}/${route}`}>
-        {`Pay to mint with ${isErc20 ? collective.name : "Base ETH"}`}
+      <Button
+        action="tx"
+        target={`/txdata/${slug}/${route}`}
+        post_url={{
+          pathname: `/${slug}`,
+          query: {
+            action: isErc20 ? "premint" : "ethMint",
+          },
+        }}
+      >
+        {`Pay with ${isErc20 ? collective.name + " then mint" : "Base ETH"}`}
       </Button>,
     ],
   };
