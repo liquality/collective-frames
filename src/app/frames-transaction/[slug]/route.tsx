@@ -32,25 +32,38 @@ const handleRequest = frames(async (ctx) => {
   isErc20 ? (route = "premint") : null;
   isErc20 ? (secondRoute = "mint") : null;
 
+  //initate second transaction erc20 mint
   if (
     ctx.message?.transactionId &&
     existingFrame &&
     isErc20 &&
-    ctx.message.buttonIndex !== 2
+    ctx.message.buttonIndex !== 4
   ) {
     return {
       image: (
-        <div tw="relative bg-purple-500 text-white w-full h-full flex flex-col justify-center items-center mb-3">
-          Approval transaction submitted for ERC20{" "}
-          {shortenAddress(collective.memeTokenContract)} 😊
-          <p>Hash: {shortenAddress(ctx.message?.transactionId)}</p>
-          <img tw="rounded-lg" src={existingFrame?.frameImgUrl} width="50%" />
-          <p tw="absolute bottom-15 right-0 mb-4 mr-4">Powered By</p>
+        <div tw="relative bg-white text-black w-full h-full flex flex-col justify-center items-center mb-3">
           <img
-            src="https://docs.liquality.io/img/logo_dark.svg"
-            width="310"
-            height="50"
-            tw="absolute bottom-0 right-0 mb-4 mr-4"
+            tw="rounded-lg"
+            src="https://cdn.discordapp.com/attachments/1013716252562296833/1230766843564916736/checkmark.png?ex=663483f2&is=66220ef2&hm=7dd7a7893f2b8ac2b342e53d9cde6c6851a0ef2122577b6cb4f40af870581624&checkmark.svg"
+            width="100"
+            height="100"
+          />
+          <h1 className="font-montserrat">Approved, now mint</h1>
+          <img
+            tw="rounded-lg"
+            src={existingFrame?.frameImgUrl}
+            width="300"
+            height="300"
+          />
+          <h2>{existingFrame.name}</h2>
+          <p tw="absolute text-s font-extralight bottom-0 left-5 mb-4 mr-4">
+            Powered By
+          </p>
+          <img
+            src="https://docs.liquality.io/img/logo_light.svg"
+            width="205"
+            height="40"
+            tw="absolute bottom-0 left-60 mb-4 mr-4"
           />
         </div>
       ),
@@ -63,31 +76,56 @@ const handleRequest = frames(async (ctx) => {
           target={`https://www.onceupon.gg/tx/${ctx.message.transactionId}`}
         >
           View on block explorer
+        </Button>,
+        <Button
+          action="link"
+          target={`https://zora.co/collect/base:${existingFrame.nftTokenAddress}/1`}
+        >
+          View on Zora
+        </Button>,
+        <Button
+          action="link"
+          target={`https://collective-frames-generator.vercel.app/`}
+        >
+          Create your own meme
         </Button>,
         <Button action="tx" target={`/txdata/${slug}`}>
           Initate second transaction for mint
         </Button>,
       ],
     };
+    //success ERC20 mint
   } else if (
     ctx.message?.transactionId &&
     existingFrame &&
     isErc20 &&
-    ctx.message.buttonIndex === 2
+    ctx.message.buttonIndex === 4
   ) {
     return {
       image: (
-        <div tw="relative bg-purple-500 text-white w-full h-full flex flex-col justify-center items-center mb-3">
-          You minted with ERC20 {shortenAddress(collective.memeTokenContract)}{" "}
-          😊
-          <p>{shortenAddress(ctx.message?.transactionId)}</p>
-          <img tw="rounded-lg" src={existingFrame?.frameImgUrl} width="50%" />
-          <p tw="absolute bottom-15 right-0 mb-4 mr-4">Powered By</p>
+        <div tw="relative bg-white text-black w-full h-full flex flex-col justify-center items-center mb-3">
           <img
-            src="https://docs.liquality.io/img/logo_dark.svg"
-            width="310"
-            height="50"
-            tw="absolute bottom-0 right-0 mb-4 mr-4"
+            tw="rounded-lg"
+            src="https://cdn.discordapp.com/attachments/1013716252562296833/1230766843564916736/checkmark.png?ex=663483f2&is=66220ef2&hm=7dd7a7893f2b8ac2b342e53d9cde6c6851a0ef2122577b6cb4f40af870581624&checkmark.svg"
+            width="100"
+            height="100"
+          />
+          <h1 className="font-montserrat">Minted with ERC20</h1>
+          <img
+            tw="rounded-lg"
+            src={existingFrame?.frameImgUrl}
+            width="300"
+            height="300"
+          />
+          <h2>{existingFrame.name}</h2>
+          <p tw="absolute text-s font-extralight bottom-0 left-5 mb-4 mr-4">
+            Powered By
+          </p>
+          <img
+            src="https://docs.liquality.io/img/logo_light.svg"
+            width="205"
+            height="40"
+            tw="absolute bottom-0 left-60 mb-4 mr-4"
           />
         </div>
       ),
@@ -101,21 +139,41 @@ const handleRequest = frames(async (ctx) => {
         >
           View on block explorer
         </Button>,
+        <Button
+          action="link"
+          target={`https://collective-frames-generator.vercel.app/`}
+        >
+          Create your own meme
+        </Button>,
       ],
     };
+    //Success ETH mint
   } else if (ctx.message?.transactionId && existingFrame && !isErc20) {
     return {
       image: (
-        <div tw="relative bg-purple-500 text-white w-full h-full flex flex-col justify-center items-center mb-3">
-          You minted with Base ETH 😊
-          <p>{shortenAddress(ctx.message?.transactionId)}</p>
-          <img tw="rounded-lg" src={existingFrame?.frameImgUrl} width="50%" />
-          <p tw="absolute bottom-15 right-0 mb-4 mr-4">Powered By</p>
+        <div tw="relative bg-white text-black w-full h-full flex flex-col justify-center items-center mb-3">
           <img
-            src="https://docs.liquality.io/img/logo_dark.svg"
-            width="310"
-            height="50"
-            tw="absolute bottom-0 right-0 mb-4 mr-4"
+            tw="rounded-lg"
+            src="https://cdn.discordapp.com/attachments/1013716252562296833/1230766843564916736/checkmark.png?ex=663483f2&is=66220ef2&hm=7dd7a7893f2b8ac2b342e53d9cde6c6851a0ef2122577b6cb4f40af870581624&checkmark.svg"
+            width="100"
+            height="100"
+          />
+          <h1 className="font-montserrat">Minted with Base ETH</h1>
+          <img
+            tw="rounded-lg"
+            src={existingFrame?.frameImgUrl}
+            width="300"
+            height="300"
+          />
+          <h2>{existingFrame.name}</h2>
+          <p tw="absolute text-s font-extralight bottom-0 left-5 mb-4 mr-4">
+            Powered By
+          </p>
+          <img
+            src="https://docs.liquality.io/img/logo_light.svg"
+            width="205"
+            height="40"
+            tw="absolute bottom-0 left-60 mb-4 mr-4"
           />
         </div>
       ),
@@ -128,6 +186,18 @@ const handleRequest = frames(async (ctx) => {
           target={`https://www.onceupon.gg/tx/${ctx.message.transactionId}`}
         >
           View on block explorer
+        </Button>,
+        <Button
+          action="link"
+          target={`https://collective-frames-generator.vercel.app/`}
+        >
+          Create your own meme
+        </Button>,
+        <Button
+          action="link"
+          target={`https://zora.co/collect/base:${existingFrame.nftTokenAddress}/1`}
+        >
+          View on Zora
         </Button>,
       ],
     };
@@ -143,7 +213,7 @@ const handleRequest = frames(async (ctx) => {
     buttons: [
       // @ts-ignore
       <Button action="tx" target={`/txdata/${slug}/${route}`}>
-        Mint for community {collective.name}
+        {`Mint for community ${collective.name}`}
       </Button>,
     ],
   };
