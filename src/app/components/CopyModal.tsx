@@ -61,7 +61,6 @@ const CopyFrameModal: React.FC<ModalProps> = (props) => {
           <button
             disabled={!castText.length}
             onClick={handleWriteCastClick}
-            style={{ width: 300 }}
             className="rounded-full px-4 py-2 bg-purple-500 text-white focus:outline-none focus:ring-0 mb-3"
           >
             Cast
