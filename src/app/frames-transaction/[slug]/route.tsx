@@ -58,7 +58,7 @@ const handleRequest = frames(async (ctx) => {
             height="100"
           />
           <h2>{existingFrame.name}</h2>
-          <p tw="absolute text-s font-extralight bottom-0 left-5 mb-4 mr-4">
+          <p tw="absolute font-extralight bottom-0 left-5 mb-4 mr-4">
             Powered By
           </p>
           <img
@@ -97,7 +97,7 @@ const handleRequest = frames(async (ctx) => {
             height="200"
           />
           <h2>{existingFrame.name}</h2>
-          <p tw="absolute text-s font-extralight bottom-0 left-5 mb-4 mr-4">
+          <p tw="absolute font-extralight bottom-0 left-5 mb-4 mr-4">
             Powered By
           </p>
           <img
@@ -156,7 +156,7 @@ const handleRequest = frames(async (ctx) => {
             height="200"
           />
           <h2>{existingFrame.name}</h2>
-          <p tw="absolute text-s font-extralight bottom-0 left-5 mb-4 mr-4">
+          <p tw="absolute font-extralight bottom-0 left-5 mb-4 mr-4">
             Powered By
           </p>
           <img
