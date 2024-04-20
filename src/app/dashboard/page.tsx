@@ -66,11 +66,11 @@ export default function Dashboard() {
               href="/create-frame"
               className="rounded-full mb-8 px-4 py-2 bg-purple-500 disabled:opacity-75 text-white focus:outline-none focus:ring-0"
             >
-              Create another NFT
+              Create another Meme
             </a>
           </div>
           <div className="flex flex-col">
-            <div className="flex">Previous NFTs ({frames?.length || 0})</div>
+            <div className="flex">Previous Memes ({frames?.length || 0})</div>
             <div className="flex mt-4 mb-12 flex-col">
               {frames.map((frame) => (
                 <div className="flex flex-col items-center" key={frame.id}>

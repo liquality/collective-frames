@@ -120,7 +120,16 @@ export async function GET(request: NextRequest, response: NextResponse) {
         eq(frame.createdBy, users[0].id)
       ));
 
-      return Response.json(res || []);
+      const sortedFrames = res.sort((a: any, b: any) => {
+        const dateA = new Date(a.createdAt);
+        const dateB = new Date(b.createdAt);
+
+        return dateB.getTime() - dateA.getTime();
+      });
+      console.log(sortedFrames, 'sortedFrames')
+
+
+      return Response.json(sortedFrames || []);
     }
 
     return NextResponse.json({ fid });

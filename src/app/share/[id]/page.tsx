@@ -36,14 +36,15 @@ export default function Share() {
           </div>
         </div>
         <div className="mt-1">
-          Cast the meme frame on Warpcast. More mints boost profits and awareness for your community and memecoin!
+          Cast the meme frame on Warpcast. More mints boost profits and
+          awareness for your community and memecoin!
         </div>
 
         <div className="flex flex-col mt-4 items-center">
           <p>{frame?.frame.name || ""}</p>
-          {frame?.frame?.nftImgUrl && (
+          {frame?.frame?.frameImgUrl && (
             <img
-              src={frame?.frame.nftImgUrl || ""}
+              src={frame?.frame.frameImgUrl || ""}
               alt="Uploaded meme"
               className="object-contain mt-3 w-10/12 sm:w-2/4"
             />
