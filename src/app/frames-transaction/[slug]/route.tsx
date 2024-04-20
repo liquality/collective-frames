@@ -40,6 +40,18 @@ const handleRequest = frames(async (ctx) => {
     ctx
   );
 
+  console.log(
+    ctx.message?.transactionId && existingFrame && isErc20,
+    "First ERC20"
+  );
+  console.log(
+    ctx.message?.transactionId &&
+      existingFrame &&
+      isErc20 &&
+      ctx.searchParams.action === "premint",
+    "Second ERC20"
+  );
+
   //initate second transaction erc20 mint
   if (
     ctx.message?.transactionId &&
