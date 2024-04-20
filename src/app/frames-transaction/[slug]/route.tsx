@@ -93,8 +93,8 @@ const handleRequest = frames(async (ctx) => {
           <img
             tw="rounded-lg"
             src={existingFrame?.frameImgUrl}
-            width="100"
-            height="100"
+            width="200"
+            height="200"
           />
           <h2>{existingFrame.name}</h2>
           <p tw="absolute text-s font-extralight bottom-0 left-5 mb-4 mr-4">
@@ -152,8 +152,8 @@ const handleRequest = frames(async (ctx) => {
           <img
             tw="rounded-lg"
             src={existingFrame?.frameImgUrl}
-            width="100"
-            height="100"
+            width="200"
+            height="200"
           />
           <h2>{existingFrame.name}</h2>
           <p tw="absolute text-s font-extralight bottom-0 left-5 mb-4 mr-4">

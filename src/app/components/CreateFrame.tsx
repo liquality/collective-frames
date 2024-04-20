@@ -315,9 +315,8 @@ export default function CreateFrame() {
       <div className="flex flex-col items-center justify-center mt-12 mb-6">
         <button
           onClick={handleSave}
-          style={{ width: 300 }}
           disabled={!formIsValid}
-          className="rounded-full px-1 py-2 bg-purple-500 disabled:opacity-75 text-white focus:outline-none focus:ring-0"
+          className="rounded-full px-4 py-2 bg-purple-500 disabled:opacity-75 text-white focus:outline-none focus:ring-0"
         >
           {isSaving ? "Creating meme frame..." : "Create meme frame"}
         </button>
