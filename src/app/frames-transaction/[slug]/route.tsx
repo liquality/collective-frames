@@ -41,15 +41,19 @@ const handleRequest = frames(async (ctx) => {
   );
 
   console.log(
-    ctx.message?.transactionId && existingFrame && isErc20,
-    "First ERC20"
-  );
-  console.log(
     ctx.message?.transactionId &&
       existingFrame &&
       isErc20 &&
       ctx.searchParams.action === "premint",
-    "Second ERC20"
+    "Initate Second ERC20"
+  );
+
+  console.log(
+    ctx.message?.transactionId &&
+      existingFrame &&
+      isErc20 &&
+      ctx.searchParams.action !== "premint",
+    "Success ERC20 mint"
   );
 
   //initate second transaction erc20 mint
@@ -85,13 +89,27 @@ const handleRequest = frames(async (ctx) => {
         aspectRatio: "1:1",
       },
       buttons: [
-        <Button action="tx" target={`/txdata/${slug}`}>
+        <Button
+          action="tx"
+          target={`/txdata/${slug}`}
+          post_url={{
+            pathname: `/${slug}`,
+            query: {
+              action: "secondTx",
+            },
+          }}
+        >
           {`Mint with ${collective.name}`}
         </Button>,
       ],
     };
     //success ERC20 mint
-  } else if (ctx.message?.transactionId && existingFrame && isErc20) {
+  } else if (
+    ctx.message?.transactionId &&
+    existingFrame &&
+    isErc20 &&
+    ctx.searchParams.action !== "premint"
+  ) {
     return {
       image: (
         <div tw="relative bg-white text-black w-full h-full flex flex-col justify-center items-center mb-3">
