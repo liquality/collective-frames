@@ -23,7 +23,7 @@ export default function Share() {
       });
   };
   return (
-    <div className="flex flex-col w-full md:w-4/5 mt-8 px-8 bg-white bg-opacity-70 p-3 rounded-[10px] text-black">
+    <div className="flex flex-col w-full md:w-4/5 px-8 bg-white bg-opacity-70 p-3 rounded-[10px] text-black">
       <div className="flex w-full flex-col">
         <div className="flex flex-col md:flex-row">
           <div className="flex-1 items-center hidden md:flex text-gray-400">
@@ -40,8 +40,8 @@ export default function Share() {
           awareness for your community and memecoin!
         </div>
 
-        <div className="flex flex-col mt-4 items-center">
-          <p>{frame?.frame.name || ""}</p>
+        <div className="flex flex-col mt-4 items-center ">
+          <p className="text-xl font-semibold">{frame?.frame.name || ""}</p>
           {frame?.frame?.frameImgUrl && (
             <img
               src={frame?.frame.frameImgUrl || ""}
