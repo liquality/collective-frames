@@ -33,7 +33,7 @@ const CopyFrameModal: React.FC<ModalProps> = (props) => {
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <Modal isOpen={isOpen} onClose={onClose} showCloseButton={true}>
       <>
         <h2 className="text-xl font-bold mb-4 text-center">
           Share with your friends on Warpcast
