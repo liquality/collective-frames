@@ -253,7 +253,7 @@ export default function CreateFrame() {
           <div className="flex flex-col mt-6 md:flex-1">
             <label className="flex  my-2 text-black">
               Mint Price in{" "}
-              {erc20Token ? erc20Token?.coinGeckoId.toUpperCase() : "ETH"}
+              {erc20Token ? erc20Token?.ticker.toUpperCase() : "ETH"}
             </label>
             <div className="text-xs mb-2 flex flex-col">
               {getDisplayValue(valueInEth.toString())} ETH{" "}
