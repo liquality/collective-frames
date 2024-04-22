@@ -98,6 +98,7 @@ export default function SignInButton({ ...signInArgs }: SignInButtonProps) {
           <Modal
             isOpen={!!(url && showDialog)}
             onClose={() => setShowDialog(false)}
+            showCloseButton={true}
           >
             <div className="flex flex-col">
               <div className="flex text-black text-xl font-semibold">

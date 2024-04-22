@@ -13,12 +13,12 @@ const Navbar = () => {
     Auth.removeUser();
     window.location.href = "/";
   };
-
+  console.log(profile, "profile");
   useEffect(() => {
-    if (isAuthenticated && !userSession) {
+    if (Auth.fid || isAuthenticated) {
       setUserSession(true);
     }
-  }, [userSession, isAuthenticated]);
+  }, [isAuthenticated]);
 
   return (
     <nav className="flex justify-between pt-4">
@@ -33,7 +33,7 @@ const Navbar = () => {
       </div>
       {userSession ? (
         <div className="flex items-center">
-          <button onClick={handleSignout}>Sign Out FID: #{profile.fid}</button>
+          <button onClick={handleSignout}>Sign Out FID: #{Auth.fid}</button>
         </div>
       ) : null}
     </nav>
