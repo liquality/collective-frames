@@ -79,7 +79,7 @@ export default function CreateFrame() {
           (token) => token.contractAddress === foundCollective.memeTokenContract
         );
 
-        const filteredList = [matchedToken, erc20TokenData[4]].filter(Boolean);
+        const filteredList = [matchedToken, erc20TokenData[9]].filter(Boolean);
 
         return filteredList;
       }
