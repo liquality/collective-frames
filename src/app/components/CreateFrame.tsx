@@ -192,7 +192,7 @@ export default function CreateFrame() {
   }, [imageFile, collective, name, erc20Token, price]);
 
   return (
-    <div className="flex flex-col mt-8 px-8 bg-white bg-opacity-70 p-3 rounded-[10px] text-black">
+    <div className="flex flex-col px-8 bg-white bg-opacity-70 p-3 rounded-[10px] text-black">
       <div className="flex flex-col md:flex-row">
         <div className="flex flex-1 items-center">
           <div className="text-slate-900 text-3xl font-bold leading-loose mr-4">
@@ -200,7 +200,7 @@ export default function CreateFrame() {
           </div>
           Build your meme frame
         </div>
-        <div className="flex flex-1 text-gray-400 items-center hidden md:flex">
+        <div className="flex-1 text-gray-400 items-center hidden md:flex">
           <div className="text-3xl font-bold leading-loose mr-4">2</div>
           Get link to share
         </div>
@@ -321,7 +321,7 @@ export default function CreateFrame() {
           {isSaving ? "Creating meme frame..." : "Create meme frame"}
         </button>
       </div>
-      <div className="flex flex-col items-center justify-center mt-6 mb-6 text-sm mt-2">
+      <div className="flex flex-col items-center justify-center mb-6 text-sm">
         This may take up to 10 seconds <br></br>
         {isSaving ? (
           <div className="mt-2 mb-3" role="status">
