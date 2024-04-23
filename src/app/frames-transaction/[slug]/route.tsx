@@ -26,6 +26,7 @@ const handleRequest = frames(async (ctx) => {
     throw new Error("No frame message");
   }
 
+  console.log(collective, "what is collective?");
   let route = "";
   let secondRoute = "";
   const isErc20 = existingFrame.paymentCurrency !== ETH_CURRENCY_ADDRESS;
