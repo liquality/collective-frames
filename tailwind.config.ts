@@ -11,7 +11,8 @@ const config: Config = {
       fontFamily: {
         'montserrat': ['Montserrat'],
         'lato': ['Lato'],
-        'garamond': ['Garamond']
+        'garamond': ['Garamond'],
+        'body': ['Montserrat'],
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
