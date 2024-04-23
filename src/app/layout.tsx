@@ -7,6 +7,8 @@ import "react-toastify/dist/ReactToastify.css";
 import { AuthKitProvider } from "@farcaster/auth-kit";
 import OurVision from "./components/OurVision";
 import Footer from "./components/Footer";
+import Modal from "./components/Modal";
+import HowItWorks from "./components/HowItWorks";
 const inter = Inter({ subsets: ["latin"] });
 
 export default function RootLayout({
@@ -14,6 +16,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
   return (
     <html lang="en">
       <head>
@@ -52,11 +55,13 @@ export default function RootLayout({
                 Create and share a &quot;meme mint frame&quot; for your memecoin
                 community. Every meme minted benefits your chosen community.
               </p>
+              <HowItWorks />
             </div>
             <div className="flex mt-8 justify-center items-center">
               {children}
             </div>
             <OurVision />
+            
           </main>
           <Footer></Footer>
           <ToastContainer />

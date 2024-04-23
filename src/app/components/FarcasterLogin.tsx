@@ -18,7 +18,7 @@ const FarcasterLogin = () => {
       const data = await ApiService.authenticateUser(res);
       if (data) {
         Auth.setUser(res.fid);
-        route.push("/dashboard");
+        window.location.href = "/dashboard";
       } else {
         throw Error("Could not get or create user in server");
       }
