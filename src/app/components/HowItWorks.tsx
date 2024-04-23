@@ -7,12 +7,12 @@ const HowItWorks: React.FC = () => {
   const [showHowItWorks, setShowHowItWorks] = useState(false);
   return (
     <>
-      <button
-        className="rounded-full px-4 py-2 bg-purple-500 text-white focus:outline-none focus:ring-0 mb-3"
+      <div
+        className="text-center cursor-pointer hover:underline text-purple-500"
         onClick={() => setShowHowItWorks(true)}
       >
-        how it works
-      </button>
+        [ how it works ]
+      </div>
       <Modal
         isOpen={showHowItWorks}
         onClose={() => setShowHowItWorks(false)}
