@@ -18,6 +18,16 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <title>Liquality Meme NFT Generator</title>
+        <meta
+          name="description"
+          content="Create and share a meme mint frame for your memecoin community. Every meme minted benefits your chosen community."
+        />
+        <meta property="og:title" content="Liquality Meme NFT Generator" />
+        <meta
+          property="og:description"
+          content="Create and share a meme mint frame for your memecoin community. Every meme minted benefits your chosen community."
+        />
+        <meta property="og:image" content="/main-bg.png" />
         <link
           href="/favicon-32x32.png"
           rel="shortcut icon"
@@ -36,10 +46,11 @@ export default function RootLayout({
                 MEME AMPLIFIER MACHINE
               </h2>
               <h4 className="text-center font-bold text-xl leading-normal tracking-tight uppercase">
-              Meme. Share. Grow the meme, earn together. 
+                Meme. Share. Grow the meme, earn together.
               </h4>
               <p className="mt-3 text-center mb-5">
-              Create and share a &quot;meme mint frame&quot; for your memecoin community. Every meme minted benefits your chosen community.
+                Create and share a &quot;meme mint frame&quot; for your memecoin
+                community. Every meme minted benefits your chosen community.
               </p>
             </div>
             <div className="flex mt-8 justify-center items-center">
