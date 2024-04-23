@@ -18,12 +18,40 @@ const HowItWorks: React.FC = () => {
         onClose={() => setShowHowItWorks(false)}
         showCloseButton={false}
       >
-        <div className="flex flex-col">
+        <div className="flex w-full text-black text-sm">
+          Create memes to mint to promote and win with your favorite
+          communities:
+        </div>
+        <div className="flex mx-4 mt-2 w-full text-black text-sm">
+          <div className="flex flex-col flex-1">
+            <ul className="list-disc list-outside">
+              <li>Mochi</li>
+              <li>Toshi</li>
+              <li>Brett</li>
+            </ul>
+          </div>
+          <div className="flex flex-col flex-1">
+            <ul className="list-disc list-outside">
+              <li>Normie</li>
+              <li>mfer</li>
+              <li>DEGEN</li>
+            </ul>
+          </div>
+          <div className="flex flex-col flex-1">
+            <ul className="list-disc list-outside">
+              <li>doginme</li>
+              <li>Benji</li>
+              <li>Higher</li>
+              <li>Base God</li>
+            </ul>
+          </div>
+        </div>
+        <div className="flex mt-6 flex-col">
           <div className="flex text-black text-xl font-semibold">
             How it Works
           </div>
         </div>
-        <div className="flex m-4 justify-center w-full text-black text-sm">
+        <div className="flex mx-4 mt-2 w-full text-black text-sm">
           <ol className="list-decimal list-outside">
             <li className="mb-2">
               {" "}
