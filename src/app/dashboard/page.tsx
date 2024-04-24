@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
+import { getTokensData } from "@/utils/3rd-party-apis";
 import ApiService from "@/utils/api-service";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -10,11 +11,19 @@ export default function Dashboard() {
   const router = useRouter();
   const [frames, setFrames] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     setLoading(true);
+    const fetchData = async (nftTokenAddress: string) => {
+      const colection = await getTokensData([nftTokenAddress]);
+      console.log(colection, "colection");
+    }
+    
     ApiService.fetchFramesByCurrentUser().then((data: any[]) => {
       if (data.length > 0) {
+        console.log( { frames: data})
         setFrames(data);
+        fetchData(data[0].nftTokenAddress);
         setLoading(false);
       } else {
         router.push("/create-frame");
@@ -110,7 +119,7 @@ export default function Dashboard() {
                         viewBox="0 0 16 16"
                       >
                         <path
-                          fill-rule="evenodd"
+                          fillRule="evenodd"
                           d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1z"
                         />
                       </svg>
