@@ -7,7 +7,6 @@ import "react-toastify/dist/ReactToastify.css";
 import { AuthKitProvider } from "@farcaster/auth-kit";
 import OurVision from "./components/OurVision";
 import Footer from "./components/Footer";
-import Modal from "./components/Modal";
 import HowItWorks from "./components/HowItWorks";
 const inter = Inter({ subsets: ["latin"] });
 
@@ -37,7 +36,7 @@ export default function RootLayout({
           type="image/x-icon"
         ></link>
       </head>
-      <body className={inter.className}>
+      <body>
         <AuthKitProvider>
           <main className="flex flex-col px-12 py-2">
             <Navbar />
