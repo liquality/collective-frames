@@ -50,7 +50,7 @@ export const erc20TokenData: TokenInfo[] =
             ticker: "DEGEN",
             contractAddress: "0x4ed4E862860beD51a9570b96d89aF5E1B0Efefed",
             decimal: 18,
-            coinGeckoId: "degen"
+            coinGeckoId: "degen-base"
         },
         {
             ticker: "doginme",
