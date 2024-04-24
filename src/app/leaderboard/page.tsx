@@ -26,8 +26,8 @@ export default function Leaderboard() {
         <div className="flex flex-col">
           <div className="flex mt-4 mb-12 flex-col items-center">
             name, frames_created, mints
-            {framesPerCollective.map((frame) => (
-              <div className="flex flex-col " key={frame.id}>
+            {framesPerCollective.map((frame, index) => (
+              <div className="flex flex-col" key={index}>
                 <div className="flex text-purple-500 ">
                   {frame.collective_name} | {frame.num_frames_created} | ?
                 </div>

@@ -73,26 +73,28 @@ export default function Dashboard() {
             <div className="flex">Previous Memes ({frames?.length || 0})</div>
             <div className="flex mt-4 mb-12 flex-col">
               {frames.map((frame) => (
-                <div className="flex flex-col items-center" key={frame.id}>
-                  <div
-                    className="flex text-purple-500 cursor-pointer hover:text-purple-900 hover:text-decoration-1"
-                    onClick={() => router.push(`/share/${frame.id}`)}
-                  >
-                    {frame.name}
+                <div className="flex justify-start flex-col" key={frame.id}>
+                  <div className="flex items-center">
+                    <div
+                      className="flex cursor-pointer mt-4"
+                      onClick={() => router.push(`/share/${frame.id}`)}
+                    >
+                      {frame?.nftImgUrl && (
+                        <img
+                          src={frame?.nftImgUrl || ""}
+                          alt="Uploaded meme"
+                          className="w-10/12 sm:w-2/4 object-contain"
+                        />
+                      )}
+                    </div>
+                    <div
+                      className="flex text-purple-500 cursor-pointer hover:text-purple-900 hover:text-decoration-1"
+                      onClick={() => router.push(`/share/${frame.id}`)}
+                    >
+                      {frame.name}
+                    </div>
                   </div>
-                  <div
-                    className="flex cursor-pointer mt-4 justify-center"
-                    onClick={() => router.push(`/share/${frame.id}`)}
-                  >
-                    {frame?.nftImgUrl && (
-                      <img
-                        src={frame?.nftImgUrl || ""}
-                        alt="Uploaded meme"
-                        className="mt-1 w-10/12 sm:w-2/4 object-contain"
-                      />
-                    )}
-                  </div>
-                  <div className="mt-4 hidden sm:flex">
+                  <div className="mt-4 ml-2 hidden sm:flex">
                     <a
                       href="#"
                       className="text-purple-500"
