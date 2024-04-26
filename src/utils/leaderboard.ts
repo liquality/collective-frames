@@ -37,7 +37,7 @@ export const getFramesPerCollective = async () => {
                         JOIN 
                             collective ON frame.collective_id = collective.id
                         GROUP BY 
-                            collective_name, nft_token_address;`);
+                            collective_name;`);
 
   const frames = await db
     .select({
