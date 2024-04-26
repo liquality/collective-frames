@@ -1,5 +1,5 @@
-import { collective, db } from "@/db";
-import { sql } from "drizzle-orm";
+import { collective, frame, db } from "@/db";
+import { eq, sql } from "drizzle-orm";
 
 //Use this sql in this function to return all the collectives and their corresponding creations
 /* 
@@ -31,17 +31,22 @@ GROUP BY
 export const getFramesPerCollective = async () => {
   const framesPerCollective = await db.execute(sql`SELECT 
                             LOWER(collective.name) AS collective_name,
-                            COUNT(frame.id) AS num_frames_created,
-                            frame.nft_token_address
+                            COUNT(frame.id) AS num_frames_created
                         FROM 
                             frame
                         JOIN 
                             collective ON frame.collective_id = collective.id
                         GROUP BY 
                             collective_name, nft_token_address;`);
-  return [
-    ...new Map(
-      framesPerCollective.rows.map((item) => [item.collective_name, item])
-    ).values(),
-  ];
+
+  const frames = await db
+    .select({
+      id: frame.id,
+      nftTokenAddress: frame.nftTokenAddress,
+      collectiveId: collective.id,
+      collectiveName: collective.name,
+    })
+    .from(frame)
+    .leftJoin(collective, eq(collective.id, frame.collectiveId));
+  return { frames, collectives: framesPerCollective.rows };
 };
