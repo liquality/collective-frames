@@ -43,7 +43,7 @@ export default function Leaderboard() {
   }, [framesPerCollective]);
 
   return (
-    <div className="flex flex-col w-full md:w-4/5">
+    <div className="flex flex-col w-full md:w-3/5">
       {loading ? (
         <div className="flex flex-col text-center justify-center text-lg">
           <div className="mt-2 mb-3" role="status">
@@ -54,22 +54,22 @@ export default function Leaderboard() {
       ) : (
         <div className="flex flex-col p-8 bg-white bg-opacity-70 rounded-[10px] text-black">
           <h2 className="flex justify-center mt-4 text-xl">Leaderboard</h2>
-          <div className="flex flex-col mt-2">
-            <div className="flex items-center">
-              <div className="flex w-2/6">Name</div>
-              <div className="flex w-1/2">Frames Created</div>
+          <div className="flex flex-col mt-2 md:items-center w-full">
+            <div className="flex items-center md:w-1/2">
+              <div className="flex w-2/6 justify-start">Name</div>
+              <div className="flex w-1/2 justify-center">Frames Created</div>
               <div className="flex w-1/6 justify-end">Mints</div>
             </div>
-            <div className="flex mt-4 mb-12 flex-col items-center">
+            <div className="flex mt-4 mb-12 flex-col items-center md:w-1/2">
               {framesPerCollective.map((frame, index) => (
                 <div className="flex w-full items-center" key={index}>
                   <div className="flex w-2/6 text-purple-500 justify-start">
                     {frame.collective_name}
                   </div>
-                  <div className="flex w-1/2 text-purple-500 justify-center text-center">
+                  <div className="flex w-1/2 text-purple-500 justify-center">
                     {frame.num_frames_created}
                   </div>
-                  <div className="flex w-1/6 text-purple-500 justify-center text-center">
+                  <div className="flex w-1/6 text-purple-500 justify-end">
                     {loadingOwners ? (
                       <Spinner size="w-3 h-3" />
                     ) : (
