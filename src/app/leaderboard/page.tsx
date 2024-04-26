@@ -26,7 +26,12 @@ export default function Leaderboard() {
       const frame = frames.find(
         (item) => item.nftTokenAddress === curr
       );
-      prev[frame?.collectiveName?.toLowerCase() || ""] = amount;
+      if(prev[frame?.collectiveName?.toLowerCase()]) {
+        const prevAmount = prev[frame?.collectiveName?.toLowerCase()];
+        prev[frame?.collectiveName?.toLowerCase()] = prevAmount + amount;
+      } else {
+        prev[frame?.collectiveName?.toLowerCase()] = amount;
+      }
       return prev;
     }, {});
     setOwners(_owners);
