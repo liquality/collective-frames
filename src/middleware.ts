@@ -8,7 +8,7 @@ export async function middleware(request: NextRequest) {
       return Response.redirect(new URL("/dashboard", request.url));
     }
 
-    if (!session && request.nextUrl.pathname !== "/") {
+    if (!session && ![ "/",  "/leaderboard"].includes(request.nextUrl.pathname) ) {
       return Response.redirect(new URL("/", request.url));
     }
   }
